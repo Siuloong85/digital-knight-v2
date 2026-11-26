@@ -1,0 +1,386 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script disable-devtool-auto src="https://cdn.jsdelivr.net/npm/disable-devtool@latest"></script>
+
+<title>Actualizar Digital Knight</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+
+    background:
+    radial-gradient(circle at top, #10104a, #01011d 60%);
+
+    color: white;
+
+    font-family: Arial, sans-serif;
+
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+
+    padding: 30px 0;
+
+    overflow-y: auto;
+}
+
+
+/* CONTENEDOR */
+
+.update-card {
+
+    width: 92%;
+    max-width: 460px;
+
+    background: rgba(17,17,34,.95);
+
+    border-radius: 25px;
+
+    padding: 30px 25px 35px;
+
+    text-align: center;
+
+    box-shadow:
+    0 15px 40px rgba(0,0,0,.6);
+
+    animation: show .4s ease;
+}
+
+
+@keyframes show {
+
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* LOGO */
+
+.logo {
+
+    width: 100px;
+
+    margin-bottom: 20px;
+
+}
+
+
+/* BANNER */
+
+.banner {
+
+    width: 75%;
+
+    max-width: 300px;
+
+    border-radius: 20px;
+
+    margin-bottom: 25px;
+
+    box-shadow:
+    0 8px 25px rgba(0,0,0,.5);
+
+}
+
+
+/* TITULO */
+
+h1 {
+
+    font-size: 28px;
+
+    margin: 10px 0 18px;
+
+}
+
+
+/* BOTÓN DE VERSIÓN */
+
+.version {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    width: 100%;
+
+    background:
+    linear-gradient(135deg,#00aeff,#0066ff);
+
+    color: white;
+
+    padding: 16px 20px;
+
+    border-radius: 15px;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    margin-bottom: 20px;
+
+    text-decoration: none;
+
+    box-shadow:
+    0 8px 20px rgba(0,174,255,.35);
+
+    transition:
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+
+.version:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+    0 10px 25px rgba(0,174,255,.5);
+
+}
+
+
+.version:active {
+
+    transform: scale(.97);
+
+}
+
+
+/* FLECHA */
+
+.download-arrow {
+
+    font-size: 25px;
+
+    line-height: 1;
+
+}
+
+
+/* TEXTO */
+
+p {
+
+    color: #ddd;
+
+    line-height: 1.7;
+
+    font-size: 15px;
+
+}
+
+
+/* NOVEDADES */
+
+.update-section {
+
+    background: #0b0b20;
+
+    border-radius: 18px;
+
+    padding: 20px;
+
+    margin-top: 20px;
+
+    text-align: left;
+
+}
+
+
+.update-section strong {
+
+    color: #00aeff;
+
+    font-size: 18px;
+
+}
+
+
+.update-section p {
+
+    margin-bottom: 0;
+
+}
+
+
+/* MÁS TARDE */
+
+.secondary {
+
+    display: block;
+
+    margin-top: 18px;
+
+    color: #aaa;
+
+    text-decoration: none;
+
+    font-size: 15px;
+
+    transition: color .2s ease;
+}
+
+
+.secondary:hover {
+
+    color: white;
+
+}
+
+
+/* MÓVILES */
+
+@media(max-width:400px){
+
+    .update-card {
+
+        padding: 25px 18px;
+
+    }
+
+    h1 {
+
+        font-size: 24px;
+
+    }
+
+    .banner {
+
+        width: 85%;
+
+    }
+
+    .version {
+
+        font-size: 17px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<div class="update-card">
+
+
+<!-- LOGO -->
+
+<img
+    class="logo"
+    src="https://od.lk/s/M18zMTIxODI5MjVf/Knight.png"
+    alt="Digital Knight">
+
+
+<!-- BANNER -->
+
+<img
+    class="banner"
+    src="https://od.lk/s/M18zMjA1NjYzNDBf/APK%20FONDO%202.jpg"
+    alt="Nueva actualización">
+
+
+<!-- TITULO -->
+
+<h1>
+Nueva actualización disponible
+</h1>
+
+
+<!-- BOTÓN DE DESCARGA -->
+
+<a
+    class="version"
+    href="https://digitalknightapp.com/www/apk/DK-V1.3.7.apk">
+
+    <span>
+        Digital Knight V1.3.7
+    </span>
+
+    <span class="download-arrow">
+        ↓
+    </span>
+
+</a>
+
+
+<p>
+Descarga la nueva versión de Digital Knight
+para disfrutar de las últimas mejoras de la aplicación.
+</p>
+
+
+<!-- NOVEDADES -->
+
+<div class="update-section">
+
+<strong>🚀 Novedades V1.3.7</strong>
+
+<p>
+
+✔ <strong>Nuevo banner de apoyo:</strong> Ahora verás un banner en la app para apoyar el desarrollo. Si eres <strong>Premium</strong>, el banner desaparece automáticamente<br><br>
+
+✔ <strong>Integración de pago:</strong> Pagos reales para apoyar y ser Premium<br><br>
+
+✔ <strong>Cobro automático mensual:</strong> Ya no necesitas pagar manualmente cada mes<br><br>
+
+✔ <strong>Banner inteligente:</strong> Los usuarios Premium no ven anuncios, los demás ven el banner para apoyar<br><br>
+
+✔ Mejoras generales de rendimiento y estabilidad
+
+</p>
+
+</div>
+
+
+<!-- MÁS TARDE -->
+
+<a
+    class="secondary"
+    href="main.html">
+
+    Más tarde
+
+</a>
+
+
+</div>
+
+
+
+<script src="/ads.js" defer></script>
+</body>
+
+<br>
+<br>
+<br>
+<br>
+</html>
+

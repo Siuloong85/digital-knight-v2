@@ -1,0 +1,2222 @@
+import { supabase } from './js/supabaseClient.js';
+import {
+  isMovieCompleted,
+  isSeriesCompleted,
+  getHiddenList,
+  hideFromContinueWatching
+} from './js/sync-supabase.js';
+// ⬅️ Quitar lazy inmediatamente si ya todas se cargaron antes
+if (localStorage.getItem("mainImagesLoaded") === "true") {
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("img[loading='lazy']").forEach(img => {
+      img.removeAttribute("loading");
+    });
+  });
+}
+
+/* ORIGINAL HALLOWEEN: conservar como respaldo
+function initBatOverlay() {
+  const batLayer = document.getElementById('batLayer');
+  if (!batLayer || batLayer.dataset.ready === 'true') return;
+
+  batLayer.dataset.ready = 'true';
+  const count = window.innerWidth < 768 ? 10 : 16;
+
+  for (let i = 0; i < count; i++) {
+    const bat = document.createElement('div');
+    bat.className = 'bat';
+    bat.textContent = '🦇';
+    bat.style.left = '-8%';
+    bat.style.top = `${Math.random() * 75 + 8}%`;
+    bat.style.fontSize = `${18 + Math.random() * 18}px`;
+    bat.style.setProperty('--duration', `${12 + Math.random() * 10}s`);
+    bat.style.setProperty('--delay', `${-Math.random() * 12}s`);
+    batLayer.appendChild(bat);
+  }
+}
+*/
+
+document.addEventListener("DOMContentLoaded", () => {
+  const images = document.querySelectorAll("img[loading='lazy']");
+  let loadedCount = 0;
+
+  images.forEach(img => {
+    img.addEventListener("load", () => {
+      loadedCount++;
+      if (loadedCount === images.length) {
+        // ✅ Todas las imágenes ya cargaron al menos una vez
+        localStorage.setItem("mainImagesLoaded", "true");
+      }
+      // quitar lazy una vez cargada
+      img.removeAttribute("loading");
+    }, { once: true });
+  });
+});
+
+  document.addEventListener('contextmenu', function(event) {
+    event.preventDefault();
+});
+
+document.addEventListener('copy', function(event) {
+    event.preventDefault();
+});
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "F12" || 
+        (event.ctrlKey && event.shiftKey && event.key === "I") || 
+        (event.ctrlKey && event.key === "U") || 
+        (event.ctrlKey && event.key === "C")) {
+        event.preventDefault();
+    }
+});
+
+// ============================================
+// MODAL DE ACTIVACIÓN DE ACTUALIZACIÓN
+// Uso: showUpdateModal() para mostrar el modal
+// ============================================
+function createUpdateModal() {
+  if (document.getElementById('updateModalOverlay')) return;
+  const overlay = document.createElement('div');
+  overlay.id = 'updateModalOverlay';
+  overlay.innerHTML = `
+    <style>
+      #updateModalOverlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:999999;display:flex;align-items:center;justify-content:center;animation:fadeIn .3s ease;backdrop-filter:blur(8px)}
+      @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+      @keyframes slideUp{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
+      @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+      @keyframes progress{0%{width:0%}100%{width:100%}}
+      .update-modal{background:linear-gradient(135deg,#0a0a2e 0%,#1a1a3e 100%);border-radius:24px;padding:30px 25px;width:90%;max-width:380px;text-align:center;animation:slideUp .4s ease;border:1px solid rgba(0,125,255,.3);box-shadow:0 20px 60px rgba(0,125,255,.2)}
+      .update-modal-logo{width:80px;height:80px;border-radius:20px;margin-bottom:15px;animation:pulse 2s infinite;box-shadow:0 8px 30px rgba(0,125,255,.3)}
+      .update-modal-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:8px}
+      .update-modal-subtitle{font-size:13px;color:#9aa3c7;margin-bottom:20px;line-height:1.5}
+      .update-modal-version{display:inline-block;background:linear-gradient(135deg,#007dff,#4358ff);color:#fff;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:700;margin-bottom:20px}
+      .update-modal-btn{display:block;width:100%;background:linear-gradient(135deg,#007dff,#4358ff);color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+      .update-modal-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,125,255,.4)}
+      .update-modal-btn:active{transform:scale(.98)}
+      .update-modal-btn .progress-bar{position:absolute;top:0;left:0;bottom:0;background:rgba(255,255,255,.2);width:0%;transition:width .3s}
+      .update-modal-btn .btn-text{position:relative;z-index:1}
+      .update-modal-btn.downloading{pointer-events:none}
+      .update-modal-btn.downloading .progress-bar{animation:progress 3s ease-in-out forwards}
+      .update-modal-btn.install{background:linear-gradient(135deg,#00c853,#00e676)}
+      .update-modal-close{display:block;margin-top:15px;color:#666;font-size:13px;cursor:pointer;background:none;border:none;width:100%;padding:8px}
+      .update-modal-close:hover{color:#999}
+      .update-modal-done{display:block;margin-top:10px;color:#007dff;font-size:13px;cursor:pointer;background:none;border:none;width:100%;padding:8px;font-weight:600}
+      .update-modal-done:hover{color:#4358ff}
+    </style>
+    <div class="update-modal">
+      <img class="update-modal-logo" src="logo-2025.png" alt="Digital Knight">
+      <div class="update-modal-title">¡Nueva versión disponible!</div>
+      <div class="update-modal-subtitle">Actualización disponible para seguir disfrutando de las nuevas mejoras y correcciones</div>
+      <div class="update-modal-version">V1.3.7</div>
+      <button class="update-modal-btn" id="updateDownloadBtn">
+        <span class="progress-bar"></span>
+        <span class="btn-text">⬇ Descargar APK</span>
+      </button>
+      <button class="update-modal-done" id="updateDoneBtn">✅ Ya actualicé</button>
+      <button class="update-modal-close" id="updateCloseBtn">Más tarde</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  document.getElementById('updateCloseBtn').onclick = () => overlay.remove();
+  document.getElementById('updateDoneBtn').onclick = () => {
+    localStorage.setItem("lastUpdateShown", CURRENT_VERSION);
+    overlay.remove();
+  };
+  document.getElementById('updateDownloadBtn').onclick = function() {
+    const btn = this;
+    const btnText = btn.querySelector('.btn-text');
+    btn.classList.add('downloading');
+    btnText.textContent = '⏳ Descargando...';
+    
+    // Animación de 3 segundos y luego descargar
+    setTimeout(() => {
+      btn.classList.remove('downloading');
+      btnText.textContent = '✅ Descarga iniciada';
+      
+      // Abrir enlace de descarga directo
+      window.open('https://od.lk/d/M18zMzU5NTc2NjRfNmxVWGg/DK-V1.3.7.apk', '_blank');
+      
+      // Cerrar modal después de 2 segundos
+      setTimeout(() => overlay.remove(), 2000);
+    }, 3000);
+  };
+}
+window.showUpdateModal = createUpdateModal;
+
+// === CONTROL DE ACTUALIZACIONES ===
+// Solo cambia CURRENT_VERSION cuando haya una nueva actualización
+// El modal aparece automáticamente una vez por versión
+
+const CURRENT_VERSION = "1.3.16";
+
+function checkForUpdateModal() {
+    const lastShown = localStorage.getItem("lastUpdateShown");
+    if (lastShown !== CURRENT_VERSION) {
+        setTimeout(() => {
+            showUpdateModal();
+            localStorage.setItem("lastUpdateShown", CURRENT_VERSION);
+        }, 2000);
+    }
+}
+
+// Activar verificación al cargar la página
+document.addEventListener("DOMContentLoaded", checkForUpdateModal);
+
+document.addEventListener("dragstart", function(event) {
+    event.preventDefault();
+});
+  
+const swiperInstances = {};
+const tabs = document.querySelectorAll('.tab');
+const sections = document.querySelectorAll('.mySwiper');
+const overlay = document.getElementById('transitionOverlay');
+const sectionContents = document.querySelectorAll('.section-content');
+const menuToggles = document.querySelectorAll('.menu-toggle');
+const mobileMenuBackdrop = document.getElementById('mobileMenuBackdrop');
+let menuAutoCloseTimer = null;
+let swipeStartX = null;
+let swipeStartY = null;
+let swipeCurrentOffset = 0;
+
+function clearMenuAutoCloseTimer() {
+  if (menuAutoCloseTimer) {
+    clearTimeout(menuAutoCloseTimer);
+    menuAutoCloseTimer = null;
+  }
+}
+
+function scheduleMenuAutoClose() {
+  clearMenuAutoCloseTimer();
+
+  const tabsContainer = document.querySelector('.tabs');
+  if (!tabsContainer || !tabsContainer.classList.contains('open')) return;
+
+  menuAutoCloseTimer = setTimeout(() => {
+    if (document.querySelector('.tabs')?.classList.contains('open')) {
+      setMobileMenuState(false);
+    }
+  }, 5000);
+}
+
+function setMobileMenuState(isOpen) {
+  const tabsContainer = document.querySelector('.tabs');
+  if (!tabsContainer) return;
+
+  clearMenuAutoCloseTimer();
+
+  if (isOpen) {
+    tabsContainer.classList.remove('hidden');
+    tabsContainer.style.transition = '';
+    tabsContainer.style.transform = '';
+    requestAnimationFrame(() => {
+      tabsContainer.classList.add('open');
+    });
+    scheduleMenuAutoClose();
+  } else {
+    tabsContainer.classList.remove('open');
+    tabsContainer.style.transform = '';
+    requestAnimationFrame(() => {
+      tabsContainer.classList.add('hidden');
+    });
+  }
+
+  document.body.classList.toggle('menu-open', isOpen);
+  mobileMenuBackdrop?.classList.toggle('visible', isOpen);
+
+  menuToggles.forEach((toggle) => {
+    toggle.classList.toggle('is-open', isOpen);
+    toggle.setAttribute('aria-expanded', String(isOpen));
+    toggle.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
+  });
+}
+
+setMobileMenuState(false);
+
+const isDrawerMenuMode = () => window.matchMedia('(max-width: 1024px), (orientation: landscape)').matches;
+
+function attachSwipeToMenu() {
+  const tabsContainer = document.querySelector('.tabs');
+  if (!tabsContainer) return;
+
+  tabsContainer.addEventListener('touchstart', (event) => {
+    if (!tabsContainer.classList.contains('open') || !isDrawerMenuMode()) return;
+
+    const touch = event.touches[0];
+    swipeStartX = touch.clientX;
+    swipeStartY = touch.clientY;
+    swipeCurrentOffset = 0;
+    tabsContainer.style.transition = 'none';
+    scheduleMenuAutoClose();
+  }, { passive: true });
+
+  tabsContainer.addEventListener('touchmove', (event) => {
+    if (swipeStartX === null || !tabsContainer.classList.contains('open') || !isDrawerMenuMode()) return;
+
+    const touch = event.touches[0];
+    const deltaX = touch.clientX - swipeStartX;
+    const deltaY = Math.abs(touch.clientY - swipeStartY);
+
+    if (deltaY > 22 && Math.abs(deltaX) < 20) return;
+
+    if (deltaX < 0) {
+      swipeCurrentOffset = Math.max(deltaX, -tabsContainer.offsetWidth);
+      tabsContainer.style.transform = `translateX(${swipeCurrentOffset}px)`;
+      scheduleMenuAutoClose();
+    }
+  }, { passive: true });
+
+  tabsContainer.addEventListener('touchend', () => {
+    if (swipeCurrentOffset < -80) {
+      setMobileMenuState(false);
+    } else {
+      tabsContainer.style.transition = '';
+      tabsContainer.style.transform = '';
+    }
+
+    swipeStartX = null;
+    swipeStartY = null;
+    swipeCurrentOffset = 0;
+    scheduleMenuAutoClose();
+  }, { passive: true });
+}
+
+attachSwipeToMenu();
+
+function openComingSoonModal(featureName) {
+  const existing = document.querySelector('.coming-soon-overlay');
+  if (existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.className = 'coming-soon-overlay';
+
+  const title = featureName === 'deportes' ? 'Deportes' : 'Canales';
+  const emoji = featureName === 'deportes' ? '🏆' : '📺';
+  const message = featureName === 'deportes'
+    ? 'Estamos preparando una experiencia única para partidos, resúmenes y contenido deportivo para que llegue muy pronto.'
+    : 'La guía de canales está en construcción. Estamos afinando la experiencia para que llegue con más estilo y más contenido.';
+
+  overlay.innerHTML = `
+    <div class="coming-soon-modal" role="dialog" aria-modal="true" aria-labelledby="comingSoonTitle">
+      <button type="button" class="coming-soon-close-btn" aria-label="Cerrar">×</button>
+      <div class="coming-soon-badge">Próximamente</div>
+      <div class="coming-soon-icon">${emoji}</div>
+      <h3 id="comingSoonTitle">${title}</h3>
+      <p>${message}</p>
+    </div>
+  `;
+
+  overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) overlay.remove();
+  });
+
+  const closeButton = overlay.querySelector('.coming-soon-close-btn');
+  closeButton.addEventListener('click', () => overlay.remove());
+
+  document.body.appendChild(overlay);
+  setMobileMenuState(false);
+}
+
+mobileMenuBackdrop?.addEventListener('click', () => setMobileMenuState(false));
+menuToggles.forEach((toggle) => {
+  toggle.addEventListener('click', () => {
+    const isOpen = !document.querySelector('.tabs')?.classList.contains('open');
+    setMobileMenuState(isOpen);
+  });
+});
+document.querySelectorAll('.menu-category').forEach(item => {
+  item.addEventListener('click', (event) => {
+    const feature = item.dataset.feature;
+    const href = item.getAttribute('href');
+
+    if (feature) {
+      event.preventDefault();
+      openComingSoonModal(feature);
+      return;
+    }
+
+    if (href) {
+      setMobileMenuState(false);
+      return;
+    }
+
+    setMobileMenuState(false);
+  });
+});
+
+async function cargarSwiperInicio() {
+
+    console.log("🔵 Cargando swiper-data.json...");
+
+    try {
+
+        const respuesta = await fetch('swiper-data.json?v=' + Date.now());
+
+        if (!respuesta.ok) {
+            throw new Error('No se pudo cargar swiper-data.json');
+        }
+
+        const datos = await respuesta.json();
+
+        console.log("🟢 JSON cargado:", datos);
+
+      // ==========================================
+// 🎲 SELECCIÓN INTELIGENTE DE CONJUNTO
+//
+// PRIORIDAD:
+// 1. Si existe un estreno → mostrar su conjunto inmediatamente
+// 2. Si no hay estreno → sistema normal de 30 minutos
+// ==========================================
+
+const nombresConjuntos = Object.keys(datos);
+
+const STORAGE_CONJUNTO = 'dk_swiper_conjunto';
+const STORAGE_TIEMPO = 'dk_swiper_conjunto_time';
+
+const ahora = Date.now();
+
+let conjuntoElegido =
+    localStorage.getItem(STORAGE_CONJUNTO);
+
+const tiempoGuardado =
+    parseInt(
+        localStorage.getItem(STORAGE_TIEMPO) || '0',
+        10
+    );
+
+const TREINTA_MINUTOS = 30 * 60 * 1000;
+
+
+// ==========================================
+// 🔥 BUSCAR CONJUNTOS QUE TENGAN ESTRENO
+// ==========================================
+
+const conjuntosConEstreno = [];
+
+nombresConjuntos.forEach(nombreConjunto => {
+
+    const conjuntoActual = datos[nombreConjunto];
+
+    if (!conjuntoActual) return;
+
+    let tieneEstreno = false;
+
+    Object.keys(conjuntoActual).forEach(sectionId => {
+
+        const lista = conjuntoActual[sectionId];
+
+        if (!Array.isArray(lista)) return;
+
+        const encontrado = lista.some(item =>
+            item &&
+            item.estreno === true
+        );
+
+        if (encontrado) {
+            tieneEstreno = true;
+        }
+
+    });
+
+    if (tieneEstreno) {
+
+        conjuntosConEstreno.push(
+            nombreConjunto
+        );
+
+    }
+
+});
+
+
+// ==========================================
+// 🚨 SI EXISTE UN ESTRENO
+//
+// EL ESTRENO TIENE PRIORIDAD ABSOLUTA
+// NO IMPORTA SI TODAVÍA NO HAN PASADO 30 MINUTOS
+// ==========================================
+
+if (conjuntosConEstreno.length > 0) {
+
+    // Si hay varios conjuntos con estreno,
+    // elegir uno de ellos aleatoriamente.
+
+    conjuntoElegido =
+        conjuntosConEstreno[
+            Math.floor(
+                Math.random() *
+                conjuntosConEstreno.length
+            )
+        ];
+
+
+    // Guardamos inmediatamente el conjunto
+    // para mantenerlo mientras exista el estreno.
+
+    localStorage.setItem(
+        STORAGE_CONJUNTO,
+        conjuntoElegido
+    );
+
+    localStorage.setItem(
+        STORAGE_TIEMPO,
+        ahora.toString()
+    );
+
+
+    console.log(
+        `🔥 ESTRENO DETECTADO → prioridad inmediata: ${conjuntoElegido}`
+    );
+
+    console.log(
+        `📌 Conjuntos con estreno:`,
+        conjuntosConEstreno
+    );
+
+}
+
+
+// ==========================================
+// 🎲 SI NO HAY ESTRENOS
+//
+// FUNCIONAMIENTO NORMAL DE 30 MINUTOS
+// ==========================================
+
+else {
+
+    const conjuntoValido =
+        conjuntoElegido &&
+        nombresConjuntos.includes(conjuntoElegido) &&
+        (ahora - tiempoGuardado) < TREINTA_MINUTOS;
+
+
+    // ==========================================
+    // SI YA PASARON 30 MINUTOS
+    // ==========================================
+
+    if (!conjuntoValido) {
+
+        conjuntoElegido =
+            nombresConjuntos[
+                Math.floor(
+                    Math.random() *
+                    nombresConjuntos.length
+                )
+            ];
+
+        localStorage.setItem(
+            STORAGE_CONJUNTO,
+            conjuntoElegido
+        );
+
+        localStorage.setItem(
+            STORAGE_TIEMPO,
+            ahora.toString()
+        );
+
+        console.log(
+            `🎲 Nuevo conjunto elegido: ${conjuntoElegido}`
+        );
+
+    }
+
+    else {
+
+        console.log(
+            `♻️ Manteniendo conjunto: ${conjuntoElegido}`
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// 🛡️ SEGURIDAD
+//
+// Por si el JSON cambió y el conjunto guardado
+// ya no existe.
+// ==========================================
+
+if (
+    !conjuntoElegido ||
+    !nombresConjuntos.includes(conjuntoElegido)
+) {
+
+    conjuntoElegido =
+        nombresConjuntos[0];
+
+    localStorage.setItem(
+        STORAGE_CONJUNTO,
+        conjuntoElegido
+    );
+
+    localStorage.setItem(
+        STORAGE_TIEMPO,
+        ahora.toString()
+    );
+
+}
+
+
+// ==========================================
+// OBTENER CONJUNTO
+// ==========================================
+
+const conjunto = datos[conjuntoElegido];
+
+
+        // ==========================================
+        // CARGAR LAS SECCIONES DEL CONJUNTO ELEGIDO
+        // ==========================================
+
+        Object.keys(conjunto).forEach(sectionId => {
+
+            const wrapper = document.querySelector(
+                `#${sectionId} .swiper-wrapper`
+            );
+
+            if (!wrapper) return;
+
+            wrapper.innerHTML = '';
+
+            conjunto[sectionId].forEach(item => {
+
+                const slide = document.createElement('div');
+
+slide.className = 'swiper-slide';
+
+/* ==========================================
+   FONDOS DEL SWIPER
+   poster  → vertical
+   backdrop → horizontal
+   ========================================== */
+
+if (item.poster) {
+
+    slide.style.setProperty(
+        '--bg',
+        `url("${item.poster}")`
+    );
+
+}
+
+if (item.backdrop) {
+
+    slide.style.setProperty(
+        '--bg-land',
+        `url("${item.backdrop}")`
+    );
+
+} else if (item.poster) {
+
+    slide.style.setProperty(
+        '--bg-land',
+        `url("${item.poster}")`
+    );
+
+}
+
+slide.innerHTML = `
+                    <div class="slide-overlay-top"></div>
+                    <div class="overlay"></div>
+
+                    <div class="content">
+
+                        <div class="title">
+
+                            ${
+                                item.logo
+                                ? `
+                                    <img
+                                        src="${item.logo}"
+                                        alt="${item.titulo}"
+                                        class="title-logo ${item.logoClass || ''}"
+                                        loading="eager"
+                                    >
+                                `
+                                : `
+                                    <div class="swiper-title-fallback">
+                                        ${item.titulo}
+                                    </div>
+                                `
+                            }
+
+                        </div>
+
+                        <div class="meta">
+
+            ${
+                item.estreno
+                ? `<span class="badge-estreno">Estreno</span>`
+                : ''
+            }
+
+            ${item.meta || ''}
+
+        </div>
+
+                        <div class="description">
+                            ${item.descripcion || ''}
+                        </div>
+
+                        <div class="button-wrapper">
+
+                            <a
+                                href="${item.archivo}"
+                                class="cta-button swiper-content-link"
+                                onclick="event.stopPropagation();"
+                            >
+                                Ir a ${
+                                    item.tipo === 'movie'
+                                    ? 'la película'
+                                    : 'la serie'
+                                }
+                            </a>
+
+                        </div>
+
+                    </div>
+                `;
+
+               // =========================================================
+// DETECTAR AUTOMÁTICAMENTE LA PROPORCIÓN DEL LOGO
+// =========================================================
+
+const logo = slide.querySelector('.title-logo');
+
+if (logo) {
+
+    const ajustarLogo = () => {
+
+        const ancho = logo.naturalWidth;
+        const alto = logo.naturalHeight;
+
+        if (!ancho || !alto) return;
+
+        const proporcion = ancho / alto;
+
+        // Logo vertical
+        if (proporcion < 0.75) {
+
+            logo.classList.add('logo-auto-vertical');
+
+        }
+
+        // Logo cuadrado / redondo
+        else if (proporcion <= 1.25) {
+
+            logo.classList.add('logo-auto-square');
+
+        }
+
+        // Logo horizontal
+        else {
+
+            logo.classList.add('logo-auto-horizontal');
+
+        }
+    };
+
+    if (logo.complete) {
+        ajustarLogo();
+    } else {
+        logo.addEventListener('load', ajustarLogo, {
+            once: true
+        });
+    }
+}
+
+                slide.addEventListener('click', function(e) {
+
+                    if (e.target.closest('.cta-button')) {
+                        return;
+                    }
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    window.location.assign(item.archivo);
+
+                });
+
+                wrapper.appendChild(slide);
+
+            });
+
+            console.log(
+                `🟢 ${sectionId}: ${conjunto[sectionId].length} slides`
+            );
+
+        });
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            '🔴 Error cargando swiper-data.json:',
+            error
+        );
+
+        return false;
+    }
+}
+
+// ==========================================
+// INICIALIZAR SWIPER DE INICIO
+// ==========================================
+
+// ==========================================
+// CREAR SWIPER
+// ==========================================
+
+function createSwiper(swiperEl) {
+
+   const swiper = new Swiper(swiperEl, {
+    loop: false,
+
+slidesPerView: 1,
+
+resistance: false,
+
+resistanceRatio: 0,
+
+speed: 700,
+
+effect: 'fade',
+
+fadeEffect: {
+    crossFade: true
+},
+
+touchRatio: 1,
+touchAngle: 45,
+threshold: 5,
+
+followFinger: true,
+
+longSwipes: true,
+longSwipesRatio: 0.15,
+longSwipesMs: 200,
+
+shortSwipes: true,
+allowTouchMove: true,
+
+    autoplay: {
+        delay: 7000,
+        disableOnInteraction: false,
+        stopOnLastSlide: true
+    },
+
+    navigation: {
+        nextEl: swiperEl.querySelector('.swiper-button-next'),
+        prevEl: swiperEl.querySelector('.swiper-button-prev')
+    },
+
+    pagination: {
+        el: swiperEl.querySelector('.swiper-pagination'),
+        clickable: true
+    },
+
+    observer: true,
+    observeParents: true,
+    watchSlidesProgress: true,
+
+    on: {
+
+        init(swiper) {
+
+            updateBackground(swiperEl);
+
+            if (swiperEl.id !== 'inicio' && swiper.slides.length > 1) {
+
+                const randomIndex =
+                    Math.floor(Math.random() * swiper.slides.length);
+
+                swiper.slideTo(randomIndex, 0, false);
+            }
+
+            console.log(
+                `🟢 Swiper inicializado: ${swiperEl.id}`
+            );
+        },
+
+        slideChangeTransitionStart(swiper) {
+
+            updateBackground(swiperEl);
+
+        },
+
+        reachEnd(swiper) {
+
+            console.log(
+                `🛑 Último slide alcanzado en ${swiperEl.id}`
+            );
+
+            if (swiper.autoplay) {
+                swiper.autoplay.stop();
+            }
+
+        }
+
+    }
+});
+
+    return swiper;
+}
+
+
+function updateBackground(swiperEl) {
+
+    const activeSlide =
+        swiperEl.querySelector('.swiper-slide-active');
+
+    if (!activeSlide) return;
+
+    const isLandscape =
+        window.matchMedia("(orientation: landscape)").matches;
+
+    const bg = isLandscape
+        ? activeSlide.style.getPropertyValue('--bg-land')
+        : activeSlide.style.getPropertyValue('--bg');
+
+    if (!bg) return;
+
+    document.body.style.backgroundImage = bg;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+}
+
+// ==========================================
+// CAMBIO DE ORIENTACIÓN
+// ==========================================
+
+window.addEventListener('orientationchange', () => {
+
+    setTimeout(() => {
+
+        const swiperActivo =
+            document.querySelector('.mySwiper[style*="display: block"]');
+
+        if (!swiperActivo) return;
+
+        updateBackground(swiperActivo);
+
+    }, 300);
+
+});
+
+window.addEventListener('resize', () => {
+
+    clearTimeout(window._dkOrientationTimer);
+
+    window._dkOrientationTimer = setTimeout(() => {
+
+        const swiperActivo =
+            document.querySelector('.mySwiper[style*="display: block"]');
+
+        if (!swiperActivo) return;
+
+        updateBackground(swiperActivo);
+
+    }, 200);
+
+});
+
+
+// Oculta los demás de entrada
+sections.forEach(swiperEl => {
+  if (swiperEl.id !== 'inicio') {
+    swiperEl.style.display = 'none';
+  }
+});
+
+let lastTabId = null;
+
+// --- Función central para activar tab con overlay fade ---
+async function activateTab(targetId, options = {}) {
+  const { skipScroll = false, skipSlideReset = false, skipOverlay = false } = options;
+
+  if (!skipOverlay) {
+    overlay.classList.remove('hidden');
+    overlay.classList.add('show');
+  }
+
+  setTimeout(async () => {
+    // Activar visualmente la tab
+    tabs.forEach(t => t.classList.remove('active'));
+    const targetTab = document.querySelector(`.tab[data-tab="${targetId}"]`);
+    if (targetTab) targetTab.classList.add('active');
+
+    // Ocultar todos los Swipers
+    sections.forEach(sec => {
+      sec.style.display = 'none';
+      const inst = swiperInstances[sec.id];
+      if (inst) inst.autoplay.stop();
+    });
+
+    // Mostrar Swiper correspondiente
+    // Mostrar Swiper correspondiente
+const targetSwiperEl = document.getElementById(targetId);
+
+if (targetSwiperEl) {
+
+    targetSwiperEl.style.display = 'block';
+
+    // Crear Swiper solo al primer uso
+    if (!swiperInstances[targetId]) {
+        swiperInstances[targetId] = createSwiper(targetSwiperEl);
+    }
+
+    const swiper = swiperInstances[targetId];
+
+    if (swiper) {
+
+        swiper.slideTo(0, 0, false);
+
+        swiper.update();
+        swiper.updateSize();
+        swiper.updateSlides();
+        swiper.updateProgress();
+
+        swiper.params.autoplay.delay = 7000;
+
+        swiper.autoplay.start();
+    }
+
+    updateBackground(targetSwiperEl);
+}
+
+
+// ==========================================
+// Mostrar sección de contenido
+// ==========================================
+
+sectionContents.forEach(sectionContent => {
+
+    sectionContent.style.display =
+        sectionContent.dataset.section === targetId
+            ? 'block'
+            : 'none';
+
+});
+
+
+// ==========================================
+// Scroll de la tab
+// ==========================================
+
+if (!skipScroll && targetTab) {
+
+    targetTab.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest'
+    });
+
+}
+
+
+// ==========================================
+// Ocultar overlay
+// ==========================================
+
+if (!skipOverlay) {
+
+    overlay.classList.remove('show');
+
+    setTimeout(() => {
+        overlay.classList.add('hidden');
+    }, 400);
+
+}
+
+
+lastTabId = targetId;
+
+}, skipOverlay ? 0 : 200);
+
+}
+
+// Click en tabs
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    const targetId = tab.dataset.tab;
+    if (targetId === lastTabId) return;
+    activateTab(targetId);
+    setMobileMenuState(false);
+  });
+});
+
+// Manejo de orientación
+window.addEventListener('orientationchange', () => {
+  setTimeout(() => {
+    if (lastTabId) {
+      const activeSwiper = document.getElementById(lastTabId);
+      if (activeSwiper) updateBackground(activeSwiper);
+    }
+  }, 300);
+});
+
+// Al cargar la página -> siempre ir a "inicio" pero sin overlay
+window.addEventListener('DOMContentLoaded', () => {
+  activateTab('inicio', { skipScroll: true, skipSlideReset: true, skipOverlay: true });
+});
+
+// Manejar botón Atrás/Adelante
+window.addEventListener('hashchange', () => {
+  const hash = window.location.hash.substring(1);
+  if (hash && hash !== lastTabId) {
+    activateTab(hash, { skipSlideReset: true });
+  }
+});
+
+const STORAGE_KEY = "notifications_data";
+
+function updateNotificationBadge() {
+
+  const badge = document.getElementById("notificationBadge");
+  if (!badge) return;
+
+  const notifications =
+    JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+  const count = notifications.length;
+
+  if (count > 0) {
+    badge.style.display = "flex";
+    badge.textContent = count;
+  } else {
+    badge.style.display = "none";
+  }
+
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  updateNotificationBadge();
+});
+
+var container = document.getElementById('continueWatchingContainer');
+var continueWatchingSection = document.querySelector('.movie-section.continue-watching');
+
+continueWatchingSection.style.display = 'none';
+
+function normalizeKey(item) {
+  if (item.key) return item.key;
+
+  if (item.data?.videoUrl && item.data?.seriesId) {
+    return `continue_${item.data.seriesId}_${item.data.videoUrl}`;
+  }
+
+  if (item.data?.link) {
+    return item.data.link;
+  }
+
+  return Math.random().toString();
+}
+
+// -----------------------------
+// LOCAL STORAGE
+// -----------------------------
+function loadContinueWatchingLocal() {
+
+  const items = [];
+
+  for (var i = 0; i < localStorage.length; i++) {
+
+    var key = localStorage.key(i);
+
+    try {
+      var raw = localStorage.getItem(key);
+      if (!raw) continue;
+
+      var itemData = JSON.parse(raw);
+      if (!itemData || typeof itemData !== 'object') continue;
+
+      // 🎬 Películas
+if (key.startsWith('progress_')) {
+
+  const movieId = key.replace('progress_', '');
+
+  const progress = parseFloat(localStorage.getItem(key)) || 0;
+
+  const duration =
+    parseFloat(localStorage.getItem(`duration_${movieId}`)) || 0;
+
+  if (
+    movieId &&
+    duration > 0 &&
+    progress > 5 &&
+    progress < duration * 0.9
+  ) {
+
+    const movieData = JSON.parse(
+      localStorage.getItem(`movie_${movieId}`) || '{}'
+    );
+
+    items.push({
+      key,
+      data: {
+        ...movieData,
+        movieId,
+        progress,
+        duration
+      },
+      type: 'movie'
+    });
+
+    console.log("🎬 AGREGANDO PELÍCULA:", {
+      movieId,
+      progress,
+      duration,
+      movieData
+    });
+  }
+}
+
+      console.log("KEY:", key);
+      // 📺 Series
+      if (key.startsWith('continue_')) {
+console.log("CONTINUE:", itemData);
+        const seriesId = itemData.seriesId;
+        const videoUrl = itemData.videoUrl;
+
+        if (!seriesId || !videoUrl) continue;
+
+        const progressKey = `progress_${seriesId}_${videoUrl}`;
+        const durationKey = `duration_${seriesId}_${videoUrl}`;
+
+        const progress = parseFloat(localStorage.getItem(progressKey)) || 0;
+        const duration = parseFloat(localStorage.getItem(durationKey)) || itemData.duration || 1;
+
+        if (progress < duration * 0.9) {
+
+          itemData.progress = progress;
+          itemData.duration = duration;
+
+          items.push({ key, data: itemData, type: 'series' });
+          console.log("AGREGANDO SERIE:", {
+  key,
+  progress,
+  duration,
+  itemData
+});
+        }
+      }
+
+    } catch (e) {
+      console.warn("LocalStorage corrupt item skipped:", key);
+    }
+  }
+
+  return items;
+}
+
+
+
+// -----------------------------
+// SUPABASE
+// -----------------------------
+async function loadContinueWatchingFromSupabase() {
+
+  try {
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return [];
+
+        const { data, error } = await supabase
+      .from('progresos')
+      .select('series_id, ultimo_visto, updated_at')
+      .eq('id', user.id)
+      .order('updated_at', { ascending: false });
+
+    if (error) {
+      console.error(error);
+      return [];
+    }
+
+        return data
+      .filter(item => item.ultimo_visto)
+      // 🔒 Filtrar contenido YA COMPLETADO o OCULTO localmente
+      .filter(item => {
+        const sid = item.series_id;
+        const visto = item.ultimo_visto || {};
+
+        // 1. Marcado como completado en Supabase → oculto en TODOS los dispositivos
+        if (visto.completado === true) {
+          console.log("✅ [FILTER] Contenido completado excluido:", sid);
+          return false;
+        }
+
+        // 2. Oculto manualmente en este dispositivo ("Quitar de continuar viendo")
+        if (getHiddenList().includes(sid)) {
+          console.log("🙈 [FILTER] Oculto localmente, excluido:", sid);
+          return false;
+        }
+
+        // 3. Completado según progreso local (≥90%)
+        if (sid.startsWith('movie_')) {
+          const movieId = sid.replace('movie_', '');
+          if (isMovieCompleted(movieId)) {
+            console.log("🎬 [FILTER] Película completada excluida:", movieId);
+            return false;
+          }
+        } else {
+          if (isSeriesCompleted(sid)) {
+            console.log("📺 [FILTER] Serie completada excluida:", sid);
+            return false;
+          }
+        }
+        return true;
+      })
+      .map(item => {
+        const visto = item.ultimo_visto || {};
+        const isMovie = item.series_id.startsWith('movie_');
+        if (isMovie) {
+          const movieId = item.series_id.replace('movie_', '');
+
+          // 📊 Cruzar con el progreso LOCAL para la barra de Continuar Viendo
+          const progress = parseFloat(localStorage.getItem(`progress_${movieId}`)) || 0;
+          const duration = parseFloat(localStorage.getItem(`duration_${movieId}`)) || 0;
+
+          return {
+            key: `continue_${item.series_id}`,
+            data: {
+              ...visto,
+              movieId,
+              progress,
+              duration,
+              tipo: 'movie',
+              visto: true,
+              updatedAt: visto.updatedAt || 0
+            },
+            type: 'movie'
+          };
+        }
+
+        // 📊 Series: progreso local desde continue_<sid> o por episodio
+        const sid = item.series_id;
+        let seriesLocal = {};
+        try {
+          seriesLocal = JSON.parse(localStorage.getItem(`continue_${sid}`) || '{}');
+        } catch (_) { seriesLocal = {}; }
+
+        let sProgress = parseFloat(seriesLocal.progress) || 0;
+        let sDuration = parseFloat(seriesLocal.duration) || 0;
+
+        // Fallback: progreso por episodio específico
+        if (!sDuration && visto.videoUrl) {
+          sProgress = parseFloat(localStorage.getItem(`progress_${sid}_${visto.videoUrl}`)) || 0;
+          sDuration = parseFloat(localStorage.getItem(`duration_${sid}_${visto.videoUrl}`)) || 0;
+        }
+
+        return {
+          key: `continue_${item.series_id}`,
+          data: {
+            ...seriesLocal,
+            seriesTitle: visto.seriesTitle || seriesLocal.seriesTitle || item.series_id,
+            episodeTitle: visto.episodeTitle || seriesLocal.episodeTitle || '',
+            poster: visto.poster || seriesLocal.poster || '',
+            link: visto.link || seriesLocal.link || '',
+            videoUrl: visto.videoUrl || seriesLocal.videoUrl || '',
+            seriesId: sid,
+            progress: sProgress,
+            duration: sDuration,
+            tipo: 'series',
+            visto: true,
+            updatedAt: visto.updatedAt || 0
+          },
+          type: 'series'
+        };
+      });
+
+  } catch (e) {
+    console.error("Supabase error:", e);
+    return [];
+  }
+}
+
+// -----------------------------
+// RENDER (UN SOLO CONTROL)
+// -----------------------------
+function renderContinueWatching(items) {
+
+  container.innerHTML = '';
+
+  if (!items || items.length === 0) {
+    continueWatchingSection.style.display = 'none';
+    return;
+  }
+
+  const uniqueMap = new Map();
+
+  items.forEach(item => {
+    const key = item.key || normalizeKey(item);
+    uniqueMap.set(key, item);
+  });
+
+  const finalItems = Array.from(uniqueMap.values());
+
+  finalItems
+    .reverse()
+    .forEach(item => {
+
+      const data = item.data;
+      if (!data) return;
+
+      const div = document.createElement('div');
+      div.classList.add('movie-item');
+
+      const link = document.createElement('a');
+      link.href = data.link || '#';
+      link.classList.add('continue-card');
+
+      const wrapper = document.createElement('div');
+      wrapper.classList.add('image-wrapper');
+
+      const img = document.createElement('img');
+      img.src = data.poster || '';
+      img.classList.add('poster');
+
+      const menuButton = document.createElement('button');
+menuButton.classList.add('menu-button');
+menuButton.innerHTML = '⋮';
+
+
+const menu = document.createElement('div');
+menu.classList.add('continue-menu');
+
+
+const removeOption = document.createElement('div');
+removeOption.classList.add('menu-option');
+removeOption.textContent = 'Quitar de Continuar viendo';
+
+
+removeOption.addEventListener('click', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+
+  // 1. Borrar de localStorage
+  localStorage.removeItem(item.key);
+
+  // También limpiar claves relacionadas si es una película local
+  if (item.key && item.key.startsWith('progress_')) {
+    const movieId = item.key.replace('progress_', '');
+    localStorage.removeItem(`duration_${movieId}`);
+    localStorage.removeItem(`hasStarted_${movieId}`);
+    localStorage.removeItem(`movie_${movieId}`);
+  }
+
+  // 2. 🙈 Ocultar localmente (Supabase NO se toca — se conserva para estadísticas)
+  let supabaseId = null;
+
+  if (item.key && item.key.startsWith('continue_')) {
+    supabaseId = item.key.replace('continue_', '');
+  } else if (item.key && item.key.startsWith('progress_')) {
+    // Película guardada solo en localStorage → su id en Supabase es movie_<movieId>
+    supabaseId = `movie_${item.key.replace('progress_', '')}`;
+  }
+
+  if (supabaseId) {
+    hideFromContinueWatching(supabaseId);
+    console.log('🙈 Ocultado de Continuar Viendo localmente:', supabaseId);
+  }
+
+  div.remove();
+
+  if (container.children.length === 0) {
+    continueWatchingSection.style.display = 'none';
+  }
+
+  menu.style.display = 'none';
+});
+
+
+menu.appendChild(removeOption);
+
+
+menuButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+
+  document.querySelectorAll('.continue-menu').forEach(m => {
+    if (m !== menu) {
+      m.style.display = 'none';
+    }
+  });
+
+  menu.style.display =
+    menu.style.display === 'block'
+      ? 'none'
+      : 'block';
+});
+
+      const progressContainer = document.createElement('div');
+      progressContainer.classList.add('progress-bar-container');
+
+      const bar = document.createElement('div');
+      bar.classList.add('progress-bar');
+
+      let percent = 0;
+
+      if (data.duration && data.progress !== undefined) {
+        percent = Math.min((data.progress / data.duration) * 100, 100);
+      }
+
+      bar.style.width = percent + '%';
+
+      progressContainer.appendChild(bar);
+      wrapper.appendChild(img);
+      wrapper.appendChild(menuButton);
+wrapper.appendChild(menu);
+      wrapper.appendChild(progressContainer);
+      link.appendChild(wrapper);
+      div.appendChild(link);
+
+      // Información debajo de la portada
+const info = document.createElement('div');
+info.classList.add('continue-info');
+
+const title = document.createElement('div');
+title.classList.add('series-title');
+
+if (item.type === 'series') {
+  title.textContent = data.seriesTitle || 'Serie';
+} else {
+  title.textContent = data.title || data.movieTitle || 'Película';
+}
+
+const episode = document.createElement('div');
+episode.classList.add('episode-title');
+
+if (item.type === 'series') {
+  episode.textContent = data.episodeTitle || '';
+}
+
+info.appendChild(title);
+
+if (episode.textContent) {
+  info.appendChild(episode);
+}
+
+div.appendChild(info);
+
+      container.appendChild(div);
+    });
+
+  continueWatchingSection.style.display = finalItems.length > 0 ? 'block' : 'none';
+}
+// -----------------------------
+// INIT (FLUJO SEGURO)
+// -----------------------------
+async function initContinueWatching() {
+
+  const localItems = loadContinueWatchingLocal();
+  const supabaseItems = await loadContinueWatchingFromSupabase();
+
+    // 🔁 Dedupe: si un contenido existe tanto local como en Supabase,
+    // se prefiere la versión LOCAL (tiene progreso real para la barra)
+    const localSupabaseIds = new Set(
+      localItems.map(i => {
+        if (i.key && i.key.startsWith('progress_')) {
+          return `movie_${i.key.replace('progress_', '')}`;
+        }
+        if (i.key && i.key.startsWith('continue_')) {
+          return i.key.replace('continue_', '');
+        }
+        return null;
+      }).filter(Boolean)
+    );
+
+    const filteredSupabase = supabaseItems.filter(si => {
+      const sid = si.data?.seriesId || (si.data?.movieId ? `movie_${si.data.movieId}` : null);
+      return !sid || !localSupabaseIds.has(sid);
+    });
+
+    const merged = [...filteredSupabase, ...localItems];
+
+  renderContinueWatching(merged);
+}
+
+initContinueWatching();
+
+
+
+  // ================================
+// 👤 PERFIL – sincronizar imágenes (UNIFICADO)
+// ================================
+function updateProfileImage(src) {
+  // Permite llamar sin parámetro (restaura desde localStorage)
+  const avatar =
+    src ||
+    localStorage.getItem('profileAvatar') ||
+    localStorage.getItem('profileImage') ||
+    (typeof DEFAULT_AVATAR !== 'undefined' ? DEFAULT_AVATAR : null);
+
+  if (!avatar) return;
+
+  const ids = [
+    'footerIconImg',
+    'footerProfileImage',
+    'profileImage',
+    'profilePageImage',
+    'headerProfileIcon',
+    'editableProfile',
+    'editableProfileInModal',
+    'avatarMain',
+    'avatarPreview',
+    'avatarCoverPreview',
+    'manageAvatar'
+  ];
+
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.tagName === 'IMG') {
+      el.src = avatar;
+    }
+  });
+
+  // Actualizar todos los iconos del header
+document.querySelectorAll(".headerProfileIcon").forEach(img => {
+  img.src = avatar;
+});
+
+  // Ocultar iconos por defecto si existen
+  ['defaultProfileIcon', 'defaultProfileIconAlt'].forEach(id => {
+    const icon = document.getElementById(id);
+    if (icon) icon.style.display = 'none';
+  });
+
+  // Guardar en ambos para compatibilidad entre páginas
+  localStorage.setItem('profileAvatar', avatar);
+  localStorage.setItem('profileImage', avatar);
+}
+
+// ================================
+// 🔄 Restaurar avatar al cargar página
+// ================================
+window.addEventListener('load', () => {
+  updateProfileImage();
+});
+
+  
+  // Ocultar footer al hacer scroll hacia abajo (con umbral para suavidad)
+  var lastScrollTop = 0;
+  var footer = document.querySelector(".footer");
+  var footerTicking = false;
+
+  window.addEventListener("scroll", function () {
+    if (footerTicking) return;
+    footerTicking = true;
+    requestAnimationFrame(function () {
+      var currentScroll = window.scrollY;
+
+      if (currentScroll > lastScrollTop + 5) {
+        footer.classList.add("hidden");
+      } else if (currentScroll < lastScrollTop - 5) {
+        footer.classList.remove("hidden");
+      }
+
+      lastScrollTop = currentScroll;
+      footerTicking = false;
+    });
+  }, { passive: true });
+
+  window.addEventListener("orientationchange", () => {
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 100); // tiempo suficiente para aplicar el cambio de orientación
+  });
+  
+  function mostrarFavoritosEnInicio() {
+    const favoritosSection = document.querySelector(".favoritos-section");
+    const favoritosContainer = document.getElementById("favoritosContainer");
+    if (!favoritosSection || !favoritosContainer) return;
+  
+    const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+    favoritosContainer.innerHTML = "";
+  
+    if (favoritos.length === 0) {
+      favoritosSection.style.display = "none"; // Oculta la sección si no hay favoritos
+      return;
+    }
+  
+    favoritosSection.style.display = "block"; // Muestra la sección
+  
+    favoritos.forEach((favorito) => {
+      const item = document.createElement("a");
+      item.href = favorito.enlace;
+      item.classList.add("movie-item");
+  
+      const imagen = document.createElement("img");
+      imagen.src = favorito.imagen.match(/src="([^"]+)"/)[1]; // Extrae la URL de la imagen
+      imagen.alt = favorito.nombre;
+      imagen.classList.add("poster");
+  
+      const titulo = document.createElement("p");
+      titulo.classList.add("movie-title");
+  
+      // Rompe enlaces invisibles si contienen punto o arroba
+      const nombreSeguro = favorito.nombre.replace(/\./g, ".\u200B").replace(/@/g, "@\u200B");
+      titulo.textContent = nombreSeguro;
+  
+      item.appendChild(imagen);
+      item.appendChild(titulo);
+      favoritosContainer.appendChild(item);
+    });
+  }
+  
+  // Ejecutar al cargar la página
+  window.addEventListener("load", mostrarFavoritosEnInicio);
+  
+  // Volver a mostrar si se actualizan los favoritos
+  window.addEventListener("favoritosActualizados", mostrarFavoritosEnInicio);
+  
+
+  window.addEventListener("beforeunload", () => {
+  sessionStorage.setItem("scrollTop", window.scrollY);
+});
+
+window.addEventListener("load", () => {
+  const scrollTop = sessionStorage.getItem("scrollTop");
+  if (scrollTop) {
+    window.scrollTo(0, parseInt(scrollTop));
+  }
+});
+
+let lastScroll = 0;
+const header = document.querySelector('header');
+const tabsContainer = document.querySelector('.tabs');
+let headerTicking = false;
+
+window.addEventListener('scroll', () => {
+  const isDrawerViewport = window.matchMedia('(max-width: 1024px), (orientation: landscape)').matches;
+
+  if (isDrawerViewport) {
+    const currentScroll = window.pageYOffset;
+
+    if (currentScroll > lastScroll + 5) {
+      header?.classList.add('hidden');
+    } else if (currentScroll < lastScroll - 5) {
+      header?.classList.remove('hidden');
+    }
+
+    if (tabsContainer) {
+      tabsContainer.classList.remove('open');
+      tabsContainer.classList.add('hidden');
+    }
+
+    lastScroll = currentScroll;
+    return;
+  }
+
+  if (headerTicking) return;
+  headerTicking = true;
+
+  requestAnimationFrame(() => {
+    const currentScroll = window.pageYOffset;
+
+    if (currentScroll > lastScroll + 5) {
+      header?.classList.add('hidden');
+      if (tabsContainer) {
+        tabsContainer.classList.add('hidden');
+        tabsContainer.classList.remove('open');
+      }
+    } else if (currentScroll < lastScroll - 5) {
+      header?.classList.remove('hidden');
+      if (tabsContainer) {
+        tabsContainer.classList.remove('hidden');
+        tabsContainer.classList.remove('open');
+      }
+    }
+
+    lastScroll = currentScroll;
+    headerTicking = false;
+  });
+}, { passive: true });
+
+if (window.matchMedia('(max-width: 1024px), (orientation: landscape)').matches) {
+  if (header) header.classList.remove('hidden');
+  if (tabsContainer) {
+    tabsContainer.classList.add('hidden');
+    tabsContainer.classList.remove('open');
+  }
+}
+
+
+// ==== Movie sections con flechas ====
+document.querySelectorAll('.movie-section').forEach(section => {
+  const scrollContainer = section.querySelector('.scroll-container') || section.querySelector('.horizontal-scroll-container');
+  const btnLeft = section.querySelector('.scroll-btn.left');
+  const btnRight = section.querySelector('.scroll-btn.right');
+
+  if (!scrollContainer || !btnLeft || !btnRight) return;
+
+  btnLeft.addEventListener('click', () => {
+    scrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+  });
+
+  btnRight.addEventListener('click', () => {
+    scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
+  });
+});
+
+// ==== Top 10 sections con scroll ====
+document.querySelectorAll('.top-10').forEach(section => {
+  const scrollable = section.querySelector('.scrollable');
+  const btnLeft = section.querySelector('.scroll-btn.left');
+  const btnRight = section.querySelector('.scroll-btn.right');
+
+  if (!scrollable || !btnLeft || !btnRight) return;
+
+  btnLeft.addEventListener('click', () => {
+    scrollable.scrollBy({ left: -300, behavior: 'smooth' });
+  });
+
+  btnRight.addEventListener('click', () => {
+    scrollable.scrollBy({ left: 300, behavior: 'smooth' });
+  });
+});
+
+// ==== Wrappers genéricos con fallback ====
+document.querySelectorAll('.scroll-wrapper').forEach(wrapper => {
+  const container = wrapper.querySelector('.scrollable') || wrapper.querySelector('.scroll-container');
+  const btnLeft = wrapper.querySelector('.scroll-btn.left');
+  const btnRight = wrapper.querySelector('.scroll-btn.right');
+
+  if (!container || !btnLeft || !btnRight) return;
+
+  btnLeft.addEventListener('click', () => {
+    container.scrollBy({ left: -300, behavior: 'smooth' });
+  });
+
+  btnRight.addEventListener('click', () => {
+    container.scrollBy({ left: 300, behavior: 'smooth' });
+  });
+});
+
+
+
+ /* ===============================
+   SISTEMA UNIVERSAL DE NOTIFICACIONES
+   -> Mostrar notificación por ID y versión
+================================= */
+
+function showNotificationOnce(id, version = "v4", delay = 1000) {
+  setTimeout(() => {
+    const key = `dismissed_${id}_${version}`;
+    const dismissed = localStorage.getItem(key);
+
+    if (!dismissed) {
+      const noti = document.getElementById(id);
+      const overlay = document.getElementById("notificationOverlay");
+
+      if (noti && overlay) {
+        noti.style.display = "block";
+        overlay.style.display = "block";
+
+        noti.querySelectorAll("[data-close]").forEach(btn => {
+          btn.onclick = () => {
+            localStorage.setItem(key, "true");
+            closeFloatingNotification();
+          };
+        });
+      }
+    }
+  }, delay);
+}
+
+function closeFloatingNotification() {
+  document.getElementById("notificationOverlay").style.display = "none";
+  document.querySelectorAll(".floating-notification").forEach(n => {
+    n.style.display = "none";
+  });
+}
+
+// ⭐⭐ LLAMADA AQUÍ MISMO ⭐⭐
+showNotificationOnce("notificationTelegram", "v5", 1500);
+
+showNotificationOnce("notificationEpisodio", "v10", 2000);
+
+showNotificationOnce("notificationPelicula", "v27", 2500);
+
+showNotificationOnce("notificationUpdate", "v18", 3000);
+
+if (sessionStorage.getItem("intro_shown")) {
+  setTimeout(() => {
+    const intro = document.getElementById("opening");
+    if (!intro) return;
+    intro.classList.add("hide");
+    setTimeout(() => intro.remove(), 1200);
+  }, 7000);
+}
+
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const img = entry.target;
+
+      img.decoding = "async"; // decodifica sin bloquear el scroll
+      img.src = img.dataset.src;
+
+      img.onload = () => {
+        img.classList.add("loaded");
+      };
+
+      observer.unobserve(img);
+    }
+  });
+}, {
+  // Carga las imágenes ANTES de entrar en pantalla para que no aparezcan
+  // de golpe al deslizar (pop-in)
+  rootMargin: "600px 0px"
+});
+
+document.querySelectorAll(".lazy-img").forEach(img => {
+  observer.observe(img);
+});
+
+
+window.addEventListener("load", () => {
+
+  const hash = window.location.hash.replace("#", "");
+
+  activateTab(hash || "inicio", {
+    skipScroll: true,
+    skipOverlay: true
+  });
+
+});
+
+// Detectar atrás/adelante del navegador
+window.addEventListener("hashchange", () => {
+
+  const hash = window.location.hash.replace("#", "");
+
+  activateTab(hash || "inicio", {
+    skipScroll: true,
+    skipOverlay: true
+  });
+
+});
+
+
+/* ===============================
+   NOTIFICACIONES FLOTANTES DINÁMICAS
+   DESDE SUPABASE
+================================= */
+
+async function loadFloatingNotification() {
+
+  const { data, error } = await supabase
+    .from("floating_notifications")
+    .select("*")
+    .eq("enabled", true)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .single();
+
+  if (error) {
+    console.log("No hay notificación flotante:", error);
+    return;
+  }
+
+  if (!data) return;
+
+  // ===============================
+  // Buscar el contenido en movies.json
+  // ===============================
+
+  const movies = await fetch("movies.json")
+    .then(r => r.json());
+
+  const movie = movies.find(m =>
+    ("/" + m.link).replace("//", "/") === data.action
+  );
+
+  console.log("🎬 Contenido encontrado:", movie);
+
+  console.log("TIPO SUPABASE:", data.type);
+
+  let header = data.title;
+let description = data.message;
+let year = "";
+let originalDescription = data.message;
+
+  if (movie) {
+
+  year =
+    (movie.details.match(/\d{4}/) || [""])[0];
+
+
+  switch (data.type) {
+
+    case "new_movie":
+        header = `
+        ¡Nueva película disponible!<br>
+        <strong>“${movie.title}”</strong><br>
+        (${year})
+        `;
+        break;
+
+    case "new_series":
+        header = `
+        ¡Nueva serie disponible!<br>
+        <strong>“${movie.title}”</strong><br>
+        (${year})
+        `;
+        break;
+
+    case "movie":
+        header = `
+        Recomendación para ti<br>
+        <strong>“${movie.title}”</strong><br>
+        (${year})
+        `;
+        break;
+
+    case "series":
+        header = `
+        No te pierdas esta serie<br>
+        <strong>“${movie.title}”</strong><br>
+        (${year})
+        `;
+        break;
+
+    case "season":
+        header = `
+        Nueva temporada disponible<br>
+        <strong>“${movie.title}”</strong><br>
+        (${year})
+        `;
+        break;
+
+    case "collection":
+        header = `
+        Nueva colección<br>
+        <strong>“${movie.title}”</strong><br>
+        (${year})
+        `;
+        break;
+
+    case "update":
+        header = `
+        Nueva actualización<br>
+        <strong>“${movie.title}”</strong><br>
+        (${year})
+        `;
+        break;
+
+    default:
+        header = `
+        <strong>“${movie.title}”</strong><br>
+        (${year})
+        `;
+}
+
+
+
+    // ===============================
+    // Obtener descripción desde la página
+    // ===============================
+
+    try {
+
+      const response = await fetch(movie.link);
+
+      const html = await response.text();
+
+      const doc = new DOMParser().parseFromString(
+        html,
+        "text/html"
+      );
+
+   originalDescription =
+  doc.querySelector(".description")
+    ?.textContent
+    .trim() || data.message;
+
+
+if (originalDescription.length > 100) {
+  originalDescription =
+    originalDescription.substring(0,100).trim() + "...";
+}
+
+
+
+
+// Solo descripción de la historia
+let enjoyText = "";
+
+if (data.type === "series") {
+  enjoyText = "Disfruta todos los episodios en Digital Knight.";
+} else {
+  enjoyText = "Disfruta esta película en Digital Knight.";
+}
+
+
+description = `
+${originalDescription}
+<br><br>
+${enjoyText}
+`;
+      
+
+      // Resaltar automáticamente el título
+const escapedTitle = movie.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+description = description.replace(
+  new RegExp(escapedTitle, "gi"),
+  `<strong>${movie.title}</strong>`
+);
+
+      console.log("📝 Descripción:", description);
+
+    } catch (err) {
+
+      console.error(
+        "Error cargando descripción:",
+        err
+      );
+
+    }
+
+  }
+
+  // ===============================
+  // CONTROL MOSTRAR UNA SOLA VEZ
+  // ===============================
+
+  const notificationKey =
+    `floating_seen_${data.id}_${data.version}`;
+
+  if (
+    data.show_once &&
+    localStorage.getItem(notificationKey)
+  ) {
+    console.log(
+      "⏩ Flotante ya vista:",
+      notificationKey
+    );
+    return;
+  }
+
+  const box =
+    document.getElementById(
+      "dynamicFloatingNotification"
+    );
+
+  if (!box) return;
+
+  document.getElementById(
+    "dynamicNotificationImage"
+  ).src = data.image;
+
+console.log("HEADER FINAL:", header);
+console.log("DESCRIPTION FINAL:", description);
+
+  document.getElementById(
+  "dynamicNotificationTitle"
+).innerHTML = header;
+
+
+document.getElementById(
+  "dynamicNotificationMessage"
+).innerHTML = description;
+
+  const button =
+    document.getElementById(
+      "dynamicNotificationButton"
+    );
+
+  button.href =
+    data.action.replace(/^\//, "");
+
+  button.textContent =
+    data.button_text || "VER AHORA";
+
+  box.style.display = "block";
+
+  const overlay =
+    document.getElementById(
+      "notificationOverlay"
+    );
+
+  if (overlay) {
+    overlay.style.display = "block";
+  }
+
+  box.querySelectorAll("[data-close]")
+    .forEach(btn => {
+
+      btn.onclick = () => {
+
+        if (data.show_once) {
+
+          localStorage.setItem(
+            notificationKey,
+            "true"
+          );
+
+          console.log(
+            "✅ Flotante guardada como vista:",
+            notificationKey
+          );
+
+        }
+
+        box.style.display = "none";
+
+        if (overlay) {
+          overlay.style.display = "none";
+        }
+
+      };
+
+    });
+
+}
+
+loadFloatingNotification();
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+
+    console.log('🚀 script.js cargado');
+
+    const cargado = await cargarSwiperInicio();
+
+    if (cargado) {
+
+        console.log('✅ swiper-data.json conectado correctamente');
+
+        const inicio = document.getElementById('inicio');
+
+        if (inicio && !swiperInstances.inicio) {
+
+            swiperInstances.inicio = createSwiper(inicio);
+
+            swiperInstances.inicio.update();
+
+            swiperInstances.inicio.updateSize();
+
+            swiperInstances.inicio.updateSlides();
+
+            updateBackground(inicio);
+
+            swiperInstances.inicio.autoplay.start();
+
+        }
+
+    } else {
+
+        console.error(
+            '❌ No se pudo cargar el contenido de Inicio'
+        );
+
+    }
+
+});
+
+

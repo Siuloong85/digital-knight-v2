@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+
+
+  <title>Death Note</title>
+  <script src="../loader.min.js"></script>
+  <meta name="theme-color" content="#01011d">
+  <meta name="background-color" content="#01011d">
+<meta name="msapplication-navbutton-color" content="#01011d">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#01011d" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="" id="ogTitle">
+<meta property="og:description" content="" id="ogDesc">
+<meta property="og:image" content="" id="ogImage">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="" id="ogUrl">
+<meta property="og:type" content="video.movie">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="" id="twTitle">
+<meta name="twitter:description" content="" id="twDesc">
+<meta name="twitter:image" content="" id="twImage">
+
+
+  <script disable-devtool-auto src="https://cdn.jsdelivr.net/npm/disable-devtool@latest"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-ChzD5StK818vBAQZL5n94vJUmJl+jz1Ro8AiyOsd0GWIT6saFOY+zG+VVM/LMxltwGPplT7tI9On7kVCXkmVc=" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined">
+   <link rel="icon" type="image/png" sizes="32x32" href="../logo-2025.png">
+    <link rel="manifest" href="../manifest.json">
+   <link href="https://vjs.zencdn.net/8.5.2/video-js.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="../anime.css">
+  <style>
+   
+
+.cover {
+  position: relative;
+  width: 100%;
+  background: url("https://od.lk/s/M18zMzEyNzY1Mjhf/Copilot_20260716_235407.png") no-repeat center top;
+  background-size: contain;
+  background-position: center top;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.cover::before,
+.cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+
+
+.cover-landscape {
+  position: absolute;
+  inset: 0;
+  background: url("https://od.lk/s/M18zMzEyNzc3MjZf/Copilot_20260717_000058.png") no-repeat center top;
+  background-size: cover;
+  z-index: 0; /* <- Esto es clave para que se vea debajo del contenido, pero por encima del fondo negro */
+  display: none;
+}
+
+.cover::backdrop,
+.cover-landscape::backdrop {
+  transition: none;
+}
+
+.cover::before,
+.cover::after,
+.cover-landscape::before,
+.cover-landscape::after {
+  transition: none; /* No tocamos tus gradientes */
+}
+
+.cover-image-overlay,
+.cover-landscape-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  transition: background 0.4s ease;
+  z-index: 0.5; /* justo encima del fondo, pero debajo de contenido y gradientes */
+  pointer-events: none;
+}
+
+
+
+
+
+/* Ocultar sombras en landscape */
+@media screen and (orientation: landscape) {
+  .cover::before,
+  .cover::after {
+    display: none;
+  }
+
+  .cover-landscape {
+    display: block;
+  }
+}
+
+.cover-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Mostrar landscape solo en modo horizontal */
+@media screen and (orientation: landscape) {
+  .cover {
+    background: none;
+  }
+
+  .cover-landscape {
+    display: block;
+  }
+}
+
+
+.cover-content img.logo {
+    width: 220px;
+    margin-bottom: 10px;
+  }
+
+  @media (orientation: landscape) {
+    
+  
+    .cover-content img.logo {
+      width: 120px;
+      margin: 0 0 0.5rem 0;
+    }
+  
+    
+  }
+  
+  
+  @media (min-width: 1200px) {
+    .cover-content img.logo {
+      margin-top: 330px;
+      width: 320px;
+      margin-bottom: 0px;
+    }
+  
+    
+  }
+
+    </style>
+</head>
+<body class="page-loading"
+      oncontextmenu="return false"
+      ondragstart="return false"
+      onselectstart="return false">
+  <div class="custom-top-bar">
+    <button onclick="window.history.back()">
+      <span class="material-icons">arrow_back</span>
+    </button>
+    <button onclick="location.reload()">
+      <span class="material-icons">refresh</span>
+    </button>
+  </div>
+    <header id="header">
+        <a href="javascript:history.back();" id="back-link" class="icon-link" tabindex="1">
+            <span class="material-icons">chevron_left</span>
+        </a>
+        <span id="page-title" class="page-title">Death Note</span> <!-- Título oculto por defecto -->
+    </header>
+    <!-- Tabs para pantallas grandes -->
+<div class="tabs tabs-secondary">
+  <!-- Logo a la izquierda -->
+  <a href="../main.html">
+    <img src="https://od.lk/s/M18zMTIxODI5MjVf/Knight.png" width="150px" class="logo" />
+  </a>
+
+  <!-- Tabs centradas -->
+  <div class="tabs-wrapper">
+    <a href="../main.html#inicio" class="tab">Inicio</a>
+    <a href="../main.html#series" class="tab">Películas</a>
+    <a href="../main.html#peliculas" class="tab">Series</a>
+    <a href="../main.html#hbo" class="tab">Anime</a>
+    <a href="../main.html#documentales" class="tab">Familia</a>
+    <a href="../main.html#mi-lista" class="tab">Doramas</a>
+  </div>
+
+  <!-- Íconos a la derecha -->
+  <div class="icons">
+    <!-- FAVORITOS -->
+    <a href="../new favoritos 2025.html" class="header-only">
+      <span class="material-icons-outlined">bookmark_border</span>
+    </a>
+
+    <!-- BUSCAR -->
+    <a href="../New search page 2025.html" class="header-only">
+      <span class="material-icons-outlined">search</span>
+    </a>
+
+    <!-- PERFIL -->
+    <a href="../perfil digital Knight 2025.html" class="header-only">
+      <img src="https://od.lk/s/M18zMTIxOTE0Mjlf/logo%202025.png" alt="Perfil" class="profile-icon-footer" id="headerProfileIcon" />
+    </a>
+  </div>
+</div>
+
+<!-- COVER / PORTADA -->
+<div class="cover" id="cover">
+  <!-- FONDO LANDSCAPE SOLO PARA MODO HORIZONTAL -->
+  <div class="cover-landscape">
+    <div class="cover-landscape-image-overlay"></div> <!-- Overlay para imagen landscape -->
+    <div class="cover-landscape-shadow-left"></div>
+  </div>
+
+  <div class="cover-image-overlay"></div> <!-- Overlay para imagen portrait -->
+  
+  <div class="cover-content">
+    <img src="https://image.tmdb.org/t/p/original/8UX1i5i49GN7cXKkIvCGmaxfqJm.png" alt="Death Note Logo "class="logo" oncontextmenu="return false" draggable="false">
+    <div class="meta">16+   1 temporada   2006   Dob Lat</div>
+  
+      <button id="resumeButton" class="watch-button" onclick="playLastWatchedEpisode()" tabindex="3">
+        <span class="material-icons">play_arrow</span> Mira T1 E1
+      </button>
+  
+      <!-- NUEVO BLOQUE DE ICONOS -->
+      <div class="iconos">
+        <!-- Botón de Favoritos -->
+        <button id="favoritoBtn" data-identificador="Death Note" onclick="toggleFavorito()">
+          <span id="favoritoIcon" class="material-icons-outlined">add</span>
+          <p id="favoritoText">Favoritos</p>
+        </button>
+  
+        <!-- Info oculta para localStorage -->
+        <div id="favoritoData" style="display: none;">
+          <img id="favoritoImagen" class="poster" src="https://image.tmdb.org/t/p/original/480WMTHF71BiUEYExNKY1uJEKq3.jpg" alt="Poster de la Película">
+          <a id="favoritoEnlace" href="death-note.html"></a>
+          <span id="nombre">Death Note</span>
+      </div>
+  
+       
+  
+        <!-- Botón de Compartir -->
+        <div class="action-item" id="compartirBtn">
+          <span class="material-icons-outlined">share</span>
+          <p>Compartir</p>
+        </div>
+              </div>
+  
+      <div class="description">
+        Light Yagami es un joven estudiante que un día encuentra un cuaderno llamado Death Note que tiene una macabra propiedad: si el nombre de una persona aparece escrito en él, morirá. Light decide, entonc...  </div>
+    </div>
+  </div>
+  
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('episodes')">Episodios</button>
+    <button class="tab" onclick="showTab('suggested')">Quizá también te guste</button>
+  </div>
+  
+  <div id="episodes" class="tab-content">
+    <div class="season-selector">
+      <select id="seasonSelect" onchange="renderEpisodes()"></select>
+    </div>
+    <div id="episodeList"></div>
+  </div>
+  
+  <div id="suggested" class="tab-content" style="display: none;">
+    <div class="suggested-grid">
+
+      <div class="suggested-item">
+        <a href="my-hero-academia.html">
+          <img src="https://image.tmdb.org/t/p/w300/phuYuzqWW9ru8EA3HVjE9W2Rr3M.jpg" alt="My Hero Academia" oncontextmenu="return false" draggable="false">
+        </a>
+        <div class="suggested-info">
+          <div class="title">My Hero Academia</div>
+          <div class="meta-row">
+            <span class="meta">Dob | Lat</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="suggested-item">
+        <a href="attack-on-titan.html">
+          <img src="https://image.tmdb.org/t/p/original/yNI1GpgU3BH4fljGNsTCWTcVuwS.jpg" alt="Attack on Titan" oncontextmenu="return false" draggable="false">
+        </a>
+        <div class="suggested-info">
+          <div class="title">Attack on Titan</div>
+          <div class="meta-row">
+            <span class="meta">Dob | Lat</span>
+          </div>
+        </div>
+      </div>
+    
+      <div class="suggested-item">
+        <a href="Las Guerreras Mágicas.html">
+          <img src="https://image.tmdb.org/t/p/original/pm3hODqtNDLqucDVvakky8FrhMx.jpg" alt="Las Guerreras Mágicas (1994)" oncontextmenu="return false" draggable="false">
+        </a>
+        <div class="suggested-info">
+          <div class="title">Las Guerreras Mágicas (1994)</div>
+          <div class="meta-row">
+            <span class="meta">Dob | Lat</span>
+          </div>
+        </div>
+      </div>
+    
+      <div class="suggested-item">
+        <a href="Los Caballeros del Zodiaco.html">
+          <img src="https://image.tmdb.org/t/p/original/r6zH9uZkgnMGG13+kWZag36Jafmn.jpg" alt="Los Caballeros del Zodiaco (1986)" oncontextmenu="return false" draggable="false">
+        </a>
+        <div class="suggested-info">
+          <div class="title">Los Caballeros del Zodiaco (1986)</div>
+          <div class="meta-row">
+            <span class="meta">Dob | Lat</span>
+          </div>
+        </div>
+      </div>
+</div>
+        </div>
+    
+
+  
+  <!-- OVERLAY -->
+<div id="menuOverlay" class="menu-overlay hidden" onclick="closeSeasonMenu()"></div>
+
+<!-- MENÚ DESLIZANTE DE TEMPORADAS -->
+<div id="seasonMenu" class="season-menu hidden">
+  <div class="season-menu-header">
+    <div class="menu-drag-indicator"></div>
+  </div>
+  <div id="seasonOptions"></div>
+</div>
+
+  
+  
+<!-- PLAYER -->
+<div class="player" id="player">
+  <video
+  id="video"
+  class="video-js vjs-default-skin"
+  preload="auto"
+  width="100%"
+  height="100%"
+    poster="https://wallpapercave.com/wp/wp5415042.jpg"
+    data-setup='{"controls": false, "autoplay": false, "preload": "auto"}'>
+    <source id="videoSource" src="" type="video/mp4" />
+  </video>
+
+  <!-- Loader -->
+  <div class="video-loader hidden" id="videoLoader">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Aspect Ratio Label -->
+  <div id="aspectLabel" style="
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 16px;
+    display: none;
+    z-index: 9999;
+  ">
+    cover
+  </div>
+
+ <div class="overlay-top" id="overlayTop"></div>
+<div class="overlay-bottom" id="overlayBottom"></div>
+
+    
+    <div class="overlay" id="overlay"></div>
+
+  <!-- Botón Omitir Intro -->
+  <div class="skip-intro hidden" id="skipIntroBtn" onclick="skipIntro()">
+    <span class="material-icons">fast_forward</span>
+    <span class="label">Omitir intro</span>
+  </div>
+
+  <!-- Botón Siguiente Episodio -->
+   <!-- Botón Siguiente Episodio -->
+    <div class="next-episode hidden" id="nextEpisodeBtn" onclick="playNextEpisode()">
+      <div class="icon-container">
+        <svg class="circle-timer" viewBox="0 0 36 36">
+          <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 1 1 0 31.831 a 15.9155 15.9155 0 1 1 0 -31.831"/>
+          <path class="circle-fill" id="circleProgress" stroke-dasharray="0, 100" d="M18 2.0845
+            a 15.9155 15.9155 0 1 1 0 31.831
+            a 15.9155 15.9155 0 1 1 0 -31.831"/>
+        </svg>
+        <span class="material-icons play-icon">play_arrow</span>
+      </div>
+      <span class="label" id="nextEpisodeLabel">Siguiente episodio</span>
+    </div>
+  
+    <div class="controls" id="controls">
+      <div class="top-bar">
+        <div class="icon-btn material-icons" onclick="goBack()">chevron_left</div>
+        <div style="display: flex; gap: 15px;">
+  
+         <!-- Botón de idioma con mini menú -->
+<!--
+<div class="icon-btn" id="langBtnWrapper" style="position:relative; display:flex; align-items:center; gap:5px;">
+  <span class="material-icons" id="langIcon">chat</span>
+  
+  <div id="langMenu" class="lang-menu">
+    <div class="lang-option" data-lang="latino">
+      <span class="check"></span> Latino
+    </div>
+    <div class="lang-option" data-lang="ingles">
+      <span class="check"></span> Inglés (Subtitulada)
+    </div>
+    <button id="langConfirmBtn">Listo</button>
+  </div>
+</div>
+-->
+  
+  <!-- Botón Cast -->
+  <div class="icon-btn material-icons" onclick="castCurrentVideo()">cast</div>
+  
+  <!-- Botón Aspect Ratio -->
+  <div class="icon-btn material-icons" onclick="toggleAspectRatio()">aspect_ratio</div>
+  </div>
+  </div>
+
+    <div class="center-controls">
+      <button class="btn" onclick="skip(-10)">
+        <span class="material-icons">replay_10</span>
+      </button>
+      <button class="btn" id="playPauseBtn" onclick="togglePlay()">
+        <span class="material-icons">play_arrow</span>
+      </button>
+      <button class="btn" onclick="skip(10)">
+        <span class="material-icons">forward_10</span>
+      </button>
+    </div>
+
+    <div class="bottom-bar">
+      <div id="episodeHeader">
+        <div class="title">Death Note</div>
+        <div class="subtitle" id="episodeSubtitle"></div>
+      </div>
+
+      <div class="progress-container">
+        <div class="buffer-bar" id="bufferBar"></div>
+        <input type="range" class="progress" id="progress" value="0" max="100">
+        <div class="time" id="duration">- 00:00</div>
+      </div>
+
+      <!-- 🚀 Botones Extra (Reiniciar / Siguiente Episodio) -->
+      <div class="extra-controls">
+        <button class="btn" onclick="restartVideo()">
+          <span class="material-icons">skip_previous</span>
+          <span class="label">Reiniciar</span>
+        </button>
+        <button class="btn" onclick="playNextEpisode()">
+          <span class="material-icons">skip_next</span>
+          <span class="label">Sig. Epi</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  
+<footer class="footer">
+  <a href="../main.html" class="footer-icon" tabindex="14">
+      <span class="material-icons-outlined">home</span>
+      <span class="material-icons">home</span>
+  </a>
+  <a href="../new favoritos 2025.html" class="footer-icon" tabindex="15">
+      <span class="material-icons-outlined">bookmark_border</span>
+      <span class="material-icons">bookmark</span>
+  </a>
+   <a href="../downloads.html" class="footer-icon download-footer" tabindex="16">
+    <span class="material-icons-outlined">arrow_downward</span>
+    <span class="material-icons">arrow_downward</span>
+</a>
+  <a href="../perfil digital Knight 2025.html" class="footer-icon" tabindex="17">
+      <img src="https://od.lk/d/M18zMDc1MjMzOTdf/DIGITAL%20KNIGHT2.png" alt="Icono de Perfil" id="footerIconImg" class="profile-icon-footer">
+  </a>
+</footer>
+
+  <script src="https://vjs.zencdn.net/8.5.2/video.min.js"></script>
+
+  <script src="../share.js"></script>
+
+<script>
+
+const seriesId = "death-note-13916";
+window.seriesId = seriesId;
+
+// --- PLAYLIST ---
+const playlist = JSON.parse(`[
+  {
+    "season": "Temporada 1",
+    "episodes": [
+      {
+        "title": "E1: Renacimiento",
+        "meta": "16+ · 21m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/3DBzrTd2ZUleqKlGOBfMklDySRH.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODIwMTlf/dn%2001.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODIwMTlf/dn%2001.mp4",
+        "episodeCode": "T1 E1: Renacimiento",
+        "hiddenCode": "T1 E1",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E2: Confrontación",
+        "meta": "16+ · 21m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/63fCP6HZf5EbP6muq2mcYh6Lvc8.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODI4Nzlf/dn%2002.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODI4Nzlf/dn%2002.mp4",
+        "episodeCode": "T1 E2: Confrontación",
+        "hiddenCode": "T1 E2",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E3: El Trato",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/k0g0yiL74LSp8JodQVjted6YMJf.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODI4MTFf/dn%2003.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODI4MTFf/dn%2003.mp4",
+        "episodeCode": "T1 E3: El Trato",
+        "hiddenCode": "T1 E3",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E4: Persecución",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/bisms0qgIVV8Qa9vGlFnfP9briJ.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODI5MTNf/dn%2004.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODI5MTNf/dn%2004.mp4",
+        "episodeCode": "T1 E4: Persecución",
+        "hiddenCode": "T1 E4",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E5: Tácticas",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/m4aiPObgEBrb3w6TPejqX5sg8Nm.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODMwMzJf/dn%2005.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODMwMzJf/dn%2005.mp4",
+        "episodeCode": "T1 E5: Tácticas",
+        "hiddenCode": "T1 E5",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E6: Desvelando",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/5J62ABo9G1OrTYbLeShozI5uBwg.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODMxMTdf/dn%2006.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODMxMTdf/dn%2006.mp4",
+        "episodeCode": "T1 E6: Desvelando",
+        "hiddenCode": "T1 E6",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E7: Nublado",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/sYCqCMvO2stQIJewetuUNP78MmG.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM0MjFf/dn%2007.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM0MjFf/dn%2007.mp4",
+        "episodeCode": "T1 E7: Nublado",
+        "hiddenCode": "T1 E7",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E8: Deslumbramiento",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/smXhV1fvWJrDtGB1MV8N3lIt5JY.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODMzMzdf/dn%2008.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODMzMzdf/dn%2008.mp4",
+        "episodeCode": "T1 E8: Deslumbramiento",
+        "hiddenCode": "T1 E8",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E9: Encuentro",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/iBRK6viH6YPlD81p6kD7yZlTIrZ.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODMzODNf/dn%2009.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODMzODNf/dn%2009.mp4",
+        "episodeCode": "T1 E9: Encuentro",
+        "hiddenCode": "T1 E9",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E10: Duda",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/iaXRsMzritInUDbQGUXG3ej3sTS.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODMzOThf/dn%20010.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODMzOThf/dn%20010.mp4",
+        "episodeCode": "T1 E10: Duda",
+        "hiddenCode": "T1 E10",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E11: Asalto",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/lgNB5KSLGYHrNgZeb0dYkDseqZX.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODMzOTdf/dn%20011.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODMzOTdf/dn%20011.mp4",
+        "episodeCode": "T1 E11: Asalto",
+        "hiddenCode": "T1 E11",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E12: Amor",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/nXhKdqsD4TZb83ZVkqNyYqkRMOX.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM0MTZf/dn%20012.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM0MTZf/dn%20012.mp4",
+        "episodeCode": "T1 E12: Amor",
+        "hiddenCode": "T1 E12",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E13: Confesión",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/peEBI9p36VCBgDp6XW8JRjO7Vdt.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM0NDNf/dn%20013.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM0NDNf/dn%20013.mp4",
+        "episodeCode": "T1 E13: Confesión",
+        "hiddenCode": "T1 E13",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E14: Amigo",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/ztpKA5qn2eggXEH7xVsQPI2wYCW.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODMwMTFf/dn%20014.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODMwMTFf/dn%20014.mp4",
+        "episodeCode": "T1 E14: Amigo",
+        "hiddenCode": "T1 E14",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E15: Apuesta",
+        "meta": "16+ · 21m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/haM3evWcGOKlm2vb4mMiIuOOcqs.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM0NDZf/dn%20015.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM0NDZf/dn%20015.mp4",
+        "episodeCode": "T1 E15: Apuesta",
+        "hiddenCode": "T1 E15",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E16: Decisión",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/hjCoHx1bUBWefQpfCbrqGMf3OBU.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM0NDdf/dn%20016.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM0NDdf/dn%20016.mp4",
+        "episodeCode": "T1 E16: Decisión",
+        "hiddenCode": "T1 E16",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E17: Ejecución",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/1FUuh3vBS6nHQrwyo9Mp8uJ7gSm.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM0NTJf/dn%20017.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM0NTJf/dn%20017.mp4",
+        "episodeCode": "T1 E17: Ejecución",
+        "hiddenCode": "T1 E17",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E18: Aliado",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/4TKRHj64fOaPynNP9tX635rqBQq.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM0NTNf/dn%20018.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM0NTNf/dn%20018.mp4",
+        "episodeCode": "T1 E18: Aliado",
+        "hiddenCode": "T1 E18",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E19: Matsuda",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/sF4lBqyCA7XUFnw3GcNyfreTlI4.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM0NTVf/dn%20019.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM0NTVf/dn%20019.mp4",
+        "episodeCode": "T1 E19: Matsuda",
+        "hiddenCode": "T1 E19",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E20: Improvisado",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/b92CjZHibPwxHPp4ID6vvaD5WZD.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM0NTZf/dn%20020.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM0NTZf/dn%20020.mp4",
+        "episodeCode": "T1 E20: Improvisado",
+        "hiddenCode": "T1 E20",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E21: Rendimiento",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/bRPNU2tc41D44L5C3wuVRq7iYZH.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM0NjVf/dn%20021.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM0NjVf/dn%20021.mp4",
+        "episodeCode": "T1 E21: Rendimiento",
+        "hiddenCode": "T1 E21",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E22: Orientación",
+        "meta": "16+ · 21m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/k8XdLNTPvIOVpXn8OXV8pOxksw3.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM0NjZf/dn%20022.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM0NjZf/dn%20022.mp4",
+        "episodeCode": "T1 E22: Orientación",
+        "hiddenCode": "T1 E22",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E23: Frenesí",
+        "meta": "16+ · 21m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/zbhauM0ivv4b2IkA20QPuQhEQ7N.jpg",
+         "videoUrl": "https://od.lk/s/M18zMzEyODM0NzBf/dn%20023.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM0NzBf/dn%20023.mp4",
+        "episodeCode": "T1 E23: Frenesí",
+        "hiddenCode": "T1 E23",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E24: Resurrección",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/vXoBIHI5u4jn8tieqMtbIPWtu1L.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM0NzJf/dn%20024.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM0NzJf/dn%20024.mp4",
+        "episodeCode": "T1 E24: Resurrección",
+        "hiddenCode": "T1 E24",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E25: Silencio",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/hKsiCNb6cUUmgFPfA5nbZW3Tlpq.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM0NzVf/dn%20025.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM0NzVf/dn%20025.mp4",
+        "episodeCode": "T1 E25: Silencio",
+        "hiddenCode": "T1 E25",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E26: Regeneración",
+        "meta": "16+ · 21m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/znx2F672Ng1QqqVc3EtC5xrm9h9.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM3OThf/dn%20026.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM3OThf/dn%20026.mp4",
+        "episodeCode": "T1 E26: Regeneración",
+        "hiddenCode": "T1 E26",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E27: Secuestro",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/5Nj7ueMx7zQyIC9WjLqAGcIVygW.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM3OTlf/dn%20027.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM3OTlf/dn%20027.mp4",
+        "episodeCode": "T1 E27: Secuestro",
+        "hiddenCode": "T1 E27",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E28: Impaciencia",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/kDCYenlI22Fjzw7a5pR9cUy3ByI.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM4MDBf/dn%20028.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM4MDBf/dn%20028.mp4",
+        "episodeCode": "T1 E28: Impaciencia",
+        "hiddenCode": "T1 E28",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E29: Padre",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/lg9llxpONn5t5GYR2pyIQNpYyPt.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM4MDJf/dn%20029.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM4MDJf/dn%20029.mp4",
+        "episodeCode": "T1 E29: Padre",
+        "hiddenCode": "T1 E29",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E30: Justicia",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/hhNecHn6UEcvGIXaWaSqKfGOBIM.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM3ODJf/dn%20030.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM3ODJf/dn%20030.mp4",
+        "episodeCode": "T1 E30: Justicia",
+        "hiddenCode": "T1 E30",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E31: Traspaso",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/sXEJqLQvNEAGUJNDHJzfiMK0qV4.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM3ODFf/dn%20031.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM3ODFf/dn%20031.mp4",
+        "episodeCode": "T1 E31: Traspaso",
+        "hiddenCode": "T1 E31",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E32: Selección",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/A4v49zTK59PCExMM5tQJUqj0231.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM3ODVf/dn%20032.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM3ODVf/dn%20032.mp4",
+        "episodeCode": "T1 E32: Selección",
+        "hiddenCode": "T1 E32",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E33: Desprecio",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/lsPwoKFZ7u5BuUOdVc6LAK6RRKf.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM3ODhf/dn%20033.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM3ODhf/dn%20033.mp4",
+        "episodeCode": "T1 E33: Desprecio",
+        "hiddenCode": "T1 E33",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E34: Vigilancia",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/pJgzs8RJXFI1TD6Jp5kwbz65kqV.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM3ODlf/dn%20034.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM3ODlf/dn%20034.mp4",
+        "episodeCode": "T1 E34: Vigilancia",
+        "hiddenCode": "T1 E34",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E35: Malicia",
+        "meta": "16+ · 21m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/2Zb7s6RZ6uvEL8YJ4R7KhEQBCuk.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM3OTNf/dn%20035.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM3OTNf/dn%20035.mp4",
+        "episodeCode": "T1 E35: Malicia",
+        "hiddenCode": "T1 E35",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E36: 28 de enero",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/5jnmAdjOpeCHN4v4R5XquLICPt5.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM3OTVf/dn%20036.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM3OTVf/dn%20036.mp4",
+        "episodeCode": "T1 E36: 28 de enero",
+        "hiddenCode": "T1 E36",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      },
+      {
+        "title": "E37: Nuevo Mundo",
+        "meta": "16+ · 22m · 2006",
+        "thumbnail": "https://image.tmdb.org/t/p/w300/85nG6sUrczzZVATIXP9JJvNMuSo.jpg",
+        "videoUrl": "https://od.lk/s/M18zMzEyODM3OTdf/dn%20037.mp4",
+        "downloadUrl": "https://od.lk/d/M18zMzEyODM3OTdf/dn%20037.mp4",
+        "episodeCode": "T1 E37: Nuevo Mundo",
+        "hiddenCode": "T1 E37",
+        "intro": {
+          "start": 0,
+          "end": 0
+        }
+      }
+    ]
+  }
+]`);
+   console.log(playlist);
+
+
+
+</script>
+
+<script src="../player-series.js"></script>
+<script type="module" src="../player-series-module.js"></script>
+<script src="../wakelock.js"></script>
+<script src="../nav.js"></script>
+
+
+
+
+</script>
+
+<script src="/ads.js" defer></script>
+<script src="/ads.js" defer></script>
+</body>
+</html>

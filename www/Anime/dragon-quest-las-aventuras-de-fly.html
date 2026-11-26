@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+
+
+  <title>Dragon Quest: Las aventuras de Fly</title>
+  <script src="../loader.min.js"></script>
+  <meta name="theme-color" content="#01011d">
+  <meta name="background-color" content="#01011d">
+<meta name="msapplication-navbutton-color" content="#01011d">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#01011d" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="" id="ogTitle">
+<meta property="og:description" content="" id="ogDesc">
+<meta property="og:image" content="" id="ogImage">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="" id="ogUrl">
+<meta property="og:type" content="video.movie">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="" id="twTitle">
+<meta name="twitter:description" content="" id="twDesc">
+<meta name="twitter:image" content="" id="twImage">
+
+
+  <script disable-devtool-auto src="https://cdn.jsdelivr.net/npm/disable-devtool@latest"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-ChzD5StK818vBAQZL5n94vJUmJl+jz1Ro8AiyOsd0GWIT6saFOY+zG+VVM/LMxltwGPplT7tI9On7kVCXkmVc=" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined">
+   <link rel="icon" type="image/png" sizes="32x32" href="../logo-2025.png">
+    <link rel="manifest" href="../manifest.json">
+   <link href="https://vjs.zencdn.net/8.5.2/video-js.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="../anime.css">
+  <style>
+   
+
+.cover {
+  position: relative;
+  width: 100%;
+  background: url("https://od.lk/s/M18zMzEzNDk4ODZf/fly%20oster.png") no-repeat center top;
+  background-size: contain;
+  background-position: center top;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.cover::before,
+.cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+
+
+.cover-landscape {
+  position: absolute;
+  inset: 0;
+  background: url("https://image.tmdb.org/t/p/original/3PQ8nCE93YQQsa1dThS53HfU2FS.jpg") no-repeat center top;
+  background-size: cover;
+  z-index: 0; /* <- Esto es clave para que se vea debajo del contenido, pero por encima del fondo negro */
+  display: none;
+}
+
+.cover::backdrop,
+.cover-landscape::backdrop {
+  transition: none;
+}
+
+.cover::before,
+.cover::after,
+.cover-landscape::before,
+.cover-landscape::after {
+  transition: none; /* No tocamos tus gradientes */
+}
+
+.cover-image-overlay,
+.cover-landscape-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  transition: background 0.4s ease;
+  z-index: 0.5; /* justo encima del fondo, pero debajo de contenido y gradientes */
+  pointer-events: none;
+}
+
+
+
+
+
+/* Ocultar sombras en landscape */
+@media screen and (orientation: landscape) {
+  .cover::before,
+  .cover::after {
+    display: none;
+  }
+
+  .cover-landscape {
+    display: block;
+  }
+}
+
+.cover-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Mostrar landscape solo en modo horizontal */
+@media screen and (orientation: landscape) {
+  .cover {
+    background: none;
+  }
+
+  .cover-landscape {
+    display: block;
+  }
+}
+
+
+.cover-content img.logo {
+    width: 220px;
+    margin-bottom: 10px;
+  }
+
+  @media (orientation: landscape) {
+    
+  
+    .cover-content img.logo {
+      width: 120px;
+      margin: 0 0 0.5rem 0;
+    }
+  
+    
+  }
+  
+  
+  @media (min-width: 1200px) {
+    .cover-content img.logo {
+      margin-top: 280px;
+      width: 420px;
+      margin-bottom: 0px;
+    }
+  
+    
+  }
+
+    </style>
+</head>
+<body class="page-loading"
+      oncontextmenu="return false"
+      ondragstart="return false"
+      onselectstart="return false">
+  <div class="custom-top-bar">
+    <button onclick="window.history.back()">
+      <span class="material-icons">arrow_back</span>
+    </button>
+    <button onclick="location.reload()">
+      <span class="material-icons">refresh</span>
+    </button>
+  </div>
+    <header id="header">
+        <a href="javascript:history.back();" id="back-link" class="icon-link" tabindex="1">
+            <span class="material-icons">chevron_left</span>
+        </a>
+        <span id="page-title" class="page-title">Dragon Quest: Las aventuras de Fly</span> <!-- Título oculto por defecto -->
+    </header>
+    <!-- Tabs para pantallas grandes -->
+<div class="tabs tabs-secondary">
+  <!-- Logo a la izquierda -->
+  <a href="../main.html">
+    <img src="https://od.lk/s/M18zMTIxODI5MjVf/Knight.png" width="150px" class="logo" />
+  </a>
+
+  <!-- Tabs centradas -->
+  <div class="tabs-wrapper">
+    <a href="../main.html#inicio" class="tab">Inicio</a>
+    <a href="../main.html#series" class="tab">Películas</a>
+    <a href="../main.html#peliculas" class="tab">Series</a>
+    <a href="../main.html#hbo" class="tab">Anime</a>
+    <a href="../main.html#documentales" class="tab">Familia</a>
+    <a href="../main.html#mi-lista" class="tab">Doramas</a>
+  </div>
+
+  <!-- Íconos a la derecha -->
+  <div class="icons">
+    <!-- FAVORITOS -->
+    <a href="../new favoritos 2025.html" class="header-only">
+      <span class="material-icons-outlined">bookmark_border</span>
+    </a>
+
+    <!-- BUSCAR -->
+    <a href="../New search page 2025.html" class="header-only">
+      <span class="material-icons-outlined">search</span>
+    </a>
+
+    <!-- PERFIL -->
+    <a href="../perfil digital Knight 2025.html" class="header-only">
+      <img src="https://od.lk/s/M18zMTIxOTE0Mjlf/logo%202025.png" alt="Perfil" class="profile-icon-footer" id="headerProfileIcon" />
+    </a>
+  </div>
+</div>
+
+<!-- COVER / PORTADA -->
+<div class="cover" id="cover">
+  <!-- FONDO LANDSCAPE SOLO PARA MODO HORIZONTAL -->
+  <div class="cover-landscape">
+    <div class="cover-landscape-image-overlay"></div> <!-- Overlay para imagen landscape -->
+    <div class="cover-landscape-shadow-left"></div>
+  </div>
+
+  <div class="cover-image-overlay"></div> <!-- Overlay para imagen portrait -->
+  
+  <div class="cover-content">
+    <img src="https://image.tmdb.org/t/p/original/g21nAm8SDy4IkIxX7s4I3ZYJOoe.png" alt="Dragon Quest: Las aventuras de Fly Logo "class="logo" oncontextmenu="return false" draggable="false">
+    <div class="meta">13+   1 temporada   1991   Dob Lat</div>
+  
+      <button id="resumeButton" class="watch-button" onclick="playLastWatchedEpisode()" tabindex="3">
+        <span class="material-icons">play_arrow</span> Mira T1 E1
+      </button>
+  
+      <!-- NUEVO BLOQUE DE ICONOS -->
+      <div class="iconos">
+        <!-- Botón de Favoritos -->
+        <button id="favoritoBtn" data-identificador="Dragon Quest: Las aventuras de Fly" onclick="toggleFavorito()">
+          <span id="favoritoIcon" class="material-icons-outlined">add</span>
+          <p id="favoritoText">Favoritos</p>
+        </button>
+  
+        <!-- Info oculta para localStorage -->
+        <div id="favoritoData" style="display: none;">
+          <img id="favoritoImagen" class="poster" src="https://image.tmdb.org/t/p/original/pajjnLkqJpiVjJYLaBYtVeoqA39.jpg" alt="Poster de la Película">
+          <a id="favoritoEnlace" href="dragon-quest-las-aventuras-de-fly.html"></a>
+          <span id="nombre">Dragon Quest: Las aventuras de Fly</span>
+      </div>
+  
+        
+  
+        <!-- Botón de Compartir -->
+        <div class="action-item" id="compartirBtn">
+          <span class="material-icons-outlined">share</span>
+          <p>Compartir</p>
+        </div>
+              </div>
+  
+      <div class="description">
+        Hace mucho tiempo, unos valientes guerreros derrotaron al Rey del Mal, devolviendo la paz y la tranquilidad a su hogar, la Isla Dermilin. Y es también aquí donde vive Fly, un niño que fue criado por B...  </div>
+    </div>
+  </div>
+  
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('episodes')">Episodios</button>
+    <button class="tab" onclick="showTab('suggested')">Quizá también te guste</button>
+  </div>
+  
+  <div id="episodes" class="tab-content">
+    <div class="season-selector">
+      <select id="seasonSelect" onchange="renderEpisodes()"></select>
+    </div>
+    <div id="episodeList"></div>
+  </div>
+  
+  <div id="suggested" class="tab-content" style="display: none;">
+    <div class="suggested-grid">
+
+      <div class="suggested-item">
+        <a href="dragon-ball-daima.html">
+          <img src="https://image.tmdb.org/t/p/w300/brd9Bp1MlH8oK2nzR6VV9imY46k.jpg" alt="Dragon Ball Daima" oncontextmenu="return false" draggable="false">
+        </a>
+        <div class="suggested-info">
+          <div class="title">Dragon Ball Daima</div>
+          <div class="meta-row">
+            <span class="meta">Dob | Lat</span>
+          </div>
+        </div>
+      </div>
+
+     <div class="suggested-item">
+        <a href="evangelion.html">
+          <img src="https://image.tmdb.org/t/p/original/hAejqZt7ptBRkYuR1p1lmGGS3g8.jpg" alt="Neon Genesis Evangelion (1995)" oncontextmenu="return false" draggable="false">
+        </a>
+        <div class="suggested-info">
+          <div class="title">Neon Genesis Evangelion (1995)</div>
+          <div class="meta-row">
+            <span class="meta">Dob | Lat</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="suggested-item">
+        <a href="Las Guerreras Mágicas.html">
+          <img src="https://image.tmdb.org/t/p/original/pm3hODqtNDLqucDVvakky8FrhMx.jpg" alt="Las Guerreras Mágicas (1994)" oncontextmenu="return false" draggable="false">
+        </a>
+        <div class="suggested-info">
+          <div class="title">Las Guerreras Mágicas (1994)</div>
+          <div class="meta-row">
+            <span class="meta">Dob | Lat</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="suggested-item">
+        <a href="inuyasha.html">
+          <img src="https://image.tmdb.org/t/p/w300/rQHTNaynedeKurm0sNOsbAZg2oe.jpg" alt="Inuyasha" oncontextmenu="return false" draggable="false">
+        </a>
+        <div class="suggested-info">
+          <div class="title">Inuyasha</div>
+          <div class="meta-row">
+            <span class="meta">Dob | Lat</span>
+          </div>
+        </div>
+      </div>
+</div>
+        </div>
+    
+
+  
+  <!-- OVERLAY -->
+<div id="menuOverlay" class="menu-overlay hidden" onclick="closeSeasonMenu()"></div>
+
+<!-- MENÚ DESLIZANTE DE TEMPORADAS -->
+<div id="seasonMenu" class="season-menu hidden">
+  <div class="season-menu-header">
+    <div class="menu-drag-indicator"></div>
+  </div>
+  <div id="seasonOptions"></div>
+</div>
+
+  
+  
+<!-- PLAYER -->
+<div class="player" id="player">
+  <video playsinline webkit-playsinline
+    id="video"
+    class="video-js vjs-default-skin"
+    preload="auto"
+    width="100%"
+    height="100%"
+    poster="https://wallpapercave.com/wp/wp5415042.jpg"
+    data-setup='{"controls": false, "autoplay": false, "preload": "auto"}'>
+    <source id="videoSource" src="tu video.mp4" type="video/mp4" />
+  </video>
+
+  <!-- Loader -->
+  <div class="video-loader hidden" id="videoLoader">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Aspect Ratio Label -->
+  <div id="aspectLabel" style="
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 16px;
+    display: none;
+    z-index: 9999;
+  ">
+    cover
+  </div>
+
+ <div class="overlay-top" id="overlayTop"></div>
+<div class="overlay-bottom" id="overlayBottom"></div>
+
+    
+    <div class="overlay" id="overlay"></div>
+
+  <!-- Botón Omitir Intro -->
+  <div class="skip-intro hidden" id="skipIntroBtn" onclick="skipIntro()">
+    <span class="material-icons">fast_forward</span>
+    <span class="label">Omitir intro</span>
+  </div>
+
+  <!-- Botón Siguiente Episodio -->
+  <div class="next-episode hidden" id="nextEpisodeBtn" onclick="playNextEpisode()">
+    <div class="icon-container">
+      <svg class="circle-timer" viewBox="0 0 36 36">
+        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 1 1 0 31.831 a 15.9155 15.9155 0 1 1 0 -31.831"/>
+        <path class="circle-fill" id="circleProgress" stroke-dasharray="0, 100" d="M18 2.0845
+          a 15.9155 15.9155 0 1 1 0 31.831
+          a 15.9155 15.9155 0 1 1 0 -31.831"/>
+      </svg>
+      <span class="material-icons play-icon">play_arrow</span>
+    </div>
+    <span class="label" id="nextEpisodeLabel">Siguiente episodio</span>
+  </div>
+
+  <div class="controls" id="controls">
+    <div class="top-bar">
+      <div class="icon-btn material-icons" onclick="goBack()">chevron_left</div>
+      <div style="display: flex; gap: 15px;">
+        <div class="icon-btn material-icons" onclick="castCurrentVideo()">cast</div>
+        <div class="icon-btn material-icons" onclick="toggleAspectRatio()">aspect_ratio</div>
+      </div>
+    </div>
+
+    <div class="center-controls">
+      <button class="btn" onclick="skip(-10)">
+        <span class="material-icons">replay_10</span>
+      </button>
+      <button class="btn" id="playPauseBtn" onclick="togglePlay()">
+        <span class="material-icons">play_arrow</span>
+      </button>
+      <button class="btn" onclick="skip(10)">
+        <span class="material-icons">forward_10</span>
+      </button>
+    </div>
+
+    <div class="bottom-bar">
+      <div id="episodeHeader">
+        <div class="title">Dragon Quest: Las aventuras de Fly</div>
+        <div class="subtitle" id="episodeSubtitle"></div>
+      </div>
+
+      <div class="progress-container">
+        <div class="buffer-bar" id="bufferBar"></div>
+        <input type="range" class="progress" id="progress" value="0" max="100">
+        <div class="time" id="duration">- 00:00</div>
+      </div>
+
+      <!-- 🚀 Botones Extra (Reiniciar / Siguiente Episodio) -->
+      <div class="extra-controls">
+        <button class="btn" onclick="restartVideo()">
+          <span class="material-icons">skip_previous</span>
+          <span class="label">Reiniciar</span>
+        </button>
+        <button class="btn" onclick="playNextEpisode()">
+          <span class="material-icons">skip_next</span>
+          <span class="label">Sig. Epi</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  
+<footer class="footer">
+  <a href="../main.html" class="footer-icon" tabindex="14">
+      <span class="material-icons-outlined">home</span>
+      <span class="material-icons">home</span>
+  </a>
+  <a href="../new favoritos 2025.html" class="footer-icon" tabindex="15">
+      <span class="material-icons-outlined">bookmark_border</span>
+      <span class="material-icons">bookmark</span>
+  </a>
+  <a href="../New search page 2025.html" class="footer-icon" tabindex="16">
+      <span class="material-icons-outlined">search</span>
+      <span class="material-icons">search</span>
+  </a>
+  <a href="../perfil digital Knight 2025.html" class="footer-icon" tabindex="17">
+      <img src="https://od.lk/d/M18zMDc1MjMzOTdf/DIGITAL%20KNIGHT2.png" alt="Icono de Perfil" id="footerIconImg" class="profile-icon-footer">
+  </a>
+</footer>
+
+  <script src="https://vjs.zencdn.net/8.5.2/video.min.js"></script>
+
+  <script src="../share.js"></script>
+
+<script>
+
+const seriesId = "dragon-quest-las-aventuras-de-fly-38324";
+window.seriesId = seriesId;
+
+// --- PLAYLIST ---
+const playlist = JSON.parse(`[
+  {
+    "season": "Temporada 1",
+    "episodes": [
+      {
+    "title": "E1: ¡Soy el pequeño valiente!",
+    "meta": "13+ · 24m · 1991",
+    "thumbnail": "https://image.tmdb.org/t/p/w300/6UqZVAhQxd8hb0W6X1i4nsOhc6A.jpg",
+    "videoUrl": "https://od.lk/d/M18zMzEzMzU2NTVf/01.mp4",
+    "downloadUrl": "https://od.lk/d/M18zMzEzMzU2NTVf/01.mp4",
+    "episodeCode": "T1 E1: ¡Soy el pequeño valiente!",
+    "hiddenCode": "T1 E1",
+    "intro": {
+      "start": 0,
+      "end": 0
+    }
+  },
+  {
+    "title": "E2: No permitiré que mates a la princesa Leona",
+    "meta": "13+ · 24m · 1991",
+    "thumbnail": "https://image.tmdb.org/t/p/w300/mwnB7SP179OQDRPdO8MX51wLbDM.jpg",
+    "videoUrl": "https://od.lk/d/M18zMzEzMzU2NTZf/02.mp4",
+    "downloadUrl": "https://od.lk/d/M18zMzEzMzU2NTZf/02.mp4",
+    "episodeCode": "T1 E2: No permitiré que mates a la princesa Leona",
+    "hiddenCode": "T1 E2",
+    "intro": {
+      "start": 0,
+      "end": 0
+    }
+  },
+  {
+    "title": "E3: La marca del dragón brilla en la cabeza de Fly",
+    "meta": "13+ · 24m · 1991",
+    "thumbnail": "https://image.tmdb.org/t/p/w300/8vD4PXlzZmsI5Zm3s4ea9mXrXYj.jpg",
+    "videoUrl": "https://od.lk/d/M18zMzEzMzYyMTdf/03.mp4",
+    "downloadUrl": "https://od.lk/d/M18zMzEzMzYyMTdf/03.mp4",
+    "episodeCode": "T1 E3: La marca del dragón brilla en la cabeza de Fly",
+    "hiddenCode": "T1 E3",
+    "intro": {
+      "start": 0,
+      "end": 0
+    }
+  },
+  {
+    "title": "E4: Avan, el tutor del valiente",
+    "meta": "13+ · 24m · 1991",
+    "thumbnail": "https://image.tmdb.org/t/p/w300/9RP0i5RCLD9lODgABi5Yr46QyZR.jpg",
+    "videoUrl": "https://od.lk/d/M18zMzEzMzYzMDVf/04.mp4",
+    "downloadUrl": "https://od.lk/d/M18zMzEzMzYzMDVf/04.mp4",
+    "episodeCode": "T1 E4: Avan, el tutor del valiente",
+    "hiddenCode": "T1 E4",
+    "intro": {
+      "start": 0,
+      "end": 0
+    }
+  },
+  {
+    "title": "E5: Las clases de Avan, entrenamiento especial para ser héroe",
+    "meta": "13+ · 24m · 1991",
+    "thumbnail": "https://image.tmdb.org/t/p/w300/uhJ8m9qdNEwgJG6OdOzcMTOGhnA.jpg",
+    "videoUrl": "https://od.lk/d/M18zMzEzMzcwMjJf/05.mp4",
+    "downloadUrl": "https://od.lk/d/M18zMzEzMzcwMjJf/05.mp4",
+    "episodeCode": "T1 E5: Las clases de Avan, entrenamiento especial para ser héroe",
+    "hiddenCode": "T1 E5",
+    "intro": {
+      "start": 0,
+      "end": 0
+    }
+  },
+  {
+    "title": "E6: El regreso del rey malo",
+    "meta": "13+ · 24m · 1991",
+    "thumbnail": "https://image.tmdb.org/t/p/w300/gJ8u5iZVM0zVlR9dtNwbog8sT4s.jpg",
+    "videoUrl": "https://od.lk/d/M18zMzEzMzcwODlf/06.mp4",
+    "downloadUrl": "https://od.lk/d/M18zMzEzMzcwODlf/06.mp4",
+    "episodeCode": "T1 E6: El regreso del rey malo",
+    "hiddenCode": "T1 E6",
+    "intro": {
+      "start": 0,
+      "end": 0
+    }
+  },
+  {
+    "title": "E7: La confrontación de Hadler contra Avan",
+    "meta": "13+ · 24m · 1991",
+    "thumbnail": "https://image.tmdb.org/t/p/w300/kR8f2FaRzZt2PBtnWdVGd4S90rM.jpg",
+    "videoUrl": "https://od.lk/d/M18zMzEzMzc3ODVf/07.mp4",
+    "downloadUrl": "https://od.lk/d/M18zMzEzMzc3ODVf/07.mp4",
+    "episodeCode": "T1 E7: La confrontación de Hadler contra Avan",
+    "hiddenCode": "T1 E7",
+    "intro": {
+      "start": 0,
+      "end": 0
+    }
+  },
+  {
+    "title": "E8: Avan y el hechizo de autosacrificio. Ataca, golpea",
+    "meta": "13+ · 24m · 1991",
+    "thumbnail": "https://image.tmdb.org/t/p/w300/jjaZ91yRIvrFutFcXFfRG5nmEIV.jpg",
+    "videoUrl": "https://od.lk/d/M18zMzEzMzgwNDRf/08.mp4",
+    "downloadUrl": "https://od.lk/d/M18zMzEzMzgwNDRf/08.mp4",
+    "episodeCode": "T1 E8: Avan y el hechizo de autosacrificio. Ataca, golpea",
+    "hiddenCode": "T1 E8",
+    "intro": {
+      "start": 0,
+      "end": 0
+    }
+  },
+  {
+    "title": "E9: Adiós isla Dermilin, es tiempo de partir a la gran aventura",
+    "meta": "13+ · 24m · 1991",
+    "thumbnail": "https://image.tmdb.org/t/p/w300/iRN1NYVvTrfNemcpG4bEcbeCP7P.jpg",
+    "videoUrl": "https://od.lk/d/M18zMzEzMzg2NDlf/09.mp4",
+    "downloadUrl": "https://od.lk/d/M18zMzEzMzg2NDlf/09.mp4",
+    "episodeCode": "T1 E9: Adiós isla Dermilin, es tiempo de partir a la gran aventura",
+    "hiddenCode": "T1 E9",
+    "intro": {
+      "start": 0,
+      "end": 0
+    }
+  },
+  {
+    "title": "E10: Crocodine el rey de las fieras aparece en el laberinto del bosque del mal",
+    "meta": "13+ · 24m · 1991",
+    "thumbnail": "https://image.tmdb.org/t/p/w300/kMeqhnMgNkQinRiOAKINo6Rcy1z.jpg",
+    "videoUrl": "https://od.lk/d/M18zMzEzMzg3OTBf/10.mp4",
+    "downloadUrl": "https://od.lk/d/M18zMzEzMzg3OTBf/10.mp4",
+    "episodeCode": "T1 E10: Crocodine el rey de las fieras aparece en el laberinto del bosque del mal",
+    "hiddenCode": "T1 E10",
+    "intro": {
+      "start": 0,
+      "end": 0
+    }
+  },
+      {
+  "title": "E11: Hacha silvante aspiradora, nos enfrentamos a Crocodine con la espada letal de Avan",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/botrqvaFnHH7k7MMxq3OHjwlYVa.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzkxNDFf/11.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzkxNDFf/11.mp4",
+  "episodeCode": "T1 E11: Hacha silvante aspiradora, nos enfrentamos a Crocodine con la espada letal de Avan",
+  "hiddenCode": "T1 E11",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+{
+  "title": "E12: El recuerdo de nuestro maestro Avan en la poderosa arma mágica",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/g7OBKf10s4xtCzyBnj1KPy6Ljzl.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzkxNTRf/12.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzkxNTRf/12.mp4",
+  "episodeCode": "T1 E12: El recuerdo de nuestro maestro Avan en la poderosa arma mágica",
+  "hiddenCode": "T1 E12",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+{
+  "title": "E13: ¿Es una trampa del obispo de lo misterioso Zaboera?, aquí viene un batallón de héroes falsos",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/mBCWOBZTIa2IzJeO7l2ZdWmeJc6.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzNDAzNTlf/13.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzNDAzNTlf/13.mp4",
+  "episodeCode": "T1 E13: ¿Es una trampa del obispo de lo misterioso Zaboera?, aquí viene un batallón de héroes falsos",
+  "hiddenCode": "T1 E13",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+{
+  "title": "E14: El ataque del batallón de las fieras. Rescatemos al reino de Lomos de la crisis",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/lId1x8ICR5TNqplk8O2l9aiGf65.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzNDA1NDlf/14.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzNDA1NDlf/14.mp4",
+  "episodeCode": "T1 E14: El ataque del batallón de las fieras. Rescatemos al reino de Lomos de la crisis",
+  "hiddenCode": "T1 E14",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+{
+  "title": "E15: ¡¿Porqué Blas ataca a Fly?! El sucio obispo de lo misterioso",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/k6rvKDFltAywW14Lj0oNP6Jx94z.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzNDE3Njlf/15.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzNDE3Njlf/15.mp4",
+  "episodeCode": "T1 E15: ¡¿Porqué Blas ataca a Fly?! El sucio obispo de lo misterioso",
+  "hiddenCode": "T1 E15",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+{
+  "title": "E16: ¡Anímate, Pop! Ten un poco de valor",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/doNwuXXQbfD3vah687OwzlnfXgi.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzNDE5MDVf/16.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzNDE5MDVf/16.mp4",
+  "episodeCode": "T1 E16: ¡Anímate, Pop! Ten un poco de valor",
+  "hiddenCode": "T1 E16",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+{
+  "title": "E17: El hechizo milagroso y la amistad",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/jUbewTJMRXiHJL5BSJ5HWhDzkKy.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzNDMxMDhf/17.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzNDMxMDhf/17.mp4",
+  "episodeCode": "T1 E17: El hechizo milagroso y la amistad",
+  "hiddenCode": "T1 E17",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+{
+  "title": "E18: El ataque directo del símbolo de la ira",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/oNJ1ZZiJuZo15opNYXXfxq5TGfv.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzQ5MTlf/18.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzQ5MTlf/18.mp4",
+  "episodeCode": "T1 E18: El ataque directo del símbolo de la ira",
+  "hiddenCode": "T1 E18",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+{
+  "title": "E19: Fly cruza el mar. Los dirigentes de los 6 batallones se reúnen",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/3QTN8bqvkiRnVmfB0yvO5Z5wL0D.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzQ5MTFf/19.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzQ5MTFf/19.mp4",
+  "episodeCode": "T1 E19: Fly cruza el mar. Los dirigentes de los 6 batallones se reúnen",
+  "hiddenCode": "T1 E19",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+{
+  "title": "E20: Ha aparecido un enemigo temerario. El guerrero de la espada malvada, Yunquel",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/7MwarCQFUV3ccSCNb4AMKFwIPI4.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzQ5MjVf/20.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzQ5MjVf/20.mp4",
+  "episodeCode": "T1 E20: Ha aparecido un enemigo temerario. El guerrero de la espada malvada, Yunquel",
+  "hiddenCode": "T1 E20",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+      {
+  "title": "E21: La espada asesina, ¿Avan verdaderamente mató a su padre?",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/yzIj19QDaRJOhCHVgSm9BCUbI52.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzQ5Mjlf/21.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzQ5Mjlf/21.mp4",
+  "episodeCode": "T1 E21: La espada asesina, ¿Avan verdaderamente mató a su padre?",
+  "hiddenCode": "T1 E21",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+{
+  "title": "E22: El poder del mal manipula y modifica los ataques de Fly",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/zl2Ok7lHzV2KPCTvFqgYNZCXJ4I.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzQ5NDFf/22.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzQ5NDFf/22.mp4",
+  "episodeCode": "T1 E22: El poder del mal manipula y modifica los ataques de Fly",
+  "hiddenCode": "T1 E22",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+{
+  "title": "E23: Maam está en peligro. Reunamos fuerzas e invoquemos al relámpago",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/zhA4P55Noi2qdk6niaD8dcD12RB.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzQ5Mzlf/23.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzQ5Mzlf/23.mp4",
+  "episodeCode": "T1 E23: Maam está en peligro. Reunamos fuerzas e invoquemos al relámpago",
+  "hiddenCode": "T1 E23",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+{
+  "title": "E24: El castillo subterráneo del mal. El gran laberinto diabólico",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/5Q4dx1rOjZCxJtc53MIxvmevKb4.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzUxODlf/24.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzUxODlf/24.mp4",
+  "episodeCode": "T1 E24: El castillo subterráneo del mal. El gran laberinto diabólico",
+  "hiddenCode": "T1 E24",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+{
+  "title": "E25: Gracias por el recuerdo",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/wqo9HL3ERVLCqc3a29eV6AJT4pr.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzUxODZf/25.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzUxODZf/25.mp4",
+  "episodeCode": "T1 E25: Gracias por el recuerdo",
+  "hiddenCode": "T1 E25",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+{
+  "title": "E26: La amarga despedida de Yunquel, el guerrero solitario",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/xpttto0CX4seZqbSvQOIVe0LdEw.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzUxOTVf/26.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzUxOTVf/26.mp4",
+  "episodeCode": "T1 E26: La amarga despedida de Yunquel, el guerrero solitario",
+  "hiddenCode": "T1 E26",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+{
+  "title": "E27: En marcha, La operación salvemos a Leona",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/n5LtzrGGmge1BIUlDLDaXDqC2tO.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzUxOTRf/27.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzUxOTRf/27.mp4",
+  "episodeCode": "T1 E27: En marcha, La operación salvemos a Leona",
+  "hiddenCode": "T1 E27",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+{
+  "title": "E28: El héroe contra el general llamas de fuego Freizard",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/bGTQng3Gv0D26OEfEYsOWWnOwee.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzUxOTZf/28.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzUxOTZf/28.mp4",
+  "episodeCode": "T1 E28: El héroe contra el general llamas de fuego Freizard",
+  "hiddenCode": "T1 E28",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+{
+  "title": "E29: La princesa Leona se convierte en una belleza congelada",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/qQBz0IEHqMhnn0R8MwK03VnxC9r.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzUxOTdf/29.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzUxOTdf/29.mp4",
+  "episodeCode": "T1 E29: La princesa Leona se convierte en una belleza congelada",
+  "hiddenCode": "T1 E29",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+{
+  "title": "E30: El entrenamiento especial del gran mago Matorif",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/rcGwY0qKeVrsilvls4AXX90vUgk.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzUxOTlf/30.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzUxOTlf/30.mp4",
+  "episodeCode": "T1 E30: El entrenamiento especial del gran mago Matorif",
+  "hiddenCode": "T1 E30",
+  "intro": {
+    "start": 0,
+    "end": 0
+  }
+},
+     {
+  "title": "E31: Leona esta en peligro vamos hacia la isla torbellino",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/o26dnghfW2qbzae449Il6dbKVc0.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzUyMDFf/31.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzUyMDFf/31.mp4",
+  "episodeCode": "T1 E31: Leona esta en peligro vamos hacia la isla torbellino",
+  "hiddenCode": "T1 E31",
+  "intro": { "start": 0, "end": 0 }
+},
+{
+  "title": "E32: El salvador inmortal",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/qDsVFJtilyMZgvExBgL5mHHpytG.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzUyMDJf/32.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzUyMDJf/32.mp4",
+  "episodeCode": "T1 E32: El salvador inmortal",
+  "hiddenCode": "T1 E32",
+  "intro": { "start": 0, "end": 0 }
+},
+{
+  "title": "E33: El regreso del temible Yunquel",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/irHMJsVsKmq30u5gBPei9VJyG2W.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzUyMDlf/33.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzUyMDlf/33.mp4",
+  "episodeCode": "T1 E33: El regreso del temible Yunquel",
+  "hiddenCode": "T1 E33",
+  "intro": { "start": 0, "end": 0 }
+},
+{
+  "title": "E34: La sorprendente y portentosa gran cruz",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/sNbKW07JdGlB735CEqILb7MkI2c.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzUyMTFf/34.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzUyMTFf/34.mp4",
+  "episodeCode": "T1 E34: La sorprendente y portentosa gran cruz",
+  "hiddenCode": "T1 E34",
+  "intro": { "start": 0, "end": 0 }
+},
+{
+  "title": "E35: La contienda a muerte de Freizard por la victoria",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/t7jrzvmnK5dYg8a4oYKA7ztmZ4N.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzUyMTZf/35.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzUyMTZf/35.mp4",
+  "episodeCode": "T1 E35: La contienda a muerte de Freizard por la victoria",
+  "hiddenCode": "T1 E35",
+  "intro": { "start": 0, "end": 0 }
+},
+{
+  "title": "E36: La mejor técnica de Avan del corte explosión de aire",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/gM8XcSBxt0Ku44d8IdBPE0OIjeE.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzUyMTdf/36.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzUyMTdf/36.mp4",
+  "episodeCode": "T1 E36: La mejor técnica de Avan del corte explosión de aire",
+  "hiddenCode": "T1 E36",
+  "intro": { "start": 0, "end": 0 }
+},
+{
+  "title": "E37: El corte mortal de Avan",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/hpUJnFhYCob9lnvvlTwtwVfeuaC.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzUzMzRf/37.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzUzMzRf/37.mp4",
+  "episodeCode": "T1 E37: El corte mortal de Avan",
+  "hiddenCode": "T1 E37",
+  "intro": { "start": 0, "end": 0 }
+},
+{
+  "title": "E38: La victoria y la decisión de Maam",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/qttPTlxWoL9NEZamfzy4MhORDRR.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzU1MzVf/38.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzU1MzVf/38.mp4",
+  "episodeCode": "T1 E38: La victoria y la decisión de Maam",
+  "hiddenCode": "T1 E38",
+  "intro": { "start": 0, "end": 0 }
+},
+{
+  "title": "E39: Adiós Maam",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/fiA6RmVeJWxTFL42UgnbX8a6Osn.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzU1NzJf/39.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzU1NzJf/39.mp4",
+  "episodeCode": "T1 E39: Adiós Maam",
+  "hiddenCode": "T1 E39",
+  "intro": { "start": 0, "end": 0 }
+},
+{
+  "title": "E40: De compras en Benganam",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/ujjE7AyL43o2UGvGdhBm9XXJmPF.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzU2NDRf/40.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzU2NDRf/40.mp4",
+  "episodeCode": "T1 E40: De compras en Benganam",
+  "hiddenCode": "T1 E40",
+  "intro": { "start": 0, "end": 0 }
+},
+{
+  "title": "E41: El ejército de super dragón",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/4OlQ2yqPUDSh1Og6NmmU7l2POvK.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzU2NDZf/41.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzU2NDZf/41.mp4",
+  "episodeCode": "T1 E41: El ejército de super dragón",
+  "hiddenCode": "T1 E41",
+  "intro": { "start": 0, "end": 0 }
+},
+{
+  "title": "E42: El misterioso reino de Teran",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/rqDGBZKKaFYi96W4Y5zG7i0sERY.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzU2NDhf/42.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzU2NDhf/42.mp4",
+  "episodeCode": "T1 E42: El misterioso reino de Teran",
+  "hiddenCode": "T1 E42",
+  "intro": { "start": 0, "end": 0 }
+},
+{
+  "title": "E43: La identidad de Fly",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/3qppf7loy9nRk5WNyrPJt6ytRWe.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzU2NTBf/43.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzU2NTBf/43.mp4",
+  "episodeCode": "T1 E43: La identidad de Fly",
+  "hiddenCode": "T1 E43",
+  "intro": { "start": 0, "end": 0 }
+},
+{
+  "title": "E44: La lucha entre padre e hijo",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/lvxmXGh3B2zyHKI54CJkER5IjGa.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzU2NTFf/44.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzU2NTFf/44.mp4",
+  "episodeCode": "T1 E44: La lucha entre padre e hijo",
+  "hiddenCode": "T1 E44",
+  "intro": { "start": 0, "end": 0 }
+},
+{
+  "title": "E45: Pon tu vida en la línea",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/tAMsbwlQPtcQFjWR7dKQs8dgVGt.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzU2NTJf/45.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzU2NTJf/45.mp4",
+  "episodeCode": "T1 E45: Pon tu vida en la línea",
+  "hiddenCode": "T1 E45",
+  "intro": { "start": 0, "end": 0 }
+},
+{
+  "title": "E46: El largo camino",
+  "meta": "13+ · 24m · 1991",
+  "thumbnail": "https://image.tmdb.org/t/p/w300/vfGIlCd85mAN9KYfGxoBVMlhcKQ.jpg",
+  "videoUrl": "https://od.lk/d/M18zMzEzMzU2NTNf/46.mp4",
+  "downloadUrl": "https://od.lk/d/M18zMzEzMzU2NTNf/46.mp4",
+  "episodeCode": "T1 E46: El largo camino",
+  "hiddenCode": "T1 E46",
+  "intro": { "start": 0, "end": 0 }
+}
+    ]
+  }
+]`);
+    console.log(playlist);
+
+
+</script>
+
+<script src="../player-series.js"></script>
+<script type="module" src="../player-series-module.js"></script>
+<script src="../wakelock.js"></script>
+<script>
+  // cuando arranque el player
+  WakeLockManager.enable();
+
+  // cuando cierres el player
+  WakeLockManager.disable();
+</script>
+
+<script src="/ads.js" defer></script>
+<script src="/ads.js" defer></script>
+</body>
+</html>

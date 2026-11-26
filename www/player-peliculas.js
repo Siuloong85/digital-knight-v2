@@ -1,0 +1,1675 @@
+// 🆔 Asegura que tengas el ID de la película global
+const movieId = window.movieId || 'unknown-id';
+
+// =========================================================
+// ⭐ DESCARGAS EXCLUSIVAS PREMIUM
+// El botón de descarga solo se muestra a usuarios Premium.
+// =========================================================
+const DK_SB_URL = 'https://wplyrhcszuoordgaphax.supabase.co';
+const DK_SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndwbHlyaGNzenVvb3JkZ2FwaGF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyNDg5NzAsImV4cCI6MjA4MTgyNDk3MH0.VctFmTaBMHkhbqDhezAvFoAT_QcC-bk7A3gH1MoMScU';
+
+function dkEsPremium(){
+  const p = JSON.parse(localStorage.getItem('dk_profile') || '{}');
+  if(!p.premium) return false;
+  // Si tiene fecha de vencimiento y ya pasó, ya no es premium
+  if(p.premium_until && new Date(p.premium_until) < new Date()) return false;
+  return true;
+}
+
+// Refresca la caché local del perfil desde Supabase (si hay sesión),
+// para que el premium activado vía pago se refleje sin volver a iniciar sesión
+async function dkRefrescarPerfil(){
+  try{
+    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm');
+    const sb = createClient(DK_SB_URL, DK_SB_KEY);
+    const { data } = await sb.auth.getSession();
+    if(data.session){
+      const { data: fresh } = await sb.from('profiles')
+        .select('premium, premium_until, devices_limit')
+        .eq('id', data.session.user.id).maybeSingle();
+      if(fresh){
+        const old = JSON.parse(localStorage.getItem('dk_profile') || '{}');
+        localStorage.setItem('dk_profile', JSON.stringify({ ...old, ...fresh }));
+      }
+    }
+  }catch(e){ console.warn('No se pudo refrescar el perfil premium:', e); }
+}
+
+function dkAplicarDescargas(){
+  const premium = dkEsPremium();
+  document.querySelectorAll(
+    '.action-item.download-action, [onclick*="descargarPelicula"]'
+  ).forEach(el => {
+    el.style.display = premium ? '' : 'none';
+  });
+}
+
+// Ocultar de inmediato según la caché local (evita que el botón "parpadee")
+function dkAplicarCuandoListo(){
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', dkAplicarDescargas);
+  } else {
+    dkAplicarDescargas();
+  }
+}
+dkAplicarCuandoListo();
+window.addEventListener('load', dkAplicarDescargas);
+
+// Refrescar contra Supabase y aplicar de nuevo (activa premium recién pagado)
+(async () => {
+  await dkRefrescarPerfil();
+  dkAplicarDescargas();
+})();
+
+// Blindaje: interceptar el click ANTES del onclick inline de la página
+document.addEventListener('click', function(e){
+  const el = e.target.closest('[onclick*="descargarPelicula"]');
+  if(el && !dkEsPremium()){
+    e.preventDefault();
+    e.stopPropagation();
+    alert('⭐ Las descargas son exclusivas de Digital Knight Premium.\nHazte Premium para descargar películas.');
+    window.location.href = '../premium.html';
+  }
+}, true);
+// =========================================================
+
+// Prevenir gestos táctiles no deseados
+document.addEventListener('touchmove', function (event) {
+  if (event.touches.length > 1) {
+    event.preventDefault();
+  }
+}, { passive: false });
+
+window.addEventListener('load', function () {
+  const overlay = document.querySelector('.overlay-loader');
+  const loader = document.getElementById('loader');
+
+  // El loader se sujeta un momento y luego hace fade SUAVE,
+  // revelando la animación de entrada sin blink ni salto
+  setTimeout(() => {
+    loader.style.opacity = '0';
+    overlay.style.opacity = '0'; // fade del overlay (0.6s en CSS)
+    setTimeout(() => {
+      overlay.classList.add('hidden'); // display:none DESPUÉS del fade
+    }, 650);
+  }, 500);
+});
+
+
+const videoElement = document.getElementById('video');
+const video = videoElement.tagName === "VIDEO"
+  ? videoElement
+  : document.getElementById('video_html5_api');
+console.log("Al cargar la página:", video);
+const controls = document.getElementById('controls');
+const overlay = document.getElementById('overlay');
+const player = document.getElementById('player');
+const progress = document.getElementById('progress');
+const duration = document.getElementById('duration');
+const playPauseBtn = document.getElementById('playPauseBtn').querySelector('.material-icons');
+const cover = document.getElementById('cover');
+const thumb = document.getElementById('thumb'); // si existe
+
+// Imagen que se muestra al pausar. Puedes definir 3 URLs en
+// window.DK_PAUSE_AD_IMAGES para que cambien aleatoriamente cada vez que pauses.
+const DK_PAUSE_AD_IMAGE_URL = window.DK_PAUSE_AD_IMAGE_URL ||
+  'https://od.lk/s/M18zMzk3MTAxODFfTkVja2c/derry.jpg';
+const DK_PAUSE_AD_IMAGES = Array.isArray(window.DK_PAUSE_AD_IMAGES)
+  ? window.DK_PAUSE_AD_IMAGES.filter(Boolean)
+  : [
+      DK_PAUSE_AD_IMAGE_URL,
+      'https://od.lk/s/M18zMzk3MTA2MDdfbTFnd1Q/Emperatriz.jpg',
+      'https://od.lk/s/M18zMzk3MTE3ODJfZUQyM3E/premium.jpg'
+    ];
+
+const pauseAd = document.createElement('div');
+pauseAd.id = 'dk-pause-ad';
+pauseAd.setAttribute('aria-hidden', 'true');
+pauseAd.style.cssText = [
+  'position:absolute',
+  'inset:0',
+  'display:none',
+  'align-items:center',
+  'justify-content:center',
+  'overflow:hidden',
+  'background:#000',
+  'pointer-events:none',
+  'z-index:4'
+].join(';');
+
+const pauseAdImage = document.createElement('img');
+pauseAdImage.alt = '';
+// El arte de pausa es un wallpaper 16:9.  No se debe recortar para llenar el
+// reproductor y tampoco debe ampliarse más allá de 1080p en pantallas grandes.
+pauseAdImage.style.cssText = [
+  'width:100%',
+  'height:100%',
+  'max-width:1920px',
+  'max-height:1080px',
+  'object-fit:contain',
+  'display:block'
+].join(';');
+pauseAd.appendChild(pauseAdImage);
+player.appendChild(pauseAd);
+
+function getRandomPauseAdImage() {
+  const images = DK_PAUSE_AD_IMAGES.filter(Boolean);
+  if (!images.length) return '';
+  const randomIndex = Math.floor(Math.random() * images.length);
+  return images[randomIndex];
+}
+
+function showPauseAd() {
+  // Las páginas de películas pausan el video al abrir/cambiar idioma. Esa
+  // pausa es interna: mientras el selector esté abierto no mostramos el arte
+  // de pausa para que el cambio de pista no parezca una pausa del usuario.
+  const langMenu = document.getElementById('langMenu');
+  const languageMenuOpen = langMenu &&
+    window.getComputedStyle(langMenu).display !== 'none';
+  const playerVisible = window.getComputedStyle(player).display !== 'none';
+  if (languageMenuOpen) {
+    hidePauseAd();
+    return;
+  }
+
+  if (video.currentTime > 0 && !video.ended && playerVisible) {
+    pauseAdImage.src = getRandomPauseAdImage();
+    pauseAd.style.display = 'flex';
+  }
+}
+
+function hidePauseAd() {
+  pauseAd.style.display = 'none';
+}
+
+// Si el usuario abre el selector estando ya en pausa, no habrá un nuevo evento
+// `pause`; por eso también retiramos la imagen desde el propio selector.
+document.addEventListener('click', (event) => {
+  if (event.target.closest('#langBtnWrapper, #langMenu')) {
+    hidePauseAd();
+  }
+}, true);
+
+video.addEventListener('pause', showPauseAd);
+video.addEventListener('play', hidePauseAd);
+
+  // =========================================================
+  // ⭐ ANUNCIO PREROLL (solo no premium)
+  // Antes de reproducir, muestra un video de 5 segundos.
+  // =========================================================
+  function mostrarPrerollSiNoPremium(callback) {
+    if (typeof window.DK_ADS !== 'undefined' && window.DK_ADS.mostrarVideoPreroll) {
+      window.DK_ADS.mostrarVideoPreroll(callback);
+    } else if (callback) {
+      callback();
+    }
+  }
+
+  // Interceptar el botón de play para mostrar el preroll
+  const originalPlay = video.play;
+  let prerollMostrado = false;
+  video.play = function() {
+    if (prerollMostrado || (typeof dkEsPremium === 'function' && dkEsPremium())) {
+      return originalPlay.apply(this, arguments);
+    }
+    prerollMostrado = true;
+    mostrarPrerollSiNoPremium(function() {
+      originalPlay.apply(video, arguments);
+      playPauseBtn.textContent = 'pause';
+      overlay.classList.remove('visible');
+    });
+    return Promise.resolve();
+  };
+
+  // También interceptar click en el overlay/botón play
+  document.addEventListener('click', function(e) {
+    const playBtn = e.target.closest('#playPauseBtn, .vjs-big-play-button, .overlay-play');
+    if (playBtn && video.paused() && !prerollMostrado && (typeof dkEsPremium !== 'function' || !dkEsPremium())) {
+      e.preventDefault();
+      e.stopPropagation();
+      prerollMostrado = true;
+      mostrarPrerollSiNoPremium(function() {
+        video.play();
+        playPauseBtn.textContent = 'pause';
+        overlay.classList.remove('visible');
+      });
+    }
+  }, true);
+  // =========================================================
+// 🧩 Barra de buffer (div .buffer-bar dentro del contenedor de progreso)
+const bufferBar = document.querySelector('.progress-container .buffer-bar');
+
+// ⚡ CRÍTICO: por defecto <input type="range"> solo acepta valores ENTEROS (step="1").
+// Con max="100", cada paso entero equivale a duration/100 segundos (ej. ~20s en una
+// película de 2h), haciendo que la barra salte en vez de moverse fluida.
+// Con step="any" aceptamos decimales y el thumb se mueve continuamente.
+if (progress) {
+  progress.step = 'any';
+}
+
+// Porcentaje de buffer actual (lo llena updateBufferBar)
+let currentBufferPercent = 0;
+
+// ------------------------
+// 2️⃣ Función para actualizar barra y thumb
+// ------------------------
+function updateMovieProgress() {
+  if (!video.duration) return;
+
+  const remaining = video.duration - video.currentTime;
+  const hours = Math.floor(remaining / 3600);
+  const minutes = Math.floor((remaining % 3600) / 60);
+  const seconds = Math.floor(remaining % 60).toString().padStart(2, '0');
+
+  duration.textContent = hours > 0
+    ? `- ${hours}:${minutes.toString().padStart(2,'0')}:${seconds}`
+    : `- ${minutes}:${seconds}`;
+
+  const percent = (video.currentTime / video.duration) * 100;
+
+  progress.value = percent;
+  // Gradiente con 3 zonas: reproducido (blanco) → buferado (blanco translúcido) → restante (#666)
+  progress.style.background =
+    `linear-gradient(to right, #fff ${percent}%, rgba(255,255,255,.4) ${percent}%, rgba(255,255,255,.4) ${currentBufferPercent}%, #666 ${currentBufferPercent}%)`;
+
+  if (thumb) {
+    const width = progress.offsetWidth;
+    thumb.style.left = `${(percent / 100) * width}px`;
+  }
+}
+
+
+// 🧩 Buffer real del video
+function updateBufferBar() {
+  if (!video.buffered || video.buffered.length === 0 || !video.duration) return;
+
+  try {
+    const bufferedEnd = video.buffered.end(video.buffered.length - 1);
+    currentBufferPercent = Math.min((bufferedEnd / video.duration) * 100, 100);
+
+    // Compatibilidad con el estilo anterior (--buffer-width)
+    document.querySelector(".progress")?.style.setProperty("--buffer-width", `${currentBufferPercent}%`);
+
+    // Barra de buffer dedicada (div .buffer-bar dentro del contenedor).
+    // 👇 Se mide sobre el SLIDER (flex:1), no sobre el contenedor completo,
+    //    para que nunca invada la etiqueta de tiempo al acercarse al 100%
+    if (bufferBar) {
+      const slider = document.querySelector(".progress");
+      const sliderWidth = (slider && slider.clientWidth) ? slider.clientWidth : 0;
+      bufferBar.style.width = `${(currentBufferPercent / 100) * sliderWidth}px`;
+    }
+  } catch (err) {
+    console.warn("No se pudo leer buffer:", err);
+  }
+}
+
+// 🔄 Bucle único de progreso fluido (60 FPS) — actualiza progreso + buffer
+// de forma continua mientras se reproduce, con protección contra bucles duplicados.
+let smoothRafId = null;
+
+function startSmoothLoop() {
+  if (smoothRafId !== null) return;
+
+  const loop = () => {
+    updateMovieProgress();
+    updateBufferBar();
+    if (!video.paused && !video.ended && video.duration) {
+      smoothRafId = requestAnimationFrame(loop);
+    } else {
+      smoothRafId = null;
+    }
+  };
+
+  smoothRafId = requestAnimationFrame(loop);
+}
+
+// Eventos principales
+video.addEventListener("play", startSmoothLoop);
+video.addEventListener("progress", updateBufferBar);
+video.addEventListener("loadedmetadata", () => { updateMovieProgress(); updateBufferBar(); });
+video.addEventListener("seeked", () => { updateMovieProgress(); updateBufferBar(); });
+video.addEventListener("pause", () => { updateMovieProgress(); updateBufferBar(); });
+video.addEventListener("ended", () => {
+  if (smoothRafId !== null) {
+    cancelAnimationFrame(smoothRafId);
+    smoothRafId = null;
+  }
+  updateMovieProgress();
+  updateBufferBar();
+});
+// ------------------------
+// 3️⃣ Listeners del progreso
+// ------------------------
+progress.addEventListener('input', () => {
+  video.currentTime = (progress.value / 100) * video.duration;
+  updateMovieProgress(); // actualiza thumb en tiempo real
+});
+
+video.addEventListener('timeupdate', updateMovieProgress);
+video.addEventListener('loadedmetadata', updateMovieProgress);
+video.addEventListener('play', () => requestAnimationFrame(updateMovieProgress));
+video.addEventListener('pause', updateMovieProgress);
+// NUEVO:  para "Reanudar" y "Reinicia"
+const watchButtonText = document.getElementById('watchButtonText');
+const restartButton = document.getElementById('restartButton');
+
+// NUEVO: Barra visual de progreso
+const progressBar = document.getElementById('watchProgressBar');
+
+let hideControlsTimeout;
+
+// Reanudar desde donde se dejó
+// Reanudar desde donde se dejó
+video.addEventListener('loadedmetadata', () => {
+  const savedTime = localStorage.getItem(`progress_${movieId}`);
+  if (savedTime) {
+    video.currentTime = parseFloat(savedTime);
+  }
+  updateMovieProgress();
+
+  // ✅ Mostrar barra y botón si aplica
+  if (video.currentTime > 5 && video.currentTime < video.duration - 5) {
+    progressBar.style.display = "block";
+    showRestartButton();
+    watchButtonText.textContent = "Continuar viendo";
+  }
+
+  // 🛰️ Sincronizar con Supabase al cargar metadata
+  if (typeof throttledSyncData === 'function') {
+    throttledSyncData(movieId);
+  }
+});
+
+let lastSync = 0; // Estado inicial del botón al cargar la página
+updateWatchButtonFromStorage();
+
+// Guardar progreso y actualizar UI
+video.addEventListener('timeupdate', () => {
+  updateMovieProgress();
+
+  const currentTime = video.currentTime;
+  const totalDuration = video.duration || 1;
+
+  // Guardar en localStorage
+  localStorage.setItem(`progress_${movieId}`, currentTime);
+  localStorage.setItem(`duration_${movieId}`, totalDuration);
+  
+
+  // Sincronizar cada 5 segundos
+  const now = Date.now();
+  if (typeof throttledSyncData === 'function' && now - lastSync > 5000) {
+    throttledSyncData(movieId);
+    lastSync = now;
+  }
+
+  // Barra de progreso
+  if (progressBar && totalDuration) {
+    const percent = (currentTime / totalDuration) * 100;
+    progressBar.firstElementChild?.style.setProperty("width", `${percent}%`);
+
+    if (currentTime > 5 && currentTime < totalDuration - 0.5) {
+      progressBar.style.display = "block";
+    }
+  }
+
+  // Botón reiniciar
+  const percentPlayed = currentTime / totalDuration;
+
+if (watchButtonText.textContent === "Volver a ver") {
+    hideRestartButton();
+} else if (currentTime > 5 && percentPlayed < 0.8) {
+    showRestartButton();
+    localStorage.setItem(`hasStarted_${movieId}`, 'true');
+} else {
+    hideRestartButton();
+}
+
+// Cambiar texto del botón
+if (percentPlayed >= 0.8) {
+    watchButtonText.textContent = "Volver a ver";
+} else if (currentTime > 10) {
+    watchButtonText.textContent = "Continuar viendo";
+} else {
+    watchButtonText.textContent = "Ver ahora";
+}
+});
+
+// Evento final real
+video.addEventListener('ended', () => {
+  endMovieCleanup(true); // 🔹 Indicamos que terminó al 100%
+});
+
+// Limpieza del estado
+function endMovieCleanup(finished = false) {
+
+  // 🔥 Al terminar la película: salir de fullscreen y volver a vertical
+  exitFullscreen();
+
+  if (window.Android) {
+    Android.setPortrait();
+  }
+
+  player.style.display = 'none';
+  cover.style.display = 'flex';
+  video.pause();
+  playPauseBtn.textContent = 'play_arrow';
+  progressBar.style.display = 'none';
+  hideRestartButton();
+
+  if (finished) {
+    // Solo limpiar progreso si de verdad terminó
+    localStorage.removeItem(`progress_${movieId}`);
+    localStorage.removeItem(`hasStarted_${movieId}`);
+    progressBar.firstElementChild.style.width = "0%";
+  }
+
+  // 🔹 Siempre actualizar el botón al cerrar el reproductor
+  updateWatchButtonFromStorage();
+}
+
+// Nueva función que actualiza el botón y la barra según progreso
+function updateWatchButton() {
+  const savedTime = parseFloat(localStorage.getItem(`progress_${movieId}`) || "0");
+  const totalDuration = parseFloat(localStorage.getItem(`duration_${movieId}`) || video.duration || 1);
+  const currentTime = video.currentTime || 0;
+
+  const effectiveTime = Math.max(savedTime, currentTime);
+
+  // Actualizar el texto del botón según el progreso
+  if (effectiveTime >= totalDuration * 0.9) {
+    watchButtonText.textContent = "Volver a ver";
+    restartButton.style.display = "inline-flex";
+    progressBar.style.display = "block";
+  } else if (effectiveTime > 5) {
+    watchButtonText.textContent = "Continuar viendo";
+    restartButton.style.display = "inline-flex";
+    progressBar.style.display = "block";
+  } else {
+    watchButtonText.textContent = "Ver ahora";
+    restartButton.style.display = "none";
+    progressBar.style.display = "none";
+  }
+
+  // Actualizar barra de progreso
+  if (progressBar && totalDuration) {
+    const percent = (effectiveTime / totalDuration) * 100;
+    progressBar.firstElementChild.style.width = `${percent}%`;
+  }
+}
+
+// Llamadas a la función en distintos momentos del video
+video.addEventListener('loadedmetadata', updateWatchButton);
+video.addEventListener('timeupdate', updateWatchButton);
+video.addEventListener('play', updateWatchButton);
+
+
+// Tu función existente para mantener compatibilidad con el almacenamiento
+// Nueva función que actualiza el botón y la barra según progreso
+// Nueva función que actualiza el botón y la barra según progreso
+function updateWatchButton() {
+  const savedTime = parseFloat(localStorage.getItem(`progress_${movieId}`) || "0");
+  const totalDuration = parseFloat(localStorage.getItem(`duration_${movieId}`) || video.duration || 1);
+  const currentTime = video.currentTime || 0;
+
+  const effectiveTime = Math.max(savedTime, currentTime);
+
+  if (effectiveTime >= totalDuration * 0.8) {
+    // Caso: Volver a ver
+    watchButtonIcon.textContent = "replay";   // 👈 Cambié restart_alt por replay
+    watchButtonText.textContent = "Volver a ver";
+    restartButton.style.display = "none";     // 👈 Oculto el botón extra (sin Reiniciar a partir del 80%)
+    progressBar.style.display = "block";
+  } else if (effectiveTime > 5) {
+    // Caso: Continuar viendo
+    watchButtonIcon.textContent = "play_arrow";
+    watchButtonText.textContent = "Continuar viendo";
+    restartButton.style.display = "inline-flex"; // 👈 Aquí sí se ve
+    progressBar.style.display = "block";
+  } else {
+    // Caso: Ver ahora
+    watchButtonIcon.textContent = "play_arrow";
+    watchButtonText.textContent = "Ver ahora";
+    restartButton.style.display = "none";
+    progressBar.style.display = "none";
+  }
+
+  // Barra de progreso
+  if (progressBar && totalDuration) {
+    const percent = (effectiveTime / totalDuration) * 100;
+    progressBar.firstElementChild.style.width = `${percent}%`;
+  }
+}
+
+// Llamadas a la función en distintos momentos del video
+video.addEventListener('loadedmetadata', updateWatchButton);
+video.addEventListener('timeupdate', updateWatchButton);
+video.addEventListener('play', updateWatchButton);
+
+
+// Función para mantener compatibilidad con almacenamiento
+function updateWatchButtonFromStorage() {
+  const savedTime = parseFloat(localStorage.getItem(`progress_${movieId}`) || "0");
+  const savedDuration = parseFloat(localStorage.getItem(`duration_${movieId}`) || "1");
+
+  if (savedTime > 10) {
+    const percentPlayed = savedTime / savedDuration;
+    if (percentPlayed >= 0.8) {
+      // Caso: Volver a ver
+      watchButtonIcon.textContent = "replay";   // 👈 Cambiado
+      watchButtonText.textContent = "Volver a ver";
+      restartButton.style.display = "none";     // 👈 Oculto
+    } else {
+      // Caso: Continuar viendo
+      watchButtonIcon.textContent = "play_arrow";
+      watchButtonText.textContent = "Continuar viendo";
+      restartButton.style.display = "inline-flex";
+    }
+    progressBar.style.display = "block";
+    progressBar.firstElementChild.style.width = `${(savedTime / savedDuration) * 100}%`;
+  } else {
+    // Caso: Ver ahora
+    watchButtonIcon.textContent = "play_arrow";
+    watchButtonText.textContent = "Ver ahora";
+    restartButton.style.display = "none";
+    progressBar.style.display = "none";
+  }
+}
+
+// Botón principal
+document.getElementById('watchButton').addEventListener('click', async () => {
+
+    console.log("🟢 CLICK EN VER AHORA");
+
+
+    if (!window.suggestionShown) {
+
+    const profile = JSON.parse(
+        localStorage.getItem("dk_profile") || "{}"
+    );
+
+    if(profile.premium){
+
+        console.log("⭐ Premium: saltando sugerencia");
+
+    } else {
+
+        console.log("⏳ Lanzando sugerencia");
+
+        await window.showSuggestedContent();
+
+        console.log("✅ Sugerencia terminada");
+
+    }
+
+}
+
+
+    console.log("🎬 Voy a abrir reproductor");
+
+
+    if (watchButtonText.textContent.includes("Volver a ver")) {
+
+        restartMovie();
+
+    } else {
+
+        showPlayer();
+
+    }
+
+});
+
+// Reiniciar
+function restartMovie() {
+  localStorage.removeItem(`progress_${movieId}`);
+  video.currentTime = 0;
+  showPlayer();
+  if (screen.orientation && screen.orientation.lock) {
+    screen.orientation.lock('landscape').catch(err => {
+      console.warn('⚠️ No se pudo bloquear orientación en restart:', err);
+    });
+  }
+}
+
+
+
+
+
+
+
+function togglePlay() {
+  if (video.paused) {
+    video.play();
+    playPauseBtn.textContent = 'pause';
+    overlay.classList.remove('visible');
+  } else {
+    video.pause();
+    playPauseBtn.textContent = 'play_arrow';
+    overlay.classList.add('visible');
+  }
+}
+
+function skip(seconds) {
+  video.currentTime += seconds;
+}
+
+function goBack() {
+
+// 🔥 SALIR DE LANDSCAPE (ANDROID)
+if (window.Android) {
+  Android.setPortrait();
+}
+
+// 🔥 SALIR DE FULLSCREEN WEB
+exitFullscreen();
+
+player.style.display = 'none';
+cover.style.display = 'flex';
+video.pause();
+playPauseBtn.textContent = 'play_arrow';
+
+// 👇 Refrescar los botones de la portada según el progreso guardado
+updateWatchButtonFromStorage();
+}
+
+function cerrarReproductor() {
+  goBack();
+}
+
+function updateProgress() {
+  if (video.duration) {
+    const remaining = video.duration - video.currentTime;
+
+    const hours = Math.floor(remaining / 3600);
+    const minutes = Math.floor((remaining % 3600) / 60);
+    const seconds = Math.floor(remaining % 60).toString().padStart(2, '0');
+
+    const formattedTime = hours > 0
+      ? `- ${hours}:${minutes.toString().padStart(2, '0')}:${seconds}`
+      : `- ${minutes}:${seconds}`;
+
+    duration.textContent = formattedTime;
+
+    const percent = (video.currentTime / video.duration) * 100;
+    progress.value = percent;
+    progress.style.background = `linear-gradient(to right, white ${percent}%, #666 ${percent}%)`;
+  }
+}
+
+progress.addEventListener('input', () => {
+  video.currentTime = (progress.value / 100) * video.duration;
+});
+
+/* -------------------
+   👇 Gestión de controles
+------------------- */
+let controlsVisible = false;
+
+/* -------------------
+   Ajuste de toggleControls
+------------------- */
+function toggleControls() {
+  if (controlsVisible) {
+    // 👇 Si ya están visibles → ocultarlos
+    hideControls();
+    clearTimeout(hideControlsTimeout);
+  } else {
+    // 👇 Si están ocultos → mostrarlos y reiniciar timeout
+    showControls();
+  }
+}
+
+const overlayTop = document.getElementById('overlayTop');
+const overlayBottom = document.getElementById('overlayBottom');
+
+function showControls() {
+  // Al volver a tocar la pantalla, los controles reemplazan al anuncio de pausa.
+  hidePauseAd();
+  controls.classList.remove('hidden');
+  overlay.classList.add('visible');
+  overlayTop.classList.add('visible');
+  overlayBottom.classList.add('visible');
+  controlsVisible = true;
+
+  clearTimeout(hideControlsTimeout);
+  hideControlsTimeout = setTimeout(() => {
+    hideControls();
+  }, 5000);
+}
+
+function hideControls() {
+  controls.classList.add('hidden');
+  overlay.classList.remove('visible');
+  overlayTop.classList.remove('visible');
+  overlayBottom.classList.remove('visible');
+  controlsVisible = false;
+
+  // Si sigue pausada al desaparecer los controles, vuelve a mostrar el anuncio.
+  if (video.paused) {
+    showPauseAd();
+  }
+}
+
+
+
+/* -------------------
+   Detectar si es táctil o desktop
+------------------- */
+const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+if (isTouchDevice) {
+  // 👉 En móviles: tap alterna los controles SIN ghost click
+  let lastTouch = 0;
+
+  video.addEventListener('touchstart', (e) => {
+    if (e.touches.length > 1) return; // ignora gestos multi-touch
+    e.preventDefault();               // evita que luego dispare click
+    e.stopPropagation();
+    lastTouch = Date.now();
+    toggleControls();                 // alterna inmediatamente al tocar
+  }, { passive: false });
+
+  // 🚫 Bloquear el click fantasma que llega tras el touch
+  video.addEventListener('click', (e) => {
+    if (Date.now() - lastTouch < 500) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+  }, true); // usar captura para interceptarlo primero
+} else {
+  // 👉 En PC: mousemove muestra controles y activa auto-ocultar cursor
+  video.addEventListener('mousemove', () => {
+    showControls();
+    enableCursorAutoHide(); // <-- ocultar cursor
+  });
+
+  /* -------------------
+     Ocultar cursor en PC
+  ------------------- */
+  let mouseMoveTimeout;
+
+  function enableCursorAutoHide() {
+    // mostrar cursor al mover el mouse
+    document.body.style.cursor = "default";
+    clearTimeout(mouseMoveTimeout);
+
+    mouseMoveTimeout = setTimeout(() => {
+      // 👉 Solo ocultar si el video está reproduciéndose
+      if (!video.paused) {
+        document.body.style.cursor = "none";
+      }
+    }, 3000); // 3 segundos sin mover → ocultar
+  }
+
+  // Cuando se pausa el video → mostrar cursor siempre
+  video.addEventListener('pause', () => {
+    document.body.style.cursor = "default";
+    clearTimeout(mouseMoveTimeout);
+  });
+
+  // Cuando se reproduce → activar auto-hide
+  video.addEventListener('play', enableCursorAutoHide);
+}
+
+function showPlayer() {
+
+    console.trace("🎬 showPlayer()");
+
+    player.style.pointerEvents = "auto";
+
+    cover.style.display = 'none';
+    player.style.display = 'flex';
+
+  // 🔥 IMPORTANTE: primero Android, luego fullscreen
+  if (window.Android) {
+    Android.setLandscape();
+  } else {
+    console.log("❌ Android no disponible");
+  }
+
+  video.play();
+
+    playPauseBtn.textContent = 'pause';
+
+    showControls();
+
+
+    // 🔥 Entrar fullscreen solo si no estamos ya dentro
+    if (!document.fullscreenElement) {
+        enterFullscreen();
+    }
+
+
+    // Mostrar controles después de la transición
+    setTimeout(() => {
+        showControls();
+    }, 500);
+
+
+    // Mostrar barra y botón si ya hay progreso
+    if (video.currentTime > 5 && video.currentTime < video.duration - 5) {
+
+        progressBar.style.display = "block";
+        showRestartButton();
+
+    }
+
+}
+
+
+player.addEventListener('mousemove', showControls);
+
+player.addEventListener('click', () => {
+    showControls();
+});
+
+player.addEventListener('touchstart', showControls, { passive: true });
+
+function enterFullscreen() {
+
+    console.trace("📺 enterFullscreen()");
+
+    if (document.fullscreenElement) {
+        console.log("⚠️ Ya está en fullscreen");
+        return;
+    }
+
+    try {
+
+        if (player.requestFullscreen) {
+
+            player.requestFullscreen();
+
+        } else if (player.webkitRequestFullscreen) {
+
+            player.webkitRequestFullscreen();
+
+        } else if (player.msRequestFullscreen) {
+
+            player.msRequestFullscreen();
+
+        }
+
+    } catch (e) {
+
+        console.warn("❌ Error entrando fullscreen:", e);
+
+    }
+
+}
+
+function exitFullscreen() {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.webkitExitFullscreen) {
+    document.webkitExitFullscreen();
+  } else if (document.msExitFullscreen) {
+    document.msExitFullscreen();
+  }
+}
+
+let changingFromSuggestion = false;
+
+document.addEventListener('fullscreenchange', () => {
+
+  const isFullscreen = document.fullscreenElement;
+
+  if (!isFullscreen) {
+
+    if (window.changingFromSuggestion) {
+
+      window.changingFromSuggestion = false;
+      return;
+
+    }
+
+
+    if (!video.paused) {
+      video.pause();
+    }
+
+
+    playPauseBtn.textContent = 'play_arrow';
+
+    player.style.display = 'none';
+    cover.style.display = 'flex';
+
+  }
+
+});
+
+
+let hasStarted = false;
+let reiniciaTimer = null;
+
+video.addEventListener('play', () => {
+
+  if (!hasStarted && video.currentTime < video.duration - 5) {
+
+    hasStarted = true;
+
+    reiniciaTimer = setTimeout(() => {
+
+      if (video.currentTime > 5 && video.currentTime < video.duration - 5) {
+
+        showRestartButton();
+        localStorage.setItem(`hasStarted_${movieId}`, 'true');
+        progressBar.style.display = "block";
+
+      }
+
+    }, 5000);
+
+
+    // 📱 Android maneja orientación
+    if (window.Android) {
+
+      Android.setLandscape();
+
+    }
+
+  }
+
+});
+
+
+// Función para mostrar el botón de "Reinicia"
+function showRestartButton() {
+  const currentTime = video.currentTime;
+  const totalDuration = video.duration || parseFloat(localStorage.getItem(`duration_${movieId}`) || "1");
+  const percentPlayed = currentTime / totalDuration;
+
+  // Solo mostrar si la película NO terminó (menos de 90%)
+  if (percentPlayed < 0.8 &&
+    watchButtonText.textContent !== "Volver a ver") {
+
+    restartButton.style.display = "flex";
+    restartButton.classList.add("shown");
+    document.getElementById("restartSpacer").style.height = "60px";
+
+} else {
+    hideRestartButton();
+}
+}
+
+function hideRestartButton() {
+  restartButton.style.display = 'none';
+  restartButton.classList.remove('shown');
+  document.getElementById('restartSpacer').style.height = '0px';
+}
+
+function actualizarMediaSession() {
+  if (!('mediaSession' in navigator)) return;
+
+  try {
+    const titulo =
+      document.getElementById('nombre')?.textContent || 'Reproduciendo';
+
+    const posterEl = document.getElementById('favoritoImagen');
+    const poster = posterEl?.src;
+    if (!poster) return;
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: titulo,
+      artist: 'Digital Knight',
+      album: 'Películas',
+      artwork: [
+        { src: poster, sizes: '96x96', type: 'image/jpeg' },
+        { src: poster, sizes: '128x128', type: 'image/jpeg' },
+        { src: poster, sizes: '192x192', type: 'image/jpeg' },
+        { src: poster, sizes: '256x256', type: 'image/jpeg' },
+        { src: poster, sizes: '384x384', type: 'image/jpeg' },
+        { src: poster, sizes: '512x512', type: 'image/jpeg' }
+      ]
+    });
+  } catch (e) {
+    console.warn('⚠️ MediaSession error:', e);
+  }
+}
+
+if ('mediaSession' in navigator) {
+  video.addEventListener('play', actualizarMediaSession);
+
+  const favImg = document.getElementById('favoritoImagen');
+  if (favImg) {
+    favImg.addEventListener('load', actualizarMediaSession);
+  }
+}
+
+
+
+// Ajustar al cargar la página
+window.addEventListener('DOMContentLoaded', () => {
+  const savedTime = parseFloat(localStorage.getItem(`progress_${movieId}`) || 0);
+  const totalDuration = parseFloat(localStorage.getItem(`duration_${movieId}`) || 1);
+  const percentPlayed = savedTime / totalDuration;
+  const hasStartedFlag = localStorage.getItem(`hasStarted_${movieId}`);
+
+  // Solo mostrar el botón si ya empezó pero NO terminó
+  if (percentPlayed < 0.8 && savedTime > 0 && hasStartedFlag === 'true') {
+    showRestartButton();
+  } else {
+    hideRestartButton();
+  }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  const header = document.getElementById('header');
+  const pageTitle = document.getElementById('page-title');
+
+  if (!header || !pageTitle) return;
+
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    const maxScroll = 300;
+
+    const opacity = Math.min(scrollY / maxScroll, 1);
+    const titleOpacity = scrollY > 150 ? Math.min(scrollY / maxScroll, 1) : 0;
+
+    // Usamos #01011d con transparencia
+    header.style.backgroundColor = `rgba(1, 1, 29, ${opacity})`;
+    pageTitle.style.opacity = titleOpacity;
+  });
+});
+
+
+const favoritoBtn = document.getElementById('favoritoBtn');
+const favoritoIcon = document.getElementById('favoritoIcon'); // Ícono
+const identificador = favoritoBtn.getAttribute('data-identificador');
+
+// Función para manejar el favorito
+async function toggleFavorito() {
+  const favoritoEnlace = document.getElementById('favoritoEnlace');
+  const imagen = document.getElementById('favoritoImagen');
+  const nombre = document.getElementById('nombre').textContent;
+  const favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
+
+  const encontrado = favoritos.some(f => f.identificador === identificador);
+
+  if (encontrado) {
+    const nuevos = favoritos.filter(f => f.identificador !== identificador);
+    localStorage.setItem('favoritos', JSON.stringify(nuevos));
+    favoritoIcon.innerText = 'add';
+    mostrarNotificacion('Se eliminó de favoritos');
+  } else {
+    favoritos.push({
+      identificador,
+      imagen: imagen.outerHTML,
+      enlace: favoritoEnlace.href,
+      nombre
+    });
+    localStorage.setItem('favoritos', JSON.stringify(favoritos));
+    favoritoIcon.innerText = 'check';
+    mostrarNotificacion('Se añadió a favoritos');
+  }
+
+  // ⏫ Sincronizar con Supabase directamente
+  try {
+    const { data: { session } } = await window.supabase.auth.getSession();
+    if (!session) return;
+    const userId = session.user.id;
+
+    if (!encontrado) {
+      await window.supabase.from('favoritos').upsert({
+        id: userId,
+        identificador,
+        nombre,
+        imagen: imagen.outerHTML,
+        enlace: favoritoEnlace.href
+      }, { onConflict: ['id', 'identificador'] });
+    } else {
+      await window.supabase.from('favoritos')
+        .delete()
+        .eq('id', userId)
+        .eq('identificador', identificador);
+    }
+  } catch (e) {
+    console.warn('❌ Error al sincronizar favorito:', e);
+  }
+
+  // 🔄 Subir el cambio a Supabase también por si hay más datos
+  if (typeof throttledSyncData === 'function') {
+    throttledSyncData(movieId);
+  }
+}
+
+// =========================================================
+
+// =========================================================
+// 🔊 CONTROL DE VOLUMEN – botón + slider debajo de la barra de progreso
+// =========================================================
+(function() {
+  console.log('[DK-VOL] start');
+
+  const style = document.createElement('style');
+  style.textContent = `
+    #dk-volume-control { display:flex !important; align-items:center; gap:8px; padding:8px 0; z-index:99999; }
+    #dk-volume-icon { cursor:pointer; font-size:22px; user-select:none; color:#fff; }
+    #dk-volume-slider-wrap { position:relative; display:none; align-items:center; gap:6px; padding:6px 8px; background:rgba(0,0,0,0.75); border-radius:8px; backdrop-filter:blur(4px); z-index:100000; }
+    #dk-volume-slider { width:110px; height:4px; accent-color:#fff; cursor:pointer; }
+    #dk-volume-slider-wrap:hover { display:flex !important; }
+    #dk-volume-control:hover #dk-volume-slider-wrap { display:flex !important; }
+    #dk-player-actions-row { position:relative; display:flex; align-items:center; justify-content:flex-start; min-height:40px; width:100%; pointer-events:auto; }
+    #dk-player-actions-row #dk-volume-control { flex:0 0 auto; }
+    #dk-player-actions-row .extra-controls { position:absolute; left:50%; transform:translateX(-50%); width:auto; justify-content:center; gap:clamp(18px, 8vw, 150px); margin:0; white-space:nowrap; }
+  `;
+  document.head.appendChild(style);
+
+  let created = false;
+  let slider, volIcon, sliderWrap, volWrapper, lastVolume = 1, isDragging = false;
+
+  function getVideoEl() {
+    return document.getElementById('video_html5_api') || document.querySelector('#video video') || document.querySelector('video');
+  }
+
+  function updateIcon(vol) {
+    if (!volIcon) return;
+    if (vol <= 0) volIcon.textContent = 'volume_off';
+    else if (vol < 0.5) volIcon.textContent = 'volume_down';
+    else volIcon.textContent = 'volume_up';
+  }
+
+  function toggleVolume() {
+    const v = getVideoEl();
+    if (!v) return;
+    if (v.muted) { v.muted = false; if (lastVolume && lastVolume > 0) v.volume = lastVolume; if (slider) slider.value = Math.round(lastVolume * 100); updateIcon(lastVolume); }
+    else { lastVolume = v.volume; v.muted = true; if (slider) slider.value = '0'; updateIcon(0); }
+  }
+
+  function create() {
+    if (created) return true;
+    let container = document.querySelector('#controls .bottom-bar');
+    if (!container) container = document.querySelector('.bottom-bar');
+    if (!container) container = document.body;
+    if (!container) return false;
+
+    volWrapper = document.createElement('div');
+    volWrapper.id = 'dk-volume-control';
+    volWrapper.style.cssText = 'display:flex !important; align-items:center; gap:8px; padding:8px 0; z-index:99999;';
+
+    volIcon = document.createElement('span');
+    volIcon.className = 'material-icons';
+    volIcon.id = 'dk-volume-icon';
+    volIcon.textContent = 'volume_up';
+    volIcon.style.cssText = 'cursor:pointer; font-size:22px; user-select:none;';
+
+    sliderWrap = document.createElement('div');
+    sliderWrap.id = 'dk-volume-slider-wrap';
+
+    slider = document.createElement('input');
+    slider.type = 'range';
+    slider.id = 'dk-volume-slider';
+    slider.min = '0';
+    slider.max = '100';
+    slider.value = '100';
+    slider.step = '1';
+
+    sliderWrap.appendChild(slider);
+    volWrapper.appendChild(volIcon);
+    volWrapper.appendChild(sliderWrap);
+
+    const pc = container.querySelector('.progress-container');
+    const extraControls = container.querySelector('.extra-controls');
+    const actionsRow = document.createElement('div');
+    actionsRow.id = 'dk-player-actions-row';
+    actionsRow.appendChild(volWrapper);
+    if (extraControls) actionsRow.appendChild(extraControls);
+    if (pc) { pc.insertAdjacentElement('afterend', actionsRow); }
+    else { container.appendChild(actionsRow); }
+
+    slider.addEventListener('input', (e) => { const v = getVideoEl(); if (!v) return; isDragging = true; const val = parseInt(e.target.value, 10) / 100; v.muted = false; v.volume = val; lastVolume = val; updateIcon(val); });
+    slider.addEventListener('change', () => { isDragging = false; });
+    volIcon.addEventListener('click', toggleVolume);
+    const v = getVideoEl();
+    if (v) { v.addEventListener('volumechange', () => { const val = Math.round((v.muted ? 0 : v.volume) * 100); slider.value = val; updateIcon(v.muted ? 0 : v.volume); }); }
+    volWrapper.addEventListener('mouseenter', () => { if (sliderWrap) sliderWrap.style.display = 'flex'; });
+    volWrapper.addEventListener('mouseleave', () => { if (!isDragging && sliderWrap) sliderWrap.style.display = 'none'; });
+    const cur = getVideoEl();
+    if (cur) updateIcon(cur.muted ? 0 : cur.volume);
+
+    created = true;
+    console.log('[DK-VOL] creado');
+    return true;
+  }
+
+  if (create()) return;
+
+  let attempts = 0;
+  const interval = setInterval(() => {
+    attempts++;
+    if (create()) { clearInterval(interval); return; }
+    if (attempts > 25) { clearInterval(interval); console.log('[DK-VOL] falló 25 intentos'); }
+  }, 400);
+})();
+// =========================================================
+
+
+// Función para cargar el estado inicial del botón de favoritos
+function cargarEstadoFavorito() {
+    const favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
+    const encontrado = favoritos.some(favorito => favorito.identificador === identificador);
+
+    if (encontrado) {
+        // Si está en favoritos, cambia solo el ícono
+        favoritoIcon.innerText = 'check';
+    } else {
+        // Si no está en favoritos, deja el ícono por defecto
+        favoritoIcon.innerText = 'add';
+    }
+}
+
+// Llamar a la función al cargar la página
+document.addEventListener('DOMContentLoaded', cargarEstadoFavorito);
+
+function mostrarNotificacion(mensaje) {
+  const notificacion = document.getElementById('notificacion');
+  const notificacionTexto = document.getElementById('notificacionTexto');
+
+  notificacionTexto.innerText = mensaje;
+  notificacion.style.bottom = "80px"; // Justo encima del footer
+
+  setTimeout(() => {
+    notificacion.style.bottom = "-200px"; // Oculta fuera del viewport
+  }, 3000);
+}
+
+// ================================
+// 👤 PERFIL – sincronizar imágenes
+// ================================
+function updateProfileImage(src) {
+  if (!src) return;
+
+  const ids = [
+    "footerIconImg",
+    "profileImage",
+    "profilePageImage",
+    "headerProfileIcon",
+    "editableProfile",
+    "editableProfileInModal"
+  ];
+
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.tagName === "IMG") {
+      el.src = src;
+    }
+  });
+
+  // Ocultar iconos por defecto si existen
+  const defaultIcon = document.getElementById("defaultProfileIcon");
+  if (defaultIcon) defaultIcon.style.display = "none";
+
+  const defaultIconAlt = document.getElementById("defaultProfileIconAlt");
+  if (defaultIconAlt) defaultIconAlt.style.display = "none";
+
+  // Guardar imagen
+  localStorage.setItem("profileImage", src);
+}
+
+// Restaurar al cargar página
+document.addEventListener("DOMContentLoaded", () => {
+  const savedProfileImage = localStorage.getItem("profileImage");
+  if (savedProfileImage) {
+    updateProfileImage(savedProfileImage);
+  }
+});
+// Función para cambiar todas las imágenes de perfil
+function updateProfileImage(src) {
+  const ids = [
+    "footerIconImg",
+    "footerProfileImage",
+    "profileImage",
+    "profilePageImage",
+    "editableProfile",
+    "editableProfileInModal",
+    "headerProfileIcon"
+  ];
+
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.src = src;
+  });
+
+  // Ocultar iconos por defecto si existen
+  const defaultIcon = document.getElementById("defaultProfileIcon");
+  if (defaultIcon) defaultIcon.style.display = "none";
+
+  const defaultIconAlt = document.getElementById("defaultProfileIconAlt");
+  if (defaultIconAlt) defaultIconAlt.style.display = "none";
+
+  // Guardar en localStorage
+  localStorage.setItem("profileImage", src);
+}
+
+// Restaurar la imagen de perfil guardada al cargar la página
+window.addEventListener("load", () => {
+  const storedProfileImage = localStorage.getItem("profileImage");
+  if (storedProfileImage) {
+    updateProfileImage(storedProfileImage); // Reutilizamos la función
+  }
+});
+
+
+var lastScrollTop = 0;
+    var footer = document.querySelector(".footer");
+
+    window.addEventListener("scroll", function () {
+        var currentScroll = window.scrollY;
+
+        if (currentScroll > lastScrollTop) {
+            // Desliza hacia abajo -> Ocultar footer
+            footer.classList.add("hidden");
+        } else {
+            // Desliza hacia arriba -> Mostrar footer
+            footer.classList.remove("hidden");
+        }
+
+        lastScrollTop = currentScroll;
+    });
+
+
+const aspectModes = [
+  'cover',
+  'fill',
+  'contain',
+  'fit-height',
+  'fit-width',
+  'scale-down'
+];
+
+let currentAspectIndex = 0;
+
+function toggleAspectRatio() {
+  // Obtener el elemento de video real de Video.js
+  const videoEl = document.querySelector('#video_html5_api') ||
+                  document.querySelector('#video video');
+
+  const label = document.getElementById('aspectLabel');
+
+  if (!videoEl) {
+    console.warn('[Aspect Ratio] No se encontró el video.');
+    return;
+  }
+
+  currentAspectIndex =
+    (currentAspectIndex + 1) % aspectModes.length;
+
+  const mode = aspectModes[currentAspectIndex];
+
+  videoEl.style.objectFit =
+    mode.startsWith('fit-') ? 'contain' : mode;
+
+  switch (mode) {
+    case 'fit-height':
+      videoEl.style.width = 'auto';
+      videoEl.style.height = '100%';
+      break;
+
+    case 'fit-width':
+      videoEl.style.width = '100%';
+      videoEl.style.height = 'auto';
+      break;
+
+    default:
+      videoEl.style.width = '100%';
+      videoEl.style.height = '100%';
+      break;
+  }
+
+  if (label) {
+    label.textContent = mode;
+    label.style.display = 'block';
+
+    clearTimeout(label._hideTimeout);
+
+    label._hideTimeout = setTimeout(() => {
+      label.style.display = 'none';
+    }, 1500);
+  }
+
+  console.log('[Aspect Ratio] Modo aplicado:', mode);
+}
+
+// Permitir que el HTML pueda llamar a la función
+window.toggleAspectRatio = toggleAspectRatio;
+
+
+const loader = document.getElementById('videoLoader');
+
+// Mostrar loader mientras se carga o busca
+video.addEventListener('waiting', () => {
+  loader.classList.remove('hidden');
+});
+
+// Ocultar loader cuando comience a reproducirse
+video.addEventListener('playing', () => {
+  loader.classList.add('hidden');
+});
+
+// También al cambiar manualmente de episodio o al adelantar
+video.addEventListener('seeking', () => {
+  loader.classList.remove('hidden');
+});
+
+video.addEventListener('seeked', () => {
+  loader.classList.add('hidden');
+});
+
+// Bloquear teclas comunes de desarrollo
+document.addEventListener('keydown', function(e) {
+  if (
+    e.key === 'F12' ||
+    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) ||
+    (e.ctrlKey && e.key === 'U')
+  ) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+});
+
+
+// =========================================================
+// 📺 CAST / WEB VIDEO CASTER – transmitir película a TV
+// =========================================================
+function castCurrentVideo() {
+  const videoEl = document.getElementById("video");
+  if (!videoEl) {
+    alert("No se encontró el reproductor.");
+    return;
+  }
+  const player = videoEl.player || (typeof videojs !== 'undefined' && videojs.getPlayer ? videojs.getPlayer("video") : null);
+  if (!player) {
+    alert("No se encontró el reproductor.");
+    return;
+  }
+  const currentSrc = player.currentSrc();
+  if (!currentSrc) {
+    alert("No se encontró el enlace del video.");
+    return;
+  }
+
+  // 🔒 Guardar estado antes de salir (por si la página se recarga al volver)
+  sessionStorage.setItem('dk_cast_return', window.location.href);
+  sessionStorage.setItem('dk_cast_type', 'movie');
+  sessionStorage.setItem('dk_cast_id', window.movieId || '');
+
+  const appLink = "wvc-x-callback://open?url=" + encodeURIComponent(currentSrc) + "&secure_uri=true";
+  const storeLink = "https://play.google.com/store/apps/details?id=com.instantbits.cast.webvideo";
+
+  // Intentar abrir la app Web Video Caster (misma pestaña para lanzar el intent de Android)
+  // Nota: desde JavaScript no se puede detectar con certeza si una app externa se abrió,
+  // por lo que NO se abre Play Store automáticamente tras un temporizador (evita que se
+  // abran ambas al mismo tiempo). Si WVC no está instalada, nada ocurre; el usuario puede
+  // ir a Play Store manualmente si lo desea.
+  location.href = appLink;
+}
+// Blindar para que el HTML no sobrescriba esta función
+Object.defineProperty(window, 'castCurrentVideo', { value: castCurrentVideo, writable: false, configurable: true });
+// =========================================================
+
+// =========================================================
+// 🔊 CONTROL DE VOLUMEN – botón + slider debajo de la barra de progreso
+// =========================================================
+(function() {
+  console.log('[DK-VOL] start');
+
+  const style = document.createElement('style');
+  style.textContent = `
+    #dk-volume-control { display:flex !important; align-items:center; gap:8px; padding:8px 0; z-index:99999; }
+    #dk-volume-icon { cursor:pointer; font-size:22px; user-select:none; color:#fff; }
+    #dk-volume-slider-wrap { position:relative; display:none; align-items:center; gap:6px; padding:6px 8px; background:rgba(0,0,0,0.75); border-radius:8px; backdrop-filter:blur(4px); z-index:100000; }
+    #dk-volume-slider { width:110px; height:4px; accent-color:#fff; cursor:pointer; }
+    #dk-volume-slider-wrap:hover { display:flex !important; }
+    #dk-volume-control:hover #dk-volume-slider-wrap { display:flex !important; }
+    #dk-player-actions-row { position:relative; display:flex; align-items:center; justify-content:flex-start; min-height:40px; width:100%; pointer-events:auto; }
+    #dk-player-actions-row #dk-volume-control { flex:0 0 auto; }
+    #dk-player-actions-row .extra-controls { position:absolute; left:50%; transform:translateX(-50%); width:auto; justify-content:center; gap:clamp(18px, 8vw, 150px); margin:0; white-space:nowrap; }
+  `;
+  document.head.appendChild(style);
+
+  let created = false;
+  let slider, volIcon, sliderWrap, volWrapper, lastVolume = 1, isDragging = false;
+
+  function getVideoEl() {
+    return document.getElementById('video_html5_api') || document.querySelector('#video video') || document.querySelector('video');
+  }
+
+  function updateIcon(vol) {
+    if (!volIcon) return;
+    if (vol <= 0) volIcon.textContent = 'volume_off';
+    else if (vol < 0.5) volIcon.textContent = 'volume_down';
+    else volIcon.textContent = 'volume_up';
+  }
+
+  function toggleVolume() {
+    const v = getVideoEl();
+    if (!v) return;
+    if (v.muted) { v.muted = false; if (lastVolume && lastVolume > 0) v.volume = lastVolume; if (slider) slider.value = Math.round(lastVolume * 100); updateIcon(lastVolume); }
+    else { lastVolume = v.volume; v.muted = true; if (slider) slider.value = '0'; updateIcon(0); }
+  }
+
+  function create() {
+    if (created) return true;
+    let container = document.querySelector('#controls .bottom-bar');
+    if (!container) container = document.querySelector('.bottom-bar');
+    if (!container) container = document.body;
+    if (!container) return false;
+
+    volWrapper = document.createElement('div');
+    volWrapper.id = 'dk-volume-control';
+    volWrapper.style.cssText = 'display:flex !important; align-items:center; gap:8px; padding:8px 0; z-index:99999;';
+
+    volIcon = document.createElement('span');
+    volIcon.className = 'material-icons';
+    volIcon.id = 'dk-volume-icon';
+    volIcon.textContent = 'volume_up';
+    volIcon.style.cssText = 'cursor:pointer; font-size:22px; user-select:none;';
+
+    sliderWrap = document.createElement('div');
+    sliderWrap.id = 'dk-volume-slider-wrap';
+
+    slider = document.createElement('input');
+    slider.type = 'range';
+    slider.id = 'dk-volume-slider';
+    slider.min = '0';
+    slider.max = '100';
+    slider.value = '100';
+    slider.step = '1';
+
+    sliderWrap.appendChild(slider);
+    volWrapper.appendChild(volIcon);
+    volWrapper.appendChild(sliderWrap);
+
+    const pc = container.querySelector('.progress-container');
+    const extraControls = container.querySelector('.extra-controls');
+    const actionsRow = document.createElement('div');
+    actionsRow.id = 'dk-player-actions-row';
+    actionsRow.appendChild(volWrapper);
+    if (extraControls) actionsRow.appendChild(extraControls);
+    if (pc) { pc.insertAdjacentElement('afterend', actionsRow); }
+    else { container.appendChild(actionsRow); }
+
+    slider.addEventListener('input', (e) => { const v = getVideoEl(); if (!v) return; isDragging = true; const val = parseInt(e.target.value, 10) / 100; v.muted = false; v.volume = val; lastVolume = val; updateIcon(val); });
+    slider.addEventListener('change', () => { isDragging = false; });
+    volIcon.addEventListener('click', toggleVolume);
+    const v = getVideoEl();
+    if (v) { v.addEventListener('volumechange', () => { const val = Math.round((v.muted ? 0 : v.volume) * 100); slider.value = val; updateIcon(v.muted ? 0 : v.volume); }); }
+    volWrapper.addEventListener('mouseenter', () => { if (sliderWrap) sliderWrap.style.display = 'flex'; });
+    volWrapper.addEventListener('mouseleave', () => { if (!isDragging && sliderWrap) sliderWrap.style.display = 'none'; });
+    const cur = getVideoEl();
+    if (cur) updateIcon(cur.muted ? 0 : cur.volume);
+
+    created = true;
+    console.log('[DK-VOL] creado');
+    return true;
+  }
+
+  if (create()) return;
+
+  let attempts = 0;
+  const interval = setInterval(() => {
+    attempts++;
+    if (create()) { clearInterval(interval); return; }
+    if (attempts > 25) { clearInterval(interval); console.log('[DK-VOL] falló 25 intentos'); }
+  }, 400);
+})();
+// =========================================================
+
+
+// Detectar teclas y mover el foco
+document.addEventListener('keydown', function(e) {
+  const focusable = Array.from(document.querySelectorAll('[tabindex]:not([disabled])'));
+
+  const current = document.activeElement;
+  const currentIndex = focusable.indexOf(current);
+
+  switch(e.key) {
+    case 'ArrowLeft':
+    case 'ArrowUp':
+      if (currentIndex > 0) {
+        focusable[currentIndex - 1].focus();
+      }
+      e.preventDefault();
+      break;
+    case 'ArrowRight':
+    case 'ArrowDown':
+      if (currentIndex < focusable.length - 1) {
+        focusable[currentIndex + 1].focus();
+      }
+      e.preventDefault();
+      break;
+    case 'Enter':
+    case 'OK':
+      if (document.activeElement) {
+        document.activeElement.click();
+      }
+      e.preventDefault();
+      break;
+  }
+});
+
+// Botón Backspace / Back
+window.addEventListener('keydown', function(e) {
+  if(e.key === 'Backspace' || e.key === 'BrowserBack') {
+    history.back();
+    e.preventDefault();
+  }
+});
+
+function descargarPelicula(url) {
+
+const nombre = document.getElementById("nombre")?.innerText.trim() || "Película";
+const img = document.getElementById("favoritoImagen")?.src || "";
+
+if (typeof Android !== "undefined") {
+
+  // 🔥 importante: tipo = movie
+  const data = "Película|" + nombre + "|" + img + "|movie";
+
+  Android.downloadFile(url, data);
+
+} else {
+  window.open(url, "_blank");
+}
+}

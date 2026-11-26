@@ -1,0 +1,65 @@
+/* =========================================================
+   LOGOS SWIPER - AJUSTE GLOBAL
+   ========================================================= */
+
+.title-logo {
+    display: block;
+    width: auto;
+    height: auto;
+
+    max-width: 72%;
+    max-height: 105px;
+    min-height: 55px;
+
+    object-fit: contain;
+    object-position: left bottom;
+
+    margin-bottom: 0;
+
+    filter: drop-shadow(0 3px 5px rgba(0,0,0,.7));
+}
+
+
+/* =========================================================
+   SWIPER HORIZONTAL
+   ========================================================= */
+
+.swiper-preview-landscape .title-logo {
+    max-width: 45%;
+    max-height: 115px;
+}
+
+
+/* =========================================================
+   SWIPER DESKTOP
+   ========================================================= */
+
+.swiper-preview-desktop .title-logo {
+    max-width: 42%;
+    max-height: 125px;
+}
+
+
+/* =========================================================
+   LOGOS AUTOMÁTICOS SEGÚN SU PROPORCIÓN
+   ========================================================= */
+
+/* Logo horizontal */
+.title-logo.logo-auto-horizontal {
+    max-width: 72% !important;
+    max-height: 105px !important;
+}
+
+
+/* Logo cuadrado / redondo */
+.title-logo.logo-auto-square {
+    max-width: 55% !important;
+    max-height: 145px !important;
+}
+
+
+/* Logo vertical */
+.title-logo.logo-auto-vertical {
+    max-width: 50% !important;
+    max-height: 165px !important;
+}

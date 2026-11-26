@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <title>Admin Notification Panel</title>
+ 
+  <meta name="theme-color" content="#01011d">
+  <meta name="background-color" content="#01011d">
+<meta name="msapplication-navbutton-color" content="#01011d">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#01011d" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="" id="ogTitle">
+<meta property="og:description" content="" id="ogDesc">
+<meta property="og:image" content="" id="ogImage">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="" id="ogUrl">
+<meta property="og:type" content="video.movie">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="" id="twTitle">
+<meta name="twitter:description" content="" id="twDesc">
+<meta name="twitter:image" content="" id="twImage">
+
+
+ <script disable-devtool-auto src="https://cdn.jsdelivr.net/npm/disable-devtool@latest"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-ChzD5StK818vBAQZL5n94vJUmJl+jz1Ro8AiyOsd0GWIT6saFOY+zG+VVM/LMxltwGPplT7tI9On7kVCXkmVc=" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined">
+  <link rel="icon" type="image/png" sizes="32x32" href="logo-2025.png">
+    <link rel="manifest" href="manifest.json">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+  background-color: #01011d;
+  font-family: 'Roboto', sans-serif;
+  color: white;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+   body {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+  min-height: 100vh;
+}
+
+   h2{
+    text-align:center;
+    color:#fff;
+    font-size:34px;
+    font-weight:800;
+    letter-spacing:1px;
+    margin-bottom:5px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#8f8fa7;
+    margin-bottom:28px;
+    font-size:14px;
+}
+
+    .card {
+      background: rgba(26, 26, 37, 0.95);
+      padding: 25px;
+      border-radius: 18px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      backdrop-filter: blur(10px);
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      background: #1c1c28;
+      color: white;
+      font-size: 14px;
+    }
+
+    textarea {
+      height: 100px;
+      resize: none;
+    }
+
+    button {
+      width: 100%;
+      background: #7c5cff;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #9a7bff;
+      transform: scale(1.02);
+    }
+
+    .status {
+      margin-top: 12px;
+      font-size: 13px;
+      opacity: 0.8;
+      text-align: center;
+    }
+
+    .section-title {
+      margin-top: 15px;
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    /* ===========================
+   BUSCADOR
+=========================== */
+
+#search {
+  margin-bottom: 5px;
+}
+
+#searchResults {
+  display: none;
+  background: #1c1c28;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 6px;
+  margin-bottom: 18px;
+  border: 1px solid rgba(255,255,255,.06);
+}
+
+.search-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.search-item:hover {
+  background: rgba(124,92,255,.18);
+}
+
+.search-item img {
+  width: 120px;
+  height: 70px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 8px;
+}
+
+.search-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-title {
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.search-details {
+  color: #8f8fa7;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+
+/* ===========================
+   VISTA PREVIA
+=========================== */
+
+#preview {
+  display:none;
+  background:#171722;
+  border-radius:16px;
+  padding:18px;
+  margin:20px auto;
+  text-align:center;
+  border:1px solid rgba(255,255,255,.05);
+}
+
+
+#previewPoster {
+
+  width:220px;
+  height:125px;
+  object-fit:cover;
+  border-radius:14px;
+  display:block;
+  margin:auto;
+
+}
+
+
+#previewTitle {
+
+  margin-top:15px;
+  font-size:22px;
+  font-weight:bold;
+
+}
+
+
+#previewDetails {
+
+  margin-top:8px;
+  color:#8f8fa7;
+
+}
+
+select{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border-radius:10px;
+  border:none;
+  outline:none;
+  background:#1c1c28;
+  color:#fff;
+  font-size:14px;
+}
+
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+
+    <h2>📺 Digital Knight Admin Panel</h2>
+
+    <!-- ========================= -->
+    <!-- BUSCADOR -->
+    <!-- ========================= -->
+
+    <div class="section-title">
+        🔎 Buscar película o serie
+    </div>
+
+    <input
+        id="search"
+        type="text"
+        placeholder="Escribe el nombre...">
+
+    <div id="searchResults"></div>
+
+
+    <!-- ========================= -->
+    <!-- INFORMACIÓN -->
+    <!-- ========================= -->
+
+   <div id="preview" style="display:none;">
+
+        <img id="previewPoster" src="" alt="Poster">
+
+        <h3 id="previewTitle"></h3>
+
+        <div id="previewDetails"></div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- TÍTULO PUSH -->
+    <!-- ========================= -->
+
+    <div class="section-title">
+        Título de la notificación
+    </div>
+
+    <input
+        id="pushTitle"
+        type="text"
+        placeholder="Ej:  Ya disponible">
+
+
+    <!-- ========================= -->
+    <!-- MENSAJE -->
+    <!-- ========================= -->
+
+    <div class="section-title">
+        Mensaje
+    </div>
+
+    <textarea
+        id="body"
+        placeholder="Escribe el mensaje..."></textarea>
+
+
+        <div class="section-title">
+    Tipo de notificación flotante
+</div>
+
+<select id="notificationType">
+    <option value="new_movie">🍿 Nueva película</option>
+    <option value="new_series">📺 Nueva serie</option>
+    <option value="movie">🎬 Recomendación de película</option>
+    <option value="series">⭐ Recomendación de serie</option>
+    <option value="season">🆕 Nueva temporada</option>
+    <option value="collection">🎞️ Nueva colección</option>
+    <option value="update">🚀 Actualización</option>
+    <option value="custom">⭐ Personalizada</option>
+</select>
+   
+
+    <!-- ========================= -->
+    <!-- DATOS -->
+    <!-- ========================= -->
+
+    <div class="section-title">
+        Acción
+    </div>
+
+    <input
+        id="previewAction"
+        readonly>
+
+    <div class="section-title">
+        Poster
+    </div>
+
+    <input
+        id="previewImage"
+        readonly>
+
+
+    <!-- Ocultos para Supabase -->
+
+    <input id="title" type="hidden">
+    <input id="image" type="hidden">
+    <input id="action" type="hidden">
+
+
+    <button onclick="send()">
+        🚀 Enviar Notificación
+    </button>
+
+    <button onclick="saveFloating()">
+    📢 Guardar notificación flotante
+</button>
+
+
+
+
+    <div
+        id="status"
+        class="status">
+    </div>
+
+</div>
+
+
+   
+
+
+
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+    const supabase = createClient(
+      "https://wplyrhcszuoordgaphax.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndwbHlyaGNzenVvb3JkZ2FwaGF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyNDg5NzAsImV4cCI6MjA4MTgyNDk3MH0.VctFmTaBMHkhbqDhezAvFoAT_QcC-bk7A3gH1MoMScU"
+    );
+
+    // ==========================
+// Cargar catálogo
+// ==========================
+
+let movies = [];
+
+async function loadMovies() {
+
+  try {
+
+    const res = await fetch("movies.json");
+
+    movies = await res.json();
+
+    console.log("✅ Catálogo cargado:", movies.length);
+
+  } catch (e) {
+
+    console.error("No se pudo cargar movies.json", e);
+
+  }
+
+}
+
+loadMovies();
+
+
+
+// ==========================
+// Buscador
+// ==========================
+
+const search = document.getElementById("search");
+const searchResults = document.getElementById("searchResults");
+
+search.addEventListener("input", () => {
+
+    const text = search.value.trim().toLowerCase();
+
+    if (text.length < 2) {
+        searchResults.style.display = "none";
+        searchResults.innerHTML = "";
+        return;
+    }
+
+    const results = movies.filter(movie => {
+
+     
+
+        if (movie.title &&
+            movie.title.toLowerCase().includes(text))
+            return true;
+
+        if (movie.hiddenTitles) {
+
+            return movie.hiddenTitles.some(t =>
+                t.toLowerCase().includes(text)
+            );
+
+        }
+
+        return false;
+
+    }).slice(0,8);
+
+    showResults(results);
+
+});
+
+function showResults(results){
+
+    if(results.length===0){
+
+        searchResults.style.display="none";
+        searchResults.innerHTML="";
+
+        return;
+    }
+
+    searchResults.style.display="block";
+
+    searchResults.innerHTML = results.map(movie=>`
+
+<div class="search-item"
+     onclick='selectMovie(${JSON.stringify(movie.title)})'>
+
+    <img src="${movie.poster}">
+
+    <div class="search-info">
+
+        <div class="search-title">
+            ${movie.title}
+        </div>
+
+        <div class="search-details">
+            ${movie.details}
+        </div>
+
+    </div>
+
+</div>
+
+`).join("");
+
+}
+
+window.selectMovie = function (title) {
+
+console.log("Seleccionada:", title);
+
+const movie = movies.find(m => m.title === title);
+
+    if (!movie) return;
+
+    // ==========================
+    // Datos de la película
+    // ==========================
+
+
+    // ==========================
+// Datos de la película
+
+document.getElementById("previewPoster").src =
+    movie.poster;
+
+document.getElementById("previewTitle").innerText =
+    movie.title;
+
+document.getElementById("previewDetails").innerText =
+    movie.details;
+
+    // ==========================
+    // Link automático
+    // ==========================
+
+    
+let action = movie.link || "";
+
+if (
+    action &&
+    !/^https?:\/\//i.test(action) &&
+    !action.startsWith("/")
+) {
+    action = "/" + action;
+}
+
+
+    document.getElementById("previewAction").value =
+        action;
+
+    document.getElementById("previewImage").value =
+        movie.poster;
+
+   // ==========================
+// Campos ocultos (Supabase)
+// ==========================
+
+document.getElementById("title").value =
+    " Ya disponible: " + movie.title;
+
+document.getElementById("image").value =
+    movie.poster;
+
+document.getElementById("action").value =
+    action;
+
+
+// ==========================
+// Campo editable
+// ==========================
+
+// ==========================
+// Campo editable
+// ==========================
+
+
+if (movie.id === "telegram-comunidad") {
+    document.getElementById("pushTitle").value =
+        "✈️ Únete a nuestro grupo de Telegram";
+} else if (movie.id === "apoyar-digital-knight") {
+    document.getElementById("pushTitle").value =
+        "❤️ Apoya a Digital Knight";
+} else if (movie.type === "update") {
+    document.getElementById("pushTitle").value =
+        "Nueva actualización disponible";
+} else {
+    document.getElementById("pushTitle").value =
+        "Ya disponible: " + movie.title;
+}
+
+
+
+// Mostrar película seleccionada
+
+document.getElementById("preview").style.display = "block";
+
+
+// Ocultar resultados
+
+searchResults.style.display = "none";
+
+
+// Dejar solo la película elegida
+
+search.value = movie.title;
+
+
+}
+
+      let sending = false;
+
+  window.send = async function () {
+
+    if (sending) return;
+
+    const title = document.getElementById("pushTitle").value.trim();
+    const body = document.getElementById("body").value.trim();
+    const image = document.getElementById("image").value.trim();
+    const action = document.getElementById("action").value.trim();
+    const status = document.getElementById("status");
+
+    if (!title || !body) {
+      status.innerText = "⚠️ Completa título y mensaje";
+      return;
+    }
+
+    sending = true;
+    status.innerText = "⏳ Enviando...";
+
+    try {
+      const { error } = await supabase
+        .from("notifications")
+        .insert([
+          { title, body, image, action }
+        ]);
+
+      if (error) {
+        console.log(error);
+        status.innerText = "❌ Error al guardar en Supabase";
+        sending = false;
+        return;
+      }
+
+      const { error: fnError } =
+        await supabase.functions.invoke("quick-responder");
+
+      if (fnError) {
+        console.log(fnError);
+        status.innerText = "⚠️ Guardado pero error enviando push";
+        sending = false;
+        return;
+      }
+
+      status.innerText = "✔ Notificación enviada 📱";
+
+      document.getElementById("title").value = "";
+      document.getElementById("body").value = "";
+      document.getElementById("image").value = "";
+      document.getElementById("action").value = "";
+
+    } catch (e) {
+      console.log(e);
+      status.innerText = "❌ Error inesperado";
+    }
+
+    sending = false;
+  }
+
+
+  window.saveFloating = async function () {
+
+  const title = document.getElementById("pushTitle").value.trim();
+  const message = document.getElementById("body").value.trim();
+  const image = document.getElementById("image").value.trim();
+  const action = document.getElementById("action").value.trim();
+  const status = document.getElementById("status");
+
+  
+
+  const contentId =
+    action.split("/").pop().replace(".html", "");
+
+  const type =
+    document.getElementById("notificationType").value;
+
+  const { error } = await supabase
+    .from("floating_notifications")
+    .insert([
+      {
+        enabled: true,
+        title,
+        message,
+        image,
+        action,
+        button_text: "VER AHORA",
+        type,
+        content_id: contentId,
+        version: "v1",
+        priority: 1,
+        show_once: true
+      }
+    ]);
+
+  if (error) {
+    console.error("ERROR SUPABASE FLOATING:", error);
+    status.innerText = "❌ " + error.message;
+    return;
+}
+
+  status.innerText = "✅ Notificación flotante guardada";
+}
+
+
+
+
+
+
+
+</script>
+
+
+</body>
+</html>

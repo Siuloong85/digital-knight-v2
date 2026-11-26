@@ -1,0 +1,36 @@
+===========================================
+CARPETA DE ANUNCIOS - DIGITAL KNIGHT
+===========================================
+
+LOS VIDEOS E IMAGENES YA NO VAN AQUI.
+Ahora se cargan desde OpenDrive para no consumir MB de Vercel.
+
+COMO SUBIR TUS ANUNCIOS A OPENDRIVE:
+
+1. Entra a https://www.opendrive.com y sube tus archivos:
+   - video1.mp4, video2.mp4 (vertical 9:16, 15-30 seg)
+   - imagen1.png, imagen2.png, imagen3.png
+
+2. Click derecho en cada archivo -> Compartir / Share
+   -> copialo en formato DIRECTO (tiene que empezar con https://od.lk/s/...)
+   Ejemplo: https://od.lk/s/M18zMTIxOTE0Mjlf/video1.mp4
+   (igual que el logo que ya usas: https://od.lk/s/M18zMTIxOTE0Mjlf/logo%202025.png)
+
+3. Abre el archivo ../ads.js (lineas 8-9) y pega tus links:
+
+   var videos = ["https://od.lk/s/TU_LINK_VIDEO1","https://od.lk/s/TU_LINK_VIDEO2"];
+   var imgs = [
+     {src:"https://od.lk/s/TU_LINK_IMAGEN1",...},
+     {src:"https://od.lk/s/TU_LINK_IMAGEN2",...},
+     {src:"https://od.lk/s/TU_LINK_IMAGEN3",...}
+   ];
+
+   Solo reemplaza donde dice PEGA_AQUI_LINK_...
+
+NOTAS:
+- Puedes borrar los archivos .mp4/.png de esta carpeta para ahorrar MB en Vercel.
+- Mientras no pegues links validos (http...), no se muestra ningun anuncio roto.
+- La rotacion sin repetir sigue igual.
+- Usuarios Premium NO ven ningun anuncio.
+
+===========================================

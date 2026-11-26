@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#01011d">
+<meta name="msapplication-navbutton-color" content="#01011d">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#01011d" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="" id="ogTitle">
+<meta property="og:description" content="" id="ogDesc">
+<meta property="og:image" content="" id="ogImage">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="" id="ogUrl">
+<meta property="og:type" content="video.movie">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="" id="twTitle">
+<meta name="twitter:description" content="" id="twDesc">
+<meta name="twitter:image" content="" id="twImage">
+ <script disable-devtool-auto src="https://cdn.jsdelivr.net/npm/disable-devtool@latest"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> 
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-ChzD5StK818vBAQZL5n94vJUmJl+jz1Ro8AiyOsd0GWIT6saFOY+zG+VVM/LMxltwGPplT7tI9On7kVCXkmVc=" crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSkt+PpBVx5hbBOss0l7zUUbzjgK6UIIV9W0rGIiXcR" crossorigin="anonymous">
+       <link rel="icon" type="image/png" sizes="32x32" href="logo-2025.png">
+
+        <link rel="manifest" href="manifest.json">
+  
+
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+  
+    <!-- Tipografía similar a Gotham Rounded -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    
+
+    <!-- Para iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default"> 
+<meta name="apple-mobile-web-app-title" content="Digital Knight">
+
+<!-- Ícono para la pantalla de inicio en iOS -->
+<link rel="apple-touch-icon" href="logo-2025.png">
+
+  <script>
+(function () {
+  try {
+    const avatar = localStorage.getItem('profileAvatar');
+    const cover = localStorage.getItem('profileCover');
+
+    if (avatar) {
+      const preloadAvatar = document.createElement('link');
+      preloadAvatar.rel = 'preload';
+      preloadAvatar.as = 'image';
+      preloadAvatar.href = avatar;
+      preloadAvatar.fetchPriority = 'high';
+      document.head.appendChild(preloadAvatar);
+    }
+
+    if (cover) {
+      const preloadCover = document.createElement('link');
+      preloadCover.rel = 'preload';
+      preloadCover.as = 'image';
+      preloadCover.href = cover;
+      preloadCover.fetchPriority = 'high';
+      document.head.appendChild(preloadCover);
+    }
+  } catch (e) {}
+})();
+</script>
+
+  <title>Perfil</title>
+  <!-- BOOTSTRAP 5 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+  <link rel="stylesheet" href="perfil-2026.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="logo-2025.png">
+  <script src="loader.min.js"></script>
+ 
+  <link rel="manifest" href="manifest.json">
+      <link rel="manifest" href="/manifest.json">
+
+      <style>
+/* Entrada rápida de la página de perfil */
+#profile-page {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+
+#profile-page.dk-ready {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Aparición progresiva */
+#profile-view .profile-header {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#profile-view .profile-options {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  transition-delay: 0.08s;
+}
+
+#profile-view .app-version {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  transition-delay: 0.18s;
+}
+
+#profile-page.dk-ready #profile-view .profile-header,
+#profile-page.dk-ready #profile-view .profile-options {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#profile-page.dk-ready #profile-view .app-version {
+  opacity: 1;
+}
+</style>
+      
+</head>
+<body oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
+ 
+ <div id="overlay" class="overlay"></div>
+
+  
+<div id="profile-page">
+
+  <!-- ================= PERFIL PRINCIPAL ================= -->
+  <section id="profile-view" class="view active">
+    <div class="container-md px-0">
+  
+      <header class="profile-header text-center" id="mainCover">
+        <div class="avatar-wrapper mx-auto">
+          <img
+  class="profile-avatar"
+  id="avatarMain"
+  src="logo-2025.png"
+  alt="Avatar de perfil"
+  loading="eager"
+  fetchpriority="high"
+  decoding="async"
+>
+        </div>
+        <h2 id="profileName" class="mt-3">Usuario</h2>
+      </header>
+  
+      <div class="profile-options container py-3">
+
+          <div class="option-item"
+     id="premiumProfileOption">
+
+  <div class="support-info">
+
+    <span id="premiumProfileText" class="support-title">
+      🤍 Apoya Digital Knight
+    </span>
+
+    <small id="premiumProfileStatus">
+      Tu apoyo ayuda a mantener la app y sus servidores en funcionamiento.
+    </small>
+
+  </div>
+
+  <span class="material-icons-outlined">
+    chevron_right
+  </span>
+
+</div>
+
+        <div class="option-item" onclick="openView('manage-profile-view')">
+          <span>Editar perfil</span>
+          <span class="material-icons-outlined">chevron_right</span>
+        </div>
+
+     
+      
+       <div class="option-item"
+     onclick="window.location.href='notificaciones.html'">
+
+    <span>Notificaciones</span>
+
+    <div class="right-icons">
+        <span id="menuNotificationBadge"
+              class="notification-badge"
+              style="display:none;">
+            0
+        </span>
+
+        <span class="material-icons-outlined">
+            chevron_right
+        </span>
+    </div>
+
+</div>
+
+       <div class="option-item"
+     onclick="window.location.href='downloads.html'">
+  <span>Descargas</span>
+
+  <div class="right-icons">
+    <span class="material-icons-outlined">download</span>
+    <span class="material-icons-outlined">chevron_right</span>
+  </div>
+</div>
+        
+      
+        <div class="option-item"
+     onclick="window.location.href='tv.html'">
+  <span>Cómo transmitir a TV</span>
+  <span class="material-icons-outlined">chevron_right</span>
+</div>
+      
+       
+<div class="option-item"
+     onclick="window.location.href='support.html'">
+
+  <div class="telegram-support-info">
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg"
+      alt="Telegram"
+      class="telegram-support-logo">
+
+    <div class="telegram-support-text">
+      <span class="telegram-support-title">
+        Únete a nuestro grupo de Telegram
+      </span>
+
+      <small>
+        Soporte, sugerencias y solicitudes de contenido
+      </small>
+    </div>
+  </div>
+
+  <span class="material-icons-outlined">
+    chevron_right
+  </span>
+
+</div>
+
+<div class="option-item" onclick="window.location.href='dinamica.html'">
+  <span>Gana Premium Gratis</span>
+  <span class="material-icons-outlined">chevron_right</span>
+</div>
+
+      
+        <div class="option-item" onclick="window.location.href='share.html'">
+  <span>Compartir Digital Knight</span>
+  <span class="material-icons-outlined">chevron_right</span>
+</div>
+      
+        <div class="option-item" onclick="window.location.href='opendrive.html'">
+  <span>Descubre OpenDrive</span>
+  <span class="material-icons-outlined">chevron_right</span>
+</div>
+      
+        <div class="option-item" onclick="openDeleteProgressModal()">
+          <span>Borrar progreso de reproducción</span>
+          <span class="material-icons-outlined">chevron_right</span>
+        </div>
+        
+      
+        <div class="option-item" onclick="window.location.href='privacidad.html'">
+  <span>Privacidad y contenido</span>
+  <span class="material-icons-outlined">chevron_right</span>
+</div>
+
+        <div class="option-item logout-item" id="logoutButton">
+          <span>Cerrar sesión</span>
+          <span class="material-icons-outlined">logout</span>
+        </div>
+        
+        <div class="app-version">
+          <p>Digital Knight</p>
+          <span>Versión 1.3.7</span>
+        </div>
+      
+      </div>
+
+  
+      
+  </section>
+  
+  
+
+  <!-- ================= ADMINISTRAR PERFIL ================= -->
+  <section id="manage-profile-view" class="view scroll-view">
+    <div class="container-md px-0">
+  
+      <header class="edit-header">
+        <button class="icon-btn" onclick="openView('profile-view')">
+          <span class="material-icons-outlined">chevron_left</span>
+        </button>
+        
+        <h2 class="m-0">Administrar perfil</h2>
+        <span></span>
+      </header>
+  
+      <div class="edit-cover editable text-center" id="manageCover">
+  
+        <button class="edit-icon cover-icon" onclick="openCoverEdit()">
+          <span class="material-icons-outlined">edit</span>
+        </button>
+        
+        <button class="edit-cover-btn" onclick="openCoverEdit()">Cambiar fondo</button>
+      
+        <div class="avatar-wrapper editable mx-auto mt-3">
+          <img
+  id="manageAvatar"
+  class="edit-avatar"
+  src="logo-2025.png"
+  alt="Avatar de perfil"
+  loading="eager"
+  fetchpriority="high"
+  decoding="async"
+>
+          <button class="edit-icon" onclick="openAvatarEdit()">
+            <span class="material-icons-outlined">edit</span>
+          </button>
+          
+          <button class="edit-avatar-btn" onclick="openAvatarEdit()">Cambiar avatar</button>
+        </div>
+      
+        <!-- NOMBRE DEL USUARIO -->
+        <h3 id="manageProfileName" class="mt-2">Usuario</h3>
+      
+      </div>
+      
+  
+      <div class="form-section container">
+        <label>Nombre de perfil</label>
+        <input type="text" id="profileNameInput">
+        <button 
+  id="saveProfileBtn"
+  class="btn w-100 mt-3 btn-secondary"
+  disabled
+  onclick="saveFullProfile()"
+>
+  Guardar
+</button>
+
+      </div>
+  
+    </div>
+  </section>
+
+
+
+  <!-- Overlay y Modal personalizado -->
+<div id="deleteProgressOverlay" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h3>¿Borrar progreso?</h3>
+    <p>
+      Se eliminará el historial de reproducción de todas las películas y series.
+      ¿Estás seguro?
+    </p>
+    <div class="modal-buttons">
+      <button class="modal-btn cancel" onclick="closeDeleteProgressModal()">
+        Cancelar
+      </button>
+      <button class="modal-btn confirm" onclick="confirmDeleteProgress()">
+        Aceptar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Notificación flotante -->
+<div id="notificacion" class="notificacion-toast">
+  <span id="notificacionTexto"></span>
+</div>
+
+  
+
+  <!-- ================= EDITAR AVATAR ================= -->
+  <section id="edit-avatar-view" class="view fixed-view">
+
+
+    <header class="edit-header">
+      <button class="icon-btn" onclick="openView('profile-view')">
+        <span class="material-icons-outlined">chevron_left</span>
+      </button>
+      <h2>Editar imagen de perfil</h2>
+      <button onclick="saveAvatar()">Listo</button>
+    </header>
+
+    <div class="edit-cover" id="avatarEditCover">
+      <div class="cover-content">
+        <img
+  id="avatarPreview"
+  class="edit-avatar"
+  src="logo-2025.png"
+  alt="Vista previa del avatar"
+  loading="eager"
+  fetchpriority="high"
+  decoding="async"
+>
+        <h3 id="editName">Usuario</h3>
+      </div>
+    </div>
+    
+
+    <div class="scroll-content">
+    <div class="avatar-section">
+      <h4>Digital Knight</h4>
+      <div class="avatar-grid">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIxOTE0Mjlf/logo%202025.png" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMjQwMTY5MzRf/knight1.png" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMjQwMTY5Mzlf/knight%202.png" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMjQwMTY5Mzhf/knight%203.png" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMjQwMTY5Mzdf/knight%204.png" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMjQwMTY5MzZf/knight%205.png" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMjQwMTY5MzVf/knight%206.png" class="lazy-img" onclick="selectAvatar(this)">
+      </div>
+
+      <h4>DC</h4>
+      <div class="avatar-grid">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzYwMDdf/01d9c7f5c5ad0f82109e9a507196c0b9.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzYwMTBf/1c4595f7d33b20717231c4e31e3fc645.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzYwMTNf/4902187.webp" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzYwMTVf/725b106124ec4020275a88bde7660691.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzYwMDhf/9c3e7721e7ae5548def51077651a1591.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzYwMDJf/b320ef3a7c7adb39d5fbbda50bf10311.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzYwMTRf/batman-ben-affleck-justice-league.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzYwMDlf/cab6c0d3a1b6b71ed42556cf9dccc2cd.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzYwMDVf/e772984b77943c6a9485ea38525a9d9f--heath-ledger-joker-makeup-heath-joker.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzYwMDRf/maxresdefault.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzYwMTJf/OIP%20%285%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzYwMTZf/OIP%20%286%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzYwMDNf/R%20%283%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzYwMDZf/R%20%284%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzYwMTFf/wp5572704.webp" class="lazy-img" onclick="selectAvatar(this)">
+      </div>
+
+
+      <h4>Marvel</h4>
+      <div class="avatar-grid">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDUzNzlf/ANTMAN%20AVATAR%20%28icon%29.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDUzODJf/daredevil%20avatar.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDcwODFf/descarga%20%283%29.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDUzNTdf/descarga%20%284%29.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDUzNzdf/Disney%2B%20_%20Pel%C3%ADculas%20y%20series%20%281%29.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDUzODRf/Disney%2B%20_%20Pel%C3%ADculas%20y%20series%20%282%29.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDcwODRf/Disney%2B%20_%20Pel%C3%ADculas%20y%20series%20%283%29.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDUzNjNf/Disney%2B%20_%20Pel%C3%ADculas%20y%20series.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDUzODlf/Disney%2B%20_%20Ver%20Disney%2C%20Marvel%2C%20Pixar%2C%20Star%20Wars%2C%20National%20Geographic%20y%20mucho%20m%C3%A1s%20%281%29.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDUzNzRf/Disney%2B%20_%20Ver%20Disney%2C%20Marvel%2C%20Pixar%2C%20Star%20Wars%2C%20National%20Geographic%20y%20mucho%20m%C3%A1s.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDUzODFf/doctor%20strange%20avatar.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDcwNzlf/falcon%20avatar.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDcwODZf/groot%20avatar.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDUzNjhf/hawkeye%20avatar.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDUzNjVf/Iniciar%20sesi%C3%B3n%20_%20Disney%2B.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDUzNjBf/iron%20man%20avatar.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDUzOTJf/ms_%20marvel%20avatar.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDUzODdf/rocket%20raccoon%20avatar.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDUzNzJf/thanos%20avatar.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDcwODlf/vision%20avatar.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDUzNzBf/WINTER%20SOLDIER%28Bucky%29%20AVATAR%20%28icon%29.jpg" class="lazy-img" onclick="selectAvatar(this)">
+      </div>
+
+      <h4>Dragon Ball</h4>
+      <div class="avatar-grid">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5MDhf/dbdiama_avatarbackground2025_avatar_10.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4OTZf/dbdiama_avatarbackground2025_avatar_3.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4OTJf/dbdiama_avatarbackground2025_avatar_4.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4OTNf/dbdiama_avatarbackground2025_avatar_5.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5MDRf/dbdiama_avatarbackground2025_avatar_6.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5MDVf/dbdiama_avatarbackground2025_avatar_7.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5MDZf/dbdiama_avatarbackground2025_avatar_8.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5MDdf/dbdiama_avatarbackground2025_avatar_9.png" class="lazy-img" onclick="selectAvatar(this)">
+
+
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyNDdf/%E2%8D%9F%20%281%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyNDhf/%E2%8D%9F%20%282%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyNDNf/%E2%8D%9F.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+      
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyNTFf/%E2%9C%B6%20%281%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyNjFf/%E2%9C%B6%20%2810%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyNjNf/%E2%9C%B6%20%2811%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyNjRf/%E2%9C%B6%20%2812%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyNTNf/%E2%9C%B6%20%282%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyNTRf/%E2%9C%B6%20%283%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyNTVf/%E2%9C%B6%20%284%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyNTZf/%E2%9C%B6%20%285%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyNTdf/%E2%9C%B6%20%286%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyNThf/%E2%9C%B6%20%287%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyNTlf/%E2%9C%B6%20%288%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyNjBf/%E2%9C%B6%20%289%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyNDlf/%E2%9C%B6.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+      
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyODFf/0ff29e7e-9468-4dc6-bef8-36f7064842cb.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyNzBf/1300a570-2e87-4277-a8a9-7cd829f2c39f.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyODJf/14ce68f6-a8ae-4ee4-ac41-81db326e0c23.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyOTZf/21d751ae-c2a1-48bd-89ad-d0c4888632c3.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyODhf/2654f470-d57c-416d-bdc2-80a0b81471f0.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyODNf/ba873300-365f-4b1e-9c2a-5c59a71ff325.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+      
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMzMjFf/BULMA.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMzMDdf/Butter%20Fan%20Art%20-%20Ginew%20special%20team%20-%20Dragon%20Ball%20Z%2C%20Dhemo%20Noriaki.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyMzdf/c4ac40ad-fadf-4d82-aeb3-fa8a7971c0eb.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyNzVf/ce3baff1-cea1-4e8f-8b4d-0e51704e9e23.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyNTBf/Cell%20%C2%B7%20Dragon%20Ball%20FighterZ.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDMyODdf/Cell%20Max%20icon%20%28DBL%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+      </div>
+
+
+
+      <h4>Disney</h4>
+      <div class="avatar-grid">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzNDcwMTZf/00dfa5bb094e32e15bb332e904d6dfcf.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzNDY1ODdf/1c00105d9dc5fd91e74c4ea08e59b798.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzNDY1Nzlf/1f8aaf6bacdf7fbef7150373f41b795a.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzNDY1NzJf/3921857d0cfa9a747a43fe0bbb65c1c3.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzNDY1ODFf/490b5c86bf01510e5af5b5ae3549fd7c.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzNDY1NzBf/5c239685ecbea2c12fcb8ee661a04d0a9098e141.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzNDY1NzRf/5e178a193ea3fe26066e94babd385d55.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzNDY1ODhf/6rIxaSE.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzNDY1ODBf/b29089e28c04e8ce9934607fe91f4bbc.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzNDY1NzVf/cb85859622e44d1d732bcc4ceb4967b2.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzNDY1NzZf/d501368a00f5c4dbdb97c808b8b727b3.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzNDY1Nzdf/f25b4ccaeb33eafd3999da4947927d15.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzNDY1ODJf/fafa4da84d9fddb87eb3066282bc5526.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzNDY1ODNf/OIP%20%287%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzNDY1ODVf/OIP%20%288%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzNDY1NzFf/OIP%20%289%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzNDY1ODZf/R%20%285%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzNDY1NzNf/R%20%286%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzNDY1Nzhf/R%20%287%29.jpeg" class="lazy-img" onclick="selectAvatar(this)">
+      </div>
+
+
+      <h4>Los Simpson</h4>
+      <div class="avatar-grid">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDI0NjVf/46975e78f00a97bd15e642b6f5ccf8c6.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDI0Njdf/8684e09af00b87d94d73dbbb87bc6e4e.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDI0NzZf/descarga%20%281%29.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDI0NjNf/descarga%20%282%29.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDI0NzJf/descarga.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDI0NzRf/Imprimible_docx%20%281%29.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDI0NzVf/Imprimible_docx%20%282%29.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDI0Nzlf/Imprimible_docx%20%283%29.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDI0ODFf/Imprimible_docx%20%284%29.jpg" class="lazy-img" onclick="selectAvatar(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTE0NDI0Njlf/Imprimible_docx.jpg" class="lazy-img" onclick="selectAvatar(this)">
+      </div>
+
+      <h4>The Rising of the Shield Hero</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NThf/100001-the-rising-of-the-shield-hero-naofumi.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NTlf/100002-the-rising-of-the-shield-hero-raphtalia.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NjBf/100003-the-rising-of-the-shield-hero-filo.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NjFf/100004-the-rising-of-the-shield-hero-melty.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NjJf/100005-the-rising-of-the-shield-hero-rishia.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+<h4>Spy x Family</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NjNf/100006-spy-x-family-loid.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NjRf/100007-spy-x-family-yor.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NTdf/100008-spy-x-family-anya-1.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NjZf/100009-spy-x-family-anya-2.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3Njdf/100010-spy-x-family-anya-3.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+<h4>The World's Finest Assassin</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MDFf/1001-the-worlds-finest-assassin-lugh.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MDJf/1002-the-worlds-finest-assassin-dia.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MDNf/1003-the-worlds-finest-assassin-tart.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MDRf/1004-the-worlds-finest-assassin-maha.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MDVf/1005-the-worlds-finest-assassin-assassin.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+<h4>Mitrasphere</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MDBf/1006-mitrasphere-hime.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MDdf/1007-mitrasphere-yuzu.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MDhf/1008-mitrasphere-matilda.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MDlf/1009-mitrasphere-hildegard.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MTBf/1010-mitrasphere-upa.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+<h4>Fena: Pirate Princess</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MTFf/1011-fena-pirate-princess-fena.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MTJf/1012-fena-pirate-princess-yukimaru.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MTRf/1013-fena-pirate-princess-shitan.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MTZf/1014-fena-pirate-princess-karin.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MTdf/1015-fena-pirate-princess-twins.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MThf/1016-fena-pirate-princess-makaba.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MTlf/1017-fena-pirate-princess-tsubaki.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MjBf/1018-fena-pirate-princess-brule.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MjFf/1019-fena-pirate-princess-fena-young.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MjJf/1020-fena-pirate-princess-yukimaru-young.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+<h4>To Your Eternity</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MjNf/1021-to-your-eternity-fushi.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MjRf/1022-to-your-eternity-joann.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MjVf/1023-to-your-eternity-march.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MjZf/1024-to-your-eternity-parona.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3Mjdf/1025-to-your-eternity-thebeholder.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3Mjhf/1026-to-your-eternity-gugu.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3Mjlf/1027-to-your-eternity-tonari.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MzBf/1028-to-your-eternity-theboy.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MzFf/1029-to-your-eternity-fushi.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MDZf/1030-to-your-eternity-march.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+<h4>Tokyo Revengers</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MzNf/1036-tokyo-revengers-takemichi.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MzRf/1037-tokyo-revengers-mikey.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MzVf/1038-tokyo-revengers-draken.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MzZf/1039-tokyo-revengers-mitsuya.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3Mzdf/1040-tokyo-revengers-baji.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+<h4>Jujutsu Kaisen</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3Mzhf/1041-jujutsu-kaisen-yuji-itadori.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3Mzlf/1042-jujutsu-kaisen-megumi-fushigoro.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NDBf/1043-jujutsu-kaisen-nobara-kugisaki.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NDFf/1044-jujutsu-kaisen-satoru-gojo.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NDJf/1045-jujutsu-kaisen-ryomen-sukuna.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+<h4>Dr. Stone</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NDNf/1046-dr-stone-senku.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NDRf/1047-dr-stone-suika.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NDVf/1048-dr-stone-kohaku.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NDZf/1049-dr-stone-chrome.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NDdf/1050-dr-stone-gen.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5MTFf/dr_stone_s4_avatar_2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5MTJf/dr_stone_s4_avatar_3.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4OTdf/dr_stone_s4_avatar_4.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+<h4>So I'm a Spider, So What?</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NDhf/1051-so-im-a-spider-so-what-kumoko.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NDlf/1052-so-im-a-spider-so-what-shun.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NTBf/1053-so-im-a-spider-so-what-katia.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NTFf/1054-so-im-a-spider-so-what-sue.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NTJf/1055-so-im-a-spider-so-what-fei.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+<h4>Black Clover</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NTNf/1056-black-clover-asta.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NTRf/1057-black-clover-yuno.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NTVf/1058-black-clover-noelle.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3MzJf/1059-black-clover-yami.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NTZf/1060-black-clover-nero.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+<h4>Tower of God</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2ODhf/11-tower-of-god-bam.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2ODlf/12-tower-of-god-khun.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2OTBf/13-tower-of-god-rak.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2ODVf/14-tower-of-god-yuri-jahad.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2ODZf/15-tower-of-god-endorsi-jahad.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+
+<h4>The God of High School</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2Nzlf/16-the-god-of-high-school-jin-mori.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2ODBf/17-the-god-of-high-school-han-daewi.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2ODFf/18-the-god-of-high-school-yoo-mira.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2ODJf/19-the-god-of-high-school-park-mujin.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2ODNf/20-the-god-of-high-school-park-ilpyo.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+
+<h4>Bananya</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2ODRf/21-bananya-bananya.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2NjFf/22-bananya-droopy-eared.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2NjJf/23-bananya-pirate.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2NjNf/24-bananya-night-rainbow.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2NjRf/25-bananya-emo.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+<h4>In/Spectre</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2NjVf/26-inspectre-kotoko-iwanaga.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2NjZf/27-inspectre-kuro-sakuragawa.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2Njdf/28-inspectre-saki-yumihara.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2Njhf/29-inspectre-steel-lady-nanase.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2ODdf/2bluenagi_nagi_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2Njlf/30-inspectre-komainu.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+
+<h4>Somali and the Forest Spirit</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2NzBf/31-somali-and-the-forest-spirit-golem.jpg" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2NzFf/32-somali-and-the-forest-spirit-somali.jpg" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2NzJf/33-somali-and-the-forest-spirit-shizuno.jpg" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2NzNf/34-somali-and-the-forest-spirit-uzoi.jpg" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2NzRf/35-somali-and-the-forest-spirit-kikila.jpg" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+
+<h4>That Time I Got Reincarnated as a Slime</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2NzVf/36-that-time-i-got-reincarnated-as-a-slime-rimuru-human.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2NzZf/37-that-time-i-got-reincarnated-as-a-slime-shuna.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2Nzdf/38-that-time-i-got-reincarnated-as-a-slime-shion.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2Nzhf/39-that-time-i-got-reincarnated-as-a-slime-rimuru-slime.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2OTNf/40-that-time-i-got-reincarnated-as-a-slime-hinata.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+<h4>Zombieland Saga Revenge</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2OTRf/41-zombieland-saga-revenge-sakura-minamoto.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2OTVf/42-zombieland-saga-revenge-saki-nikaido.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2OTZf/43-zombieland-saga-revenge-ai-mizuno.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2OTdf/44-zombieland-saga-revenge-junko-konno.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2OThf/45-zombieland-saga-revenge-yugiri.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2OTlf/46-zombieland-saga-revenge-lily-hoshikawa.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU2OTJf/47-zombieland-saga-revenge-tae-yamada.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+
+<h4>Attack on Titan</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3ODhf/aot_fc_annie-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3ODlf/aot_fc_armin-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3OTBf/aot_fc_conny-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NzBf/aot_fc_eren-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NzFf/aot_fc_hange-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NzJf/aot_fc_jean-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NzNf/aot_fc_levi-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NzRf/aot_fc_mikasa-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NzVf/aot_fc_reiner-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3NzZf/aot_fc_sasha-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+<h4>The Apothecary Diaries</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3Nzdf/apothecary_gaoshun.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3Nzhf/apothecary_gyokuyou.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3Nzlf/apothecary_jinshi-1.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3ODBf/apothecary_jinshi-2.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3ODFf/apothecary_lihaku.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3ODJf/apothecary_maomao-1.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3ODNf/apothecary_maomao-2.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3ODRf/apothecary_xiaolan.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+
+<h4>One Piece</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3ODVf/ash.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3ODZf/avatars-big_mom.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3ODdf/avatars-brook.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3OTJf/avatars-chopper.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3OTNf/avatars-franky.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3OTRf/avatars-jinbei.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3OTVf/avatars-kaido.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3OTZf/avatars-kid.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3OTdf/avatars-law.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3OThf/avatars-luffy.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3OTlf/avatars-nami.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MDBf/avatars-perona.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MDFf/avatars-robin.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MDJf/avatars-sanji.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MDNf/avatars-shanks.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MDRf/avatars-usopp.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MDVf/avatars-yamato.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MDZf/avatars-zoro.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+<h4>Black Butler</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MTZf/bb_gregory-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MTdf/bb_sebastian-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MThf/bb-ciel-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MTlf/bb-edgar-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MjBf/bb-herman-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MjFf/bb-lawrence-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+<h4>Blue Lock</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU3OTFf/bachira_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MjJf/bluelock_bachira_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MjNf/bluelock_bachira_teaser_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MjRf/bluelock_barou_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MjVf/bluelock_chigiri_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MjZf/bluelock_ego_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4Mjdf/bluelock_hiori_teaser_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4Mjhf/bluelock_isagi_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4Mjlf/bluelock_isagi_kv1_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MzBf/bluelock_isagi_teaser_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MzFf/bluelock_karasu_teaser_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MzJf/bluelock_kunigami_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MzNf/bluelock_nagi_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MzRf/bluelock_nagi_teaser_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MDdf/bluelock_nanase_teaser_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MDhf/bluelock_oliver_kv1_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MDlf/bluelock_otoya_teaser_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MTBf/bluelock_reo_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MTFf/bluelock_rin_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MTJf/bluelock_rin_kv1_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MTNf/bluelock_rin_teaser_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MTRf/bluelock_sae_kv1_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MTVf/bluelock_sae_teaser_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MzZf/bluelock_shidou_teaser_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4Mzdf/bluelock_yukimiya_teaser_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4Mzhf/bluelock_zantetsu_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+<h4>Blue Lock Nagi</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4Mzlf/bluenagi_chigiri_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NDBf/bluenagi_isagi_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NDFf/bluenagi_kunigami_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NDJf/bluenagi_nagi_school_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NDNf/bluenagi_reo_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NDRf/bluenagi_reo_school_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NDVf/bluenagi_rin_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+
+<h4>Bocchi the Rock!</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NDZf/bocchi-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NDhf/bocchi-iita-kv-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NDlf/bocchi-kita-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NTBf/bocchi-kv-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NTFf/bocchi-nijika-kv-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NTJf/bocchi-ryo-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NTNf/bocchi-ryo-kv-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NTRf/bochhi-nijika-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+
+<h4>Chainsaw Man</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NTVf/chainsawman-aki.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NTZf/chainsawman-chainsawman.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NTdf/chainsawman-denji.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NThf/chainsawman-himeno.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NTlf/chainsawman-kishibe.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4MzVf/chainsawman-kobeni.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NjFf/chainsawman-makima.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NjJf/chainsawman-pochita.png" class="lazy-img" onclick="selectAvatar(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU4NjNf/chainsawman-power.png" class="lazy-img" onclick="selectAvatar(this)">
+</div>
+
+<h4>One Piece Egghead</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5NDJf/egghead-brook.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5NDNf/egghead-chopper.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5NDRf/egghead-franky.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5NDVf/egghead-jimbei.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5NDZf/egghead-luffy.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5NDdf/egghead-nami.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5NDhf/egghead-robin.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5NDlf/egghead-sanji.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5MTNf/egghead-usopp.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5MTRf/egghead-zoro.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+<h4>Finn</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5NTFf/finn-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5NTJf/finn-2.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+
+<h4>Frieren</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5NTBf/freiren-avatar-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5ODRf/freiren-avatar-2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5ODVf/freiren-avatar-3.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5ODZf/frieren_eisen-avatar-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5ODdf/frieren_eisen-avatar-2.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5ODhf/frieren_fern-avatar-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5ODlf/frieren_fern-avatar-2.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5OTBf/frieren_heiter-avatar-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5OTFf/frieren_heiter-avatar-2.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5OTJf/frieren_himmel-avatar-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5OTNf/frieren_himmel-avatar-2.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5OTRf/frieren_stark-avatar-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5NzRf/frieren_stark-avatar-2.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+
+<h4>One Piece Gear 5</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5NzVf/gear5avatar1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5NzZf/gear5avatar2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5Nzdf/gear5avatar3.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5Nzhf/gear5avatar4.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5Nzlf/gear5avatar5.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5ODBf/gear5avatar6.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5ODFf/gear5avatar7.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5ODJf/gear5avatar8.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5ODNf/gear5avatar9.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+<h4>Gene</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5OTZf/gene-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5OTdf/gene-2.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+
+<h4>Giallon</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5OThf/giallon-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5OTlf/giallon-2.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+
+<h4>I'm in Love with the Villainess</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMDFf/im_in_love_clarie-kv1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMDJf/im_in_love_clarie-kv2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMDBf/im_in_love_clarie.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMDNf/im_in_love_lene.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMDRf/im_in_love_manaria.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMDVf/im_in_love_misha.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMDdf/im_in_love_rae-kv1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODU5OTVf/im_in_love_rae-kv2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMDZf/im_in_love_rae.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+
+<h4>Inbento</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMDlf/inbento_avatar_1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMTBf/inbento_avatar_3.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMTFf/inbento_avatar_4.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMTJf/inbento_avatar_5.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+<h4>Mushoku Tensei</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMjFf/mushokutensei_ariel.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMjJf/mushokutensei_cliff.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMjNf/mushokutensei_elinalise.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMjRf/mushokutensei_eris.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMjVf/mushokutensei_ghislaine.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMjZf/mushokutensei_juli.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMjdf/mushokutensei_linia.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMjhf/mushokutensei_luke.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMjlf/mushokutensei_pursena.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMzFf/mushokutensei_rudeus-school-uniform.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMTVf/mushokutensei_rudeus.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMzJf/mushokutensei_ruijerd.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMzNf/mushokutensei_sara.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMzRf/mushokutensei_soldat.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMzVf/mushokutensei_suzanne.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMzdf/mushokutensei_sylphie-fitz.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMzZf/mushokutensei_sylphie.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMzhf/mushokutensei_zanoba.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+
+<h4>My Dress-Up Darling</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMzlf/my-dress-up-gojo-1-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNDBf/my-dress-up-gojo-2-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNDFf/my-dress-up-marin-1-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNDJf/my-dress-up-marin-2-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNDNf/my-dress-up-marin-cosplay-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwMzBf/my-dress-up-marin-normal-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNTRf/my-dress-up-sajuna-1-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNTVf/my-dress-up-sajuna-2-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNTZf/my-dress-up-shinju-1-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNTdf/my-dress-up-shinju-2-avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+<h4>One Piece</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNTBf/one-piece-chopper-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNTFf/one-piece-chopper-2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNTJf/one-piece-chopper-3.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNTNf/one-piece-franky-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNjlf/one-piece-franky-2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNzBf/one-piece-franky-3.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNzFf/one-piece-jimbei-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNzJf/one-piece-jimbei-2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNzNf/one-piece-jimbei-3.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNzRf/one-piece-jimbei-4.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNzVf/one-piece-luffy-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNzZf/one-piece-luffy-2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNzdf/one-piece-luffy-3.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNzhf/one-piece-luffy-4.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNzlf/one-piece-luffy-5.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwODBf/one-piece-nico-robin-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNjBf/one-piece-nico-robin-2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNjFf/one-piece-nico-robin-3.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNjJf/one-piece-roronoa-zoro-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNjNf/one-piece-roronoa-zoro-2.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNjRf/one-piece-sanji-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNjVf/one-piece-sanji-2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNjZf/one-piece-sanji-3.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNjdf/one-piece-usopp-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwNjhf/one-piece-usopp-2.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+<h4>Rent-a-Girlfriend</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwODlf/rcg1_avatar_02.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwOTBf/rcg1_avatar_04.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwOTFf/rcg2_avatar_01.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwOTJf/rcg2_avatar_03.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwOTNf/rcg2_avatar_04.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwOTRf/rent-a-gf-chizuru-s1-date-kv.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwOTVf/rent-a-gf-chizuru-s2-date-kv.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwOTZf/rent-a-gf-chizuru-s3-date-kv.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwOTdf/rent-a-gf-mami-s1-date-kv.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwOThf/rent-a-gf-mami-s2-date-kv_1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwOTlf/rent-a-gf-mami-s2-date-kv_2.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMDBf/rent-a-gf-mami-s3-date-kv_1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMDFf/rent-a-gf-mami-s3-date-kv_2.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMDJf/rent-a-gf-ruka-s1-date-kv.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMDNf/rent-a-gf-ruka-s2-date-kv.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMDRf/rent-a-gf-ruka-s3-date-kv.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMDVf/rent-a-gf-sumi-s1-date-kv.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMDZf/rent-a-gf-yaemori-s3-date-kv.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwODFf/rent-a-gf-yaemori-s3-main-kv.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwODJf/rent-a-gf-yaemori-s3-teaser-kv.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+<h4>Re:Zero</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwODNf/rezero_s3_avatar_01.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwODRf/rezero_s3_avatar_02.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwODVf/rezero_s3_avatar_04.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwODZf/rezero_s3_avatar_05.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwODdf/rezero_s3_avatar_06.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYwODhf/rezero_s3_avatar_07.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMDhf/rezero_s3_avatar_08.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMDlf/rezero_s3_avatar_09.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMTBf/rezero_s3_avatar_10.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMTFf/rezero_s3_avatar_11.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMTJf/rezero_s3_avatar_12.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMTNf/rezero_s3_avatar_13.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMTRf/rezero_s3_avatar_14.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMTVf/rezero_s3_avatar_15.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMTZf/rezero_s3_avatar_16.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMTdf/rezero_s3_avatar_17.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMThf/rezero_s3_avatar_18.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMTlf/rezero_s3_avatar_19.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMjBf/rezero_s3_avatar_20.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMjFf/rezero_s3_avatar_21.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMjJf/rezero_s3_avatar_22.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMDdf/rezero_s3_avatar_23.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+
+<h4>Metallic Rouge</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMjRf/rouge-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMjVf/rouge-2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMjZf/rouge-3.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMjdf/rouge-4.png" class="lazy-img" onclick="selectAvatar(this)">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMjhf/rupa-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMjlf/rupa-2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMzBf/rupa-3.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMzFf/rupa-4.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMzJf/rupa-5.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+<h4>RWBY</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMzNf/rwby_avatar_01.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMzRf/rwby_avatar_02.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMzVf/rwby_avatar_03.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMzZf/rwby_avatar_04.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+
+<h4>Shangri-La Frontier</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMzdf/sarah.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMzhf/shangrilafrontier_s2_avatar_1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMzlf/shangrilafrontier_s2_avatar_2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNDBf/shangrilafrontier_s2_avatar_3.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNDFf/shangrilafrontier_s2_avatar_4.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxMjNf/shangrilafrontier_s2_avatar_5.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNDRf/shangrilafrontier_s2_avatar_6.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNDVf/shangrilafrontier_s2_avatar_7.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNDZf/shangrilafrontier_s2_avatar_8.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNDdf/shangrilafrontier_s2_avatar_9.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNDhf/shangrilafrontier_s2_avatar_10.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNDlf/shangrilafrontier_s2_avatar_11.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNTFf/shangrilafrontier_s2_avatar_12.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNTNf/shangrilafrontier_s2_avatar_13.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNTVf/shangrilafrontier_s2_avatar_14.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNTZf/shangrilafrontier_s2_avatar_15.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+
+<h4>Solo Leveling</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNTdf/solo_baekyoonho.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNThf/solo_chahaein.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNTlf/solo_choijongin.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNjBf/solo_gogunhee.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNDJf/solo_sungjinwoo.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNDNf/solo_teaser_visual.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNjZf/solo_woojinchul.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNjdf/solo_yoojinho.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNjFf/sololeveling_s2_avatar_1_v2_choi_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNjJf/sololeveling_s2_avatar_2_v2_jinwoo_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNjNf/sololeveling_s2_avatar_3_v2_igris_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNjRf/sololeveling_s2_avatar_4_v2_baek_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNjVf/sololeveling_s2_avatar_5_v2_cha_avatar.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+<h4>Re:Zero - Subaru</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxODBf/subaru-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxODFf/subaru-2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxODJf/subaru-3.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxODNf/subaru-4.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxODRf/subaru-5.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+
+<h4>Tower of God</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxODVf/tog_bam_avatar_1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxODZf/tog_bam_avatar_2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxODdf/tog_bam_avatar_3.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxODhf/tog_endorsi_avatar_1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxODlf/tog_endorsi_avatar_2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNjhf/tog_hayuri_avatar_1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNjlf/tog_hwaryun_avatar_1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNzBf/tog_ja_avatar_1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNzFf/tog_ja_avatar_2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNzJf/tog_jihwa_avatar_1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNzNf/tog_jihwa_avatar_2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNzRf/tog_khunaa_avatar_1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNzVf/tog_khunaa_avatar_2.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNzZf/tog_khunran_avatar_1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxNzdf/tog_rak_avatar_1.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+
+<h4>Vijay</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxOTFf/vijay-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxOTJf/vijay-2.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+
+<h4>Wendy</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxOTNf/wendy-1.png" class="lazy-img" onclick="selectAvatar(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5ODYxOTBf/wendy-2.png" class="lazy-img" onclick="selectAvatar(this)">
+
+</div>
+
+
+
+    </div>
+  </div>
+  </section>
+
+  <!-- ================= EDITAR PERFIL COMPLETO ================= -->
+  <section id="edit-profile-view" class="view scroll-view">
+
+    <header class="edit-header">
+      <button class="icon-btn" onclick="openView('profile-view')">
+        <span class="material-icons-outlined">chevron_left</span>
+      </button>
+      <h2>Editar nombre</h2>
+      <button onclick="saveFullProfile()">Guardar</button>
+    </header>
+
+    <div class="form-section">
+      <label>Nombre de perfil</label>
+      <input type="text" id="profileNameInput">
+    </div>
+
+  </section>
+
+  <!-- ================= EDITAR FONDO ================= -->
+  <section id="edit-cover-view" class="view fixed-view">
+
+
+    <header class="edit-header">
+      <button class="icon-btn" onclick="openView('profile-view')">
+        <span class="material-icons-outlined">chevron_left</span>
+      </button>
+      <h2>Editar fondo</h2>
+      <button onclick="saveCover()" >Listo</button>
+      
+    </header>
+
+    <div class="edit-cover" id="coverPreviewTemp">
+      <img
+  class="edit-avatar"
+  id="avatarCoverPreview"
+  src="avatar.jpg"
+  alt="Vista previa del fondo"
+  loading="eager"
+  fetchpriority="high"
+  decoding="async"
+>
+      <h3 id="editNameCover">Usuario</h3>
+    </div>
+
+    <div class="scroll-content">
+    <div class="avatar-section">
+      <h4>Digital Knight</h4>
+      <div class="avatar-grid">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk4MDdf/colorful-gradient-digital-art-abstract-tn.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk4MTNf/dLB5ai0.webp" class="lazy-img" onclick="selectCover(this)">
+      
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMjQwMTY5NTJf/fondo%201.png" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMjQwMTY5NTNf/fondo%202.png" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMjQwMTY5NTRf/fondo%203.png" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMjQwMTY5NTVf/fondo%204.png" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMjQwMTY9NTZf/fondo%205.png" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMjQwMTY5NTdf/fondo%206.png" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMjQwMTY5NThf/fondo%207.png" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMjQwMTY5NTlf/fondo%208.png" class="lazy-img" onclick="selectCover(this)">
+      
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk4MTJf/OIP%20%285%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk4MTVf/OIP%20%286%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk4MTRf/R%20%286%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+      </div>
+
+      <h4>DC</h4>
+      <div class="avatar-grid">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2Mjdf/1245135.webp" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2MjNf/155917.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2MzNf/463476.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2MTNf/8ae01662d94b48e17cab2b7c18140b7f.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2Mjlf/batman_gotham_skyline_artwork.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2MzFf/gGQAsC.webp" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2MTJf/HD-wallpaper-amazing-view-space-scenery-horizon-planet.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2MTZf/KryptonKandor1.webp" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2MzJf/LyzkjE.webp" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2MjFf/Metropolis-Comic-Art-Credit-DC-Entertainment-2.webp" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2MjBf/OIP%20%281%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2MjJf/OIP%20%283%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2MjZf/OIP%20%284%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2MTlf/OIP.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2MTdf/R%20%281%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2MThf/R%20%282%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2MjVf/R%20%283%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2MTFf/R%20%285%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2MTVf/R.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2MTRf/wp2467632.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMjk2Mjhf/wp2640243.webp" class="lazy-img" onclick="selectCover(this)">
+      </div>
+
+      <h4>Marvel</h4>
+      <div class="avatar-grid">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzM4NzVf/1164342.webp" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzM4NzNf/68391fe4f7f1dbefa63479111ea9eaef.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzM4Njlf/A1331-Architecture-of-Marvel-Movies-Image-1.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzM4NjVf/black-panther2.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzM4NjNf/main-qimg-57d99982fa98ccf820abd398976d7942.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzM4NzRf/OIP%20%281%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzM4NjJf/OIP.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzM4NzJf/tumblr_moi7roOAAv1rjavnlo5_1280.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzM4NjFf/wp2436484.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzM4NjZf/wp4884745.webp" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzM4Njhf/wp4884757.jpg" class="lazy-img" onclick="selectCover(this)">
+      </div>
+
+      <h4>Dragon Ball</h4>
+      <div class="avatar-grid">
+         <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMTZf/dbdiama_avatarbackground2025_01_background.jpg" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMTdf/dbdiama_avatarbackground2025_02_background.jpg" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMThf/dbdiama_avatarbackground2025_03_background.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMTlf/4da8ad87-6b36-4778-910f-79c724685800.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMDVf/59a21ff7-3213-4525-94d4-b6b369ee1d14.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMjBf/descarga%20%2829%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMjFf/descarga%20%2830%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMDBf/descarga%20%2831%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMDJf/descarga%20%2832%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMDNf/descarga%20%2833%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMDRf/descarga%20%2834%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMDZf/descarga%20%2835%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMDdf/descarga%20%2836%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMDhf/descarga%20%2837%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMTFf/descarga%20%2838%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMTJf/descarga%20%2839%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMTNf/descarga%20%2840%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMTRf/descarga%20%2841%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMTVf/descarga%20%2842%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMTZf/descarga%20%2843%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMTdf/descarga%20%2844%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMThf/descarga%20%2845%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMDlf/Dragon%20Ball%20Z%20_%20Revival%20Of%20F.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTIwMDYzMTBf/f390b28b-1c1d-45ea-9776-1cc14667668b.jpeg" class="lazy-img" onclick="selectCover(this)">
+      </div>
+
+
+      <h4>Disney</h4>
+      <div class="avatar-grid">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzU5MDhf/25ef34ab2e728e5035c1a61acd351624.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzU5MDVf/4b572a4c5213364d2068da8a956ea3ab.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzU5MTNf/51rhZOyLcEL._AC_SS450_.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzU5MDRf/76d0fad6227dbc5a0983d004a236d8ec.png" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzU5MTFf/bfa456dc0119be38185a4ecf5e12ea79.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzU5MDlf/c31d52848154a3812f0d09237236b6ab.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzU5MDNf/HD-wallpaper-tangled-castle-tangled-disney-castle-painting-rapunzel.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzU5MTJf/Motunui_29.webp" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzU5MDJf/OIP%20%283%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzU5MDZf/OIP%20%284%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzU5MTBf/R%20%282%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzU5MDdf/wp1896501.webp" class="lazy-img" onclick="selectCover(this)">
+      </div>
+
+      <h4>Los Simpson</h4>
+      <div class="avatar-grid">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzU4Nzlf/22c106dfd7fb38a24db39492c1cb7f2c.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzU4NzRf/591067.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzU4NzZf/bcd48940348908f96e968a561011b5a3.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzU4Nzhf/d313b427f3197255e816764177bda749.jpg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzU4Nzdf/OIP%20%281%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzU4NzNf/OIP.jpeg" class="lazy-img" onclick="selectCover(this)">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTAzMzU4NzVf/R%20%281%29.jpeg" class="lazy-img" onclick="selectCover(this)">
+      </div>
+
+      <h4>Attack on Titan</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMyOTdf/aot_background_1.png" class="lazy-img" onclick="selectCover(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMyOThf/aot_background_2.png" class="lazy-img" onclick="selectCover(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMyOTlf/aot_background_3.png" class="lazy-img" onclick="selectCover(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMDBf/aot_background_4.png" class="lazy-img" onclick="selectCover(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMDFf/aot_background_5.png" class="lazy-img" onclick="selectCover(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMDJf/aot_background_6.png" class="lazy-img" onclick="selectCover(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMDNf/aot_background_8.png" class="lazy-img" onclick="selectCover(this)">
+
+</div>
+
+
+<h4>Backgrounds</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMDRf/background1.png" class="lazy-img" onclick="selectCover(this)">
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMDVf/background2.png" class="lazy-img" onclick="selectCover(this)">
+
+</div>
+
+
+<h4>Black Butler</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMDZf/blackbutler-background.png" class="lazy-img" onclick="selectCover(this)">
+
+</div>
+
+
+<h4>Blue Lock</h4>
+<div class="avatar-grid">
+
+<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMDdf/bluelock_background.png" class="lazy-img" onclick="selectCover(this)">
+
+</div>
+
+
+
+<h4>Dr. Stone</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMTlf/dr_stone_s4_background.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMjBf/drstone_avatarbackground_01_background.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMjFf/drstone_avatarbackground_02_background.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMjJf/drstone_avatarbackground_03_background.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMjNf/drstone_avatarbackground_04background.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMjRf/drstone_avatarbackground_background.png" class="lazy-img" onclick="selectCover(this)">
+</div>
+
+<h4>Fena: Pirate Princess</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMjVf/fena_avatarbackground_01_background.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMjZf/fena_avatarbackground_02_background.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMjdf/fena_avatarbackground_03_background.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMjhf/fena_avatarbackground_05_background.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMjlf/fena_avatarbackground_06_background.png" class="lazy-img" onclick="selectCover(this)">
+</div>
+
+<h4>Frieren: Beyond Journey's End</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMzFf/frieren_background_01.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMzJf/frieren_background_02.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMzNf/frieren_background_03.png" class="lazy-img" onclick="selectCover(this)">
+</div>
+
+<h4>Girls Band Cry</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMzRf/girlsbandcry_background.png" class="lazy-img" onclick="selectCover(this)">
+</div>
+
+<h4>I'm in Love with the Villainess</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMzVf/iminlovewiththevillainess_avatarbackground_background_03.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMzZf/iminlovewiththevillainess_avatarbackground_background_04.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMzdf/iminlovewiththevillainess_avatarbackground_background_05.png" class="lazy-img" onclick="selectCover(this)">
+</div>
+
+<h4>Inbento</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMzhf/inbento_background_1.png" class="lazy-img" onclick="selectCover(this)">
+</div>
+
+<h4>In/Spectre</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzMzlf/inspectre_avatarbackground_background.png" class="lazy-img" onclick="selectCover(this)">
+</div>
+
+<h4>Metallic Rouge</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNDBf/mettalicrouge_avatarbackground_background_01.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNDFf/mettalicrouge_avatarbackground_background_02.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNDJf/mettalicrouge_avatarbackground_background_03.png" class="lazy-img" onclick="selectCover(this)">
+</div>
+
+<h4>Mushoku Tensei</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNDNf/mushokutensei_avatarbackground_background_s1_01.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNDRf/mushokutensei_avatarbackground_background_s1_02.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNDVf/mushokutensei_avatarbackground_background_s1_03.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNDZf/mushokutensei_avatarbackground_background_s2_01.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNDdf/mushokutensei_avatarbackground_background_s2_03.png" class="lazy-img" onclick="selectCover(this)">
+</div>
+
+<h4>My Dress-Up Darling</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNDhf/mydressupdarling_avatarbackground_background_01.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNDlf/mydressupdarling_avatarbackground_background_04.png" class="lazy-img" onclick="selectCover(this)">
+</div>
+<h4>Rent-a-Girlfriend</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNTBf/rcg1_background_final.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNTFf/rcg2_background_final.png" class="lazy-img" onclick="selectCover(this)">
+</div>
+
+<h4>That Time I Got Reincarnated as a Slime</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNTJf/reincarnatedasaslime_background_03.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNTNf/reincarnatedasaslime_background_05.png" class="lazy-img" onclick="selectCover(this)">
+</div>
+
+<h4>Rent-a-Girlfriend</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNTRf/rentagirlfriend_avatarbackground_background.png" class="lazy-img" onclick="selectCover(this)">
+</div>
+
+<h4>Re:Zero</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNTVf/rezero_s3_background_01png.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNTZf/rezero_s3_background_03.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNTdf/rezero_s3_background_04.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNThf/rezero_s3_background_05.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNTlf/rezero_s3_background_06.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNjBf/rezero_s3_background_07.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNjFf/rezero_s3_background_08.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNjJf/rezero_s3_background_09.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNjNf/rezero_s3_background_10.png" class="lazy-img" onclick="selectCover(this)">
+</div>
+
+<h4>RWBY</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNjRf/rwby_background_final.png" class="lazy-img" onclick="selectCover(this)">
+</div>
+
+<h4>Solo Leveling</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNjVf/sololeveling_avatarbackground_01_background.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNjZf/sololeveling_avatarbackground_02_background%281%29.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNjdf/sololeveling_avatarbackground_02_background.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNjhf/sololeveling_s2_background_1.jpg" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNjlf/sololeveling_s2_background_2.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNzBf/sololeveling_s2_background_7.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNzFf/sololeveling_s2_background_8.png" class="lazy-img" onclick="selectCover(this)">
+</div>
+
+
+
+<h4>Tower of God</h4>
+<div class="avatar-grid">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNzVf/towerofgod_avatarbackground_02_background.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNzZf/towerofgod_avatarbackground_background_03.png" class="lazy-img" onclick="selectCover(this)">
+  <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='130' height='200'></svg>" data-src="https://od.lk/s/M18zMTk5OTMzNzdf/towerofgod2_background.png" class="lazy-img" onclick="selectCover(this)">
+</div>
+
+
+    </div>
+  </div>
+  </section>
+
+</div>
+
+<!-- ================= LOGOUT MODAL ================= -->
+<div id="logoutOverlay" class="logout-overlay hidden">
+  <div class="logout-modal">
+    <h3>¿Cerrar sesión?</h3>
+    <p>Tu sesión actual se cerrará.</p> 
+
+    <div class="logout-actions">
+      <button onclick="closeLogoutModal()" class="btn-cancel">
+        Cancelar
+      </button>
+
+      <button onclick="confirmLogout()" class="btn-confirm">
+        Cerrar sesión
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<footer class="footer">
+  <a href="main.html" class="footer-icon">
+      <span class="material-icons-outlined">home</span>
+      <span class="material-icons">home</span>
+  </a>
+  <a href="new favoritos 2025.html" class="footer-icon">
+      <span class="material-icons-outlined">bookmark_border</span>
+      <span class="material-icons">bookmark</span>
+  </a>
+  <a href="downloads.html" class="footer-icon download-footer">
+    <span class="material-icons-outlined">arrow_downward</span>
+    <span class="material-icons">arrow_downward</span>
+</a>
+ <a href="New search page 2025.html" class="footer-icon">
+        <span class="material-icons-outlined">search</span>
+        <span class="material-icons">search</span>
+    </a>
+</footer>
+
+
+<script src="perfil-2026.js"></script>
+<script src="notifications.js"></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+  defer>
+</script>
+
+<script type="module">
+import { supabase } from "./js/supabaseClient.js";
+import { saveProfileToSupabase } from "./js/sync-supabase.js";
+import { loadProfileInfo } from "./js/sync-supabase.js";
+
+(async()=>{
+
+ await loadProfileInfo();
+
+ syncPreviewData();
+
+})();
+
+async function refreshSupportStatus(){
+
+    const { data:{ session } } = await supabase.auth.getSession();
+
+    if(!session) return;
+
+
+    const { data: profile } = await supabase
+    .from("profiles")
+    .select(`
+        premium
+    `)
+    .eq("id", session.user.id)
+    .single();
+
+
+    if(!profile) return;
+
+
+    // La opción permite administrar o realizar un apoyo.
+    const premiumOption =
+    document.getElementById("premiumProfileOption");
+    if(premiumOption){
+        premiumOption.onclick = () => {
+            window.location.href =
+            profile.premium ? "manage-premium.html" : "premium.html";
+        };
+    }
+
+
+    const oldProfile =
+    JSON.parse(localStorage.getItem("dk_profile")) || {};
+
+
+    localStorage.setItem(
+        "dk_profile",
+        JSON.stringify({
+            ...oldProfile,
+            ...profile
+        })
+    );
+
+
+    const text =
+    document.getElementById("premiumProfileText");
+
+    const status =
+    document.getElementById("premiumProfileStatus");
+
+
+    if(text && status){
+
+        if(profile.premium){
+
+            text.textContent =
+            "❤️ Gracias por tu apoyo";
+
+            status.textContent =
+            "Tu apoyo ayuda a mantener Digital Knight y sus servidores en funcionamiento.";
+
+        }else{
+
+            text.textContent =
+            "🤍 Apoya Digital Knight";
+
+            status.textContent =
+            "Tu apoyo ayuda a mantener la app y atender reportes de fallas.";
+
+        }
+
+    }
+
+}
+
+
+refreshSupportStatus();
+
+window.supabase = supabase;
+window.saveProfileToSupabase = saveProfileToSupabase;
+
+const logoutButton = document.getElementById("logoutButton");
+const logoutOverlay = document.getElementById("logoutOverlay");
+
+// Abrir modal
+logoutButton.addEventListener("click", () => {
+  logoutOverlay.classList.remove("hidden");
+});
+
+// Cerrar modal
+window.closeLogoutModal = function () {
+  logoutOverlay.classList.add("hidden");
+};
+
+// Confirmar cierre de sesión
+window.confirmLogout = async function () {
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    console.error("Error al cerrar sesión:", error.message);
+    alert("Error al cerrar sesión");
+    return;
+  }
+
+  window.location.href = "login.html";
+};
+
+
+requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
+    document.getElementById('profile-page')?.classList.add('dk-ready');
+  });
+});
+</script>
+
+
+</body>
+</html>

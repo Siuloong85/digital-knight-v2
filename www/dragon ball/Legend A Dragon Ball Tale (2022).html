@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+
+
+  <title>Legend: A Dragon Ball Tale</title>
+   <script src="../loader.min.js"></script>
+  <meta name="theme-color" content="#01011d">
+  <meta name="background-color" content="#01011d">
+<meta name="msapplication-navbutton-color" content="#01011d">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#01011d" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="" id="ogTitle">
+<meta property="og:description" content="" id="ogDesc">
+<meta property="og:image" content="" id="ogImage">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="" id="ogUrl">
+<meta property="og:type" content="video.movie">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="" id="twTitle">
+<meta name="twitter:description" content="" id="twDesc">
+<meta name="twitter:image" content="" id="twImage">
+
+
+  <script disable-devtool-auto src="https://cdn.jsdelivr.net/npm/disable-devtool@latest"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-ChzD5StK818vBAQZL5n94vJUmJl+jz1Ro8AiyOsd0GWIT6saFOY+zG+VVM/LMxltwGPplT7tI9On7kVCXkmVc=" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined">
+   <link rel="icon" type="image/png" sizes="32x32" href="../logo-2025.png">
+    <link rel="manifest" href="../manifest.json">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="../peliculas.css">
+ <style>
+   .cover::before {
+  background: linear-gradient(to bottom,  #01011d, transparent 20%);
+}
+
+.cover::after {
+  background: linear-gradient(to top,  #01011d, #01011d,  #010118,  #000000, rgba(0, 0, 0, 0.664), transparent 60%);
+}
+
+    .cover {
+  position: relative;
+  width: 100%;
+  
+  background: url("https://od.lk/s/M18zMTIwMjA0OTRf/Son%20goku%20%28edited%20by%20me%20jaden%20Robertson%29.jpeg") no-repeat center top;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.cover::before,
+.cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+
+
+.cover-landscape {
+  position: absolute;
+  inset: 0;
+  background: url("https://od.lk/s/M18zMTIwMjA1MTBf/Vegeta%20%282%29.jpeg") no-repeat center top;
+  background-size: cover;
+  z-index: 0; /* <- Esto es clave para que se vea debajo del contenido, pero por encima del fondo negro */
+  display: none;
+}
+
+
+
+/* Ocultar sombras en landscape */
+@media screen and (orientation: landscape) {
+  .cover::before,
+  .cover::after {
+    display: none;
+  }
+
+  .cover-landscape {
+    display: block;
+  }
+}
+
+
+
+
+/* Mostrar landscape solo en modo horizontal */
+@media screen and (orientation: landscape) {
+  .cover {
+    background: none;
+  }
+
+  .cover-landscape {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  .cover-content {
+    padding-top: 70px; /* Ajusta según el tamaño de tu #header */
+  }
+}
+
+
+.cover-content img.logo {
+    width: 200px;
+    margin-bottom: 10px;
+  }
+
+  @media (orientation: landscape) {
+    
+  
+    .cover-content img.logo {
+      width: 190px;
+      margin-bottom: 4px;
+    }
+  
+    
+  }
+  
+  @media (min-width: 1024px) {
+    
+  
+    .cover-content img.logo {
+      margin-top:440px;
+      width: 300px;
+      margin-bottom: -10px;
+    }
+  
+    
+  } 
+
+
+/* General: espacio para header fijo en pantallas pequeñas */
+@media screen and (max-width: 1024px) {
+  .cover-content {
+    padding-top: 80px; /* deja espacio para el header fijo */
+  }
+}
+
+/* Móviles en portrait */
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  .cover-content {
+    padding-top: 90px; /* un poco más de espacio en modo vertical */
+  }
+
+  .cover {
+    padding-top: 0; /* el padding se maneja dentro de .cover-content */
+  }
+}
+
+/* Móviles en landscape (horizontal) */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+  .cover-content {
+    padding-top: 60px;
+  }
+}
+
+/* Tablets en cualquier orientación */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .cover-content {
+    padding-top: 70px;
+  }
+}
+
+/* PC: sin padding adicional */
+@media screen and (min-width: 1025px) {
+  .cover-content {
+    padding-top: 0;
+  }
+}
+
+    </style>
+</head>
+<body class="page-loading"
+      oncontextmenu="return false"
+      ondragstart="return false"
+      onselectstart="return false">
+
+  <div class="custom-top-bar">
+    <button onclick="window.history.back()">
+      <span class="material-icons">arrow_back</span>
+    </button>
+    <button onclick="location.reload()">
+      <span class="material-icons">refresh</span>
+    </button>
+  </div>
+  <header id="header">
+    <a href="javascript:history.back();" id="back-link" class="icon-link" tabindex="1">
+        <span class="material-icons">chevron_left</span>
+    </a>
+    <span id="page-title" class="page-title">Legend: A Dragon Ball Tale </span> <!-- Título oculto por defecto -->
+</header>
+
+<div class="tabs tabs-secondary">
+  <!-- Logo a la izquierda -->
+  <a href="../main.html">
+    <img src="https://od.lk/s/M18zMTIxODI5MjVf/Knight.png" width="150px" class="logo" />
+  </a>
+
+  <!-- Tabs centradas -->
+  <div class="tabs-wrapper">
+    <a href="../main.html#inicio" class="tab">Inicio</a>
+    <a href="../main.html#series" class="tab">Películas</a>
+    <a href="../main.html#peliculas" class="tab">Series</a>
+    <a href="../main.html#hbo" class="tab">Anime</a>
+    <a href="../main.html#documentales" class="tab">Familia</a>
+    <a href="../main.html#mi-lista" class="tab">Doramas</a>
+  </div>
+
+  <!-- Íconos a la derecha -->
+  <div class="icons">
+    <!-- FAVORITOS -->
+    <a href="../new favoritos 2025.html" class="header-only">
+      <span class="material-icons-outlined">bookmark_border</span>
+    </a>
+
+    <!-- BUSCAR -->
+    <a href="../New search page 2025.html" class="header-only">
+      <span class="material-icons-outlined">search</span>
+    </a>
+
+    <!-- PERFIL -->
+    <a href="../perfil digital Knight 2025.html" class="header-only">
+      <img src="https://od.lk/s/M18zMTIxOTE0Mjlf/logo%202025.png" alt="Perfil" class="profile-icon-footer" id="headerProfileIcon" />
+    </a>
+  </div>
+</div>
+
+
+<!-- COVER / PORTADA -->
+<div class="cover" id="cover">
+    <!-- FONDO LANDSCAPE SOLO PARA MODO HORIZONTAL -->
+    <div class="cover-landscape">
+      <div class="cover-landscape-shadow-left"></div>
+    </div>
+  
+    <div class="cover-content">
+      <img src="https://od.lk/s/M18zMDc1Nzg0NTZf/legend.png" alt="Legend: A Dragon Ball Tale  "class="logo" tabindex="2">
+      <div class="meta">12+    11m   2022   Sub</div>
+  
+      <div class="bloque-botones">
+        <div id="video-controls">
+          <button id="watchButton" class="watch-button" onclick="showPlayer()">
+            <span id="watchButtonIcon" class="material-icons">play_arrow</span>
+            <div class="watch-text-wrapper">
+              <span id="watchButtonText">Ver ahora</span>
+              <div id="watchProgressBar" class="watch-progress-bar">
+                <div></div>
+              </div>
+            </div>
+          </button>
+          
+          <button id="restartButton" class="restart-button" onclick="restartMovie()"> 
+            <span class="material-icons">replay</span> Reiniciar
+          </button>
+      
+          <!-- Espacio opcional si quieres animar la separación (no obligatorio) -->
+          <!-- <div id="restartSpacer" style="height: 0px; transition: height 0.3s ease;"></div> -->
+        </div>
+      
+        <div class="iconos">
+          <!-- Botón de Favoritos -->
+          <button id="favoritoBtn" data-identificador="Legend: A Dragon Ball Tale" onclick="toggleFavorito()" tabindex="4">
+            <span id="favoritoIcon" class="material-icons-outlined">add</span>
+            <p id="favoritoText">Favoritos</p>
+          </button>
+      
+          <!-- Info oculta para localStorage -->
+          <div id="favoritoData" style="display: none;">
+            <img id="favoritoImagen" class="poster" src="https://od.lk/s/M18zMTIwMjA2MDNf/dragon%20ball%20tale.png" alt="Poster de la Película">
+            <a id="favoritoEnlace" href="Legend A Dragon Ball Tale (2022).html"></a>
+            <span id="nombre">Legend: A Dragon Ball Tale. </span>
+          </div>
+      
+          
+      
+          <!-- Botón de Compartir -->
+          <div class="action-item" id="compartirBtn">
+            <span class="material-icons-outlined">share</span>
+            <p>Compartir</p>
+          </div>
+      
+          <!-- Botón de Descargar -->
+           <!-- Botón de Descargar -->
+           <div class="action-item download-action" onclick="descargarPelicula('https://od.lk/d/M18zMDQ2MDgxNThf/Legend%20-%20A%20Dragonball%20Tale%20%28Corto%20subtitulado%20al%20espa%C3%B1ol%29.mp4')">
+            <i class="material-icons">arrow_downward</i>
+            <span class="underline"></span>
+            Descargar
+          </div>
+        </div>
+      </div>
+      
+      <div class="description">
+        Siguiendo órdenes diplomáticas del Gran Consejo, Vegeta, ahora rey de los Saiyajins, emprende una misión interestelar de asesinato.
+      </div>
+    </div>
+  </div>
+
+   <!-- QUIZÁ TAMBIÉN TE GUSTE -->
+ <div class="page-content">
+<div class="sugerencias-section">
+  <div class="sugerencias-header">
+    <h2 class="sugerencias-titulo">Quizá también te guste</h2>
+    <div class="sugerencias-tabs-line"></div>
+  </div>
+  <div class="sugerencias-grid">
+    <a href="Dragon Ball Z El combate final.html" class="sugerencia-item">
+      <img src="https://th.bing.com/th/id/R.3b1db6e9b3b754db3cad21d7f2232264?rik=LpboS6E7Ln1g0g&riu=http%3a%2f%2fwww.dragonball-ultimate.com%2fwp-content%2fuploads%2f2017%2f09%2fdragonball-z-film-11-1.jpg&ehk=NtZwvTOT%2bFz%2fuehFqZ60i%2bG%2fGZblja%2bPyGlqZzLA8SQ%3d&risl=&pid=ImgRaw&r=0" alt="El combate final">
+      <p class="sugerencia-titulo">El combate final</p>
+      <p class="sugerencia-sub">Dob | Lat</p>
+    </a>
+  
+    <a href="Dragon ball Z 10 el regreso del guerrero legendario.html" class="sugerencia-item">
+      <img src="https://elcomercio.pe/resizer/UQPThrB2cYDxpo2UVRgriWFYfHc=/620x0/smart/filters:format(jpeg):quality(75)/arc-anglerfish-arc2-prod-elcomercio.s3.amazonaws.com/public/W6YZTOUVDRCDHKREJV54L5LZNY.jpg" alt="El regreso del guerrero legendario">
+      <p class="sugerencia-titulo">El regreso del guerrero legendario</p>
+      <p class="sugerencia-sub">Dob | Lat</p>
+    </a>
+  
+    <a href="Dragon Ball Z 09 La Galaxia Corre Peligro.html" class="sugerencia-item">
+      <img src="https://th.bing.com/th/id/OIP.kgbsgSWpZ3iFWLmlOwMUjQHaKd?rs=1&pid=ImgDetMain" alt="La Galaxia Corre Peligro">
+      <p class="sugerencia-titulo">La Galaxia Corre Peligro</p>
+      <p class="sugerencia-sub">Dob | Lat</p>
+    </a>
+  
+    <a href="Dragon Ball Z 08 El poder invencible.html" class="sugerencia-item">
+      <img src="https://th.bing.com/th/id/R.b2723b64fa747fcce5218eb7b98a5296?rik=%2bEgX1KQQAb9VGg&riu=http%3a%2f%2f3.bp.blogspot.com%2f-Ej8Hbf3bCVA%2fVb54fjO_tWI%2fAAAAAAAABGk%2fx9HjY-Nrcpo%2fs1600%2fdbz2.png&ehk=VPZ5zUAdch%2fzXKuPWdhpezPspfMhDj1gAQQDzH%2bDxOc%3d&risl=&pid=ImgRaw&r=0" alt="El poder invencible">
+      <p class="sugerencia-titulo">El poder invencible</p>
+      <p class="sugerencia-sub">Dob | Lat</p>
+    </a>
+  
+    <a href="Dragon Ball Z 07 La Pelea de los Tres Saiyajin.html" class="sugerencia-item">
+      <img src="https://es.web.img3.acsta.net/pictures/21/04/19/13/24/3827526.jpg" alt="La Pelea de los Tres Saiyajin">
+      <p class="sugerencia-titulo">La Pelea de los Tres Saiyajin</p>
+      <p class="sugerencia-sub">Dob | Lat</p>
+    </a>
+  
+    <a href="Dragon Ball Z 06 Los Guerreros más Poderosos.html" class="sugerencia-item">
+      <img src="https://media.fstatic.com/OpiMMDWeuS0ODRXHmSgcOXut0gU=/322x478/smart/filters:format(webp)/media/movies/covers/2023/03/movie_09.jpg" alt="Los Guerreros más Poderosos">
+      <p class="sugerencia-titulo">Los Guerreros más Poderosos</p>
+      <p class="sugerencia-sub">Dob | Lat</p>
+    </a>
+  
+    <a href="Dragon Ball Z 05 Los Rivales más Poderosos.html" class="sugerencia-item">
+      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgyCeOEfMI47kxU7SPLuzNf2k4q-4JHnNr_CuY0vFx8dNkSL0vAQVqTsV2YRlhwAR4q8lfZ6YHv4_PubIOaQDyylA8XZYipaw299BCUkCJTiAjqS2alSc0cgXVnsl_sKGq3DkHOiC1Z5w9MNZuF1ZEnIIEp2Efw9lSvyaXPG7eaJ_H95JOi22HlKWWYng/w1200-h630-p-k-no-nu/poster.jpg" alt="Los Rivales más Poderosos">
+      <p class="sugerencia-titulo">Los Rivales más Poderosos</p>
+      <p class="sugerencia-sub">Dob | Lat</p>
+     </a>
+  </div>
+</div>
+</div>
+  
+
+  
+<!-- PLAYER -->
+<div class="player" id="player">
+  <video id="video" poster="https://wallpapercave.com/wp/wp5415042.jpg" src="https://od.lk/s/M18zMDQ2MDgxNThf/Legend%20-%20A%20Dragonball%20Tale%20%28Corto%20subtitulado%20al%20espa%C3%B1ol%29.mp4" preload="metadata"></video>
+ <!-- Loader -->
+ <!-- CONGELAR IMAGEN DURANTE CAMBIO DE IDIOMA -->
+<canvas id="languageFreezeFrame"></canvas>
+<!-- Loader -->
+<div class="video-loader hidden" id="videoLoader">
+  <div class="spinner"></div>
+</div>
+
+    <!-- Aspect Ratio Label -->
+    <div id="aspectLabel" style="
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 16px;
+      display: none;
+      z-index: 9999;
+    ">
+      cover
+    </div>
+  
+   <div class="overlay-top" id="overlayTop"></div>
+<div class="overlay-bottom" id="overlayBottom"></div>
+
+    
+    <div class="overlay" id="overlay"></div>
+  
+   
+    <div class="controls" id="controls">
+      <div class="top-bar">
+        <div class="icon-btn material-icons" onclick="goBack()">chevron_left</div>
+        <div style="display: flex; gap: 15px;">
+  
+         <!-- Botón de idioma con mini menú -->
+<!--
+<div class="icon-btn" id="langBtnWrapper" style="position:relative; display:flex; align-items:center; gap:5px;">
+  <span class="material-icons" id="langIcon">chat</span>
+  
+  <div id="langMenu" class="lang-menu">
+    <div class="lang-option" data-lang="latino">
+      <span class="check"></span> Español (Latino)
+    </div>
+    <div class="lang-option" data-lang="ingles">
+      <span class="check"></span> Inglés (Subtitulada)
+    </div>
+    <button id="langConfirmBtn">Listo</button>
+  </div>
+</div>
+-->
+  
+  <!-- Botón Cast -->
+  <div class="icon-btn material-icons" onclick="castCurrentVideo()">cast</div>
+  
+  <!-- Botón Aspect Ratio -->
+  <div class="icon-btn material-icons" onclick="toggleAspectRatio()">aspect_ratio</div>
+  </div>
+  </div>
+  
+      <div class="center-controls">
+        <button class="btn" onclick="skip(-10)">
+          <span class="material-icons">replay_10</span>
+        </button>
+        <button class="btn" id="playPauseBtn" onclick="togglePlay()">
+          <span class="material-icons">play_arrow</span>
+        </button>
+        <button class="btn" onclick="skip(10)">
+          <span class="material-icons">forward_10</span>
+        </button>
+      </div>
+  
+      <div class="bottom-bar">
+        <div id="episodeHeader">
+          <div class="title">Legend:</div>
+          <div class="subtitle" id="episodeSubtitle">A Dragon Ball Tale.</div>
+        </div>
+  
+        <div class="progress-container">
+          <div class="buffer-bar"></div>  <!-- ✅ Agrega esto -->
+          <input type="range" class="progress" id="progress" value="0" max="100">
+          <div class="time" id="duration">- 00:00</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <a href="../main.html" class="footer-icon">
+        <span class="material-icons-outlined">home</span>
+        <span class="material-icons">home</span>
+    </a>
+    <a href="../new favoritos 2025.html" class="footer-icon">
+        <span class="material-icons-outlined">bookmark_border</span>
+        <span class="material-icons">bookmark</span>
+    </a>
+     <a href="../downloads.html" class="footer-icon download-footer" tabindex="16">
+    <span class="material-icons-outlined">arrow_downward</span>
+    <span class="material-icons">arrow_downward</span>
+</a>
+    <a href="../New search page 2025.html" class="footer-icon">
+        <span class="material-icons-outlined">search</span>
+        <span class="material-icons">search</span>
+    </a>
+  </footer>
+  <script src="https://vjs.zencdn.net/8.5.2/video.min.js"></script>
+
+ 
+
+ 
+
+ 
+<script>
+
+window.movieId = "legend-a-dragon-ball-tale"; // cambia por el ID único que desees
+</script>
+
+<script src="../suggestions-library.js"></script>
+<script src="../suggested-content.js"></script>
+<script src="../player-peliculas.js"></script>
+<script src="../pip.js"></script>
+<script src="../share.js"></script>
+<script type="module" src="../player-peliculas-module.js"></script>
+<script src="../wakelock.js"></script>
+<script src="../nav.js"></script>
+
+</script>
+
+<script src="/ads.js" defer></script>
+<script src="/ads.js" defer></script>
+</body>
+</html>
